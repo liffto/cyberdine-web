@@ -2,14 +2,14 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <main className="h-screen w-screen">
+    <main className="h-screen w-screen bg-white flex justify-center items-center">
       <div className="">
         <Image
           className=""
-          src="/images/jpg/commingsoon.jpg"
-          alt="Next.js Logo"
-          width={1920}
-          height={1080}
+          src="/images/jpg/comingsoon.jpg"
+          alt="coming soon"
+          width={500}
+          height={335}
           priority
         />
       </div>
