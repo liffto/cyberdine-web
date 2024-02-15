@@ -1,5 +1,22 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  //  (https://firebasestorage.googl
+  images: {
+    remotePatterns: [
+      {
+    protocol: 'https',
+    hostname: '**.firebasestorage.googleapis.com',
+    port: '',
+  },
+  {
+    protocol: 'https',
+    hostname: '**.googleapis.com',
+    port: '',
+  },
+    ],
+  },
+
+};
 
 import withPWA from "next-pwa"
 const PWA = withPWA({

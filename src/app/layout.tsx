@@ -4,14 +4,13 @@ import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
-import "./globals.css";
 
 
 const APP_NAME = "LT Menu";
 const APP_DEFAULT_TITLE = "LT Menu";
 const APP_TITLE_TEMPLATE = "%s - LT Menu";
 const APP_DESCRIPTION =
-  "Restraunt management solutions";
+  "Restraunt management solutions, 'best in business'";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://lt-menu.vercel.app"),
