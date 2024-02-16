@@ -3,7 +3,6 @@ import { ref, get as getFirebaseData, Query } from "firebase/database";
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
-  try {
     // const request = await req.json();
     console.log("req.url",req.url.split("/")[5]);
     
@@ -21,7 +20,5 @@ export async function GET(req: Request) {
         data: "No data found",
       });
     }
-  } catch (error: any) {
-    return NextResponse.error();
-  }
+  
 }
