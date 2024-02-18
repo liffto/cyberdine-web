@@ -8,7 +8,7 @@ export async function GET(req: Request) {
     
     // return NextResponse.json({"hi":req.url})
 
-    const completedTasksRef: Query = ref(database, `menu/${req.url.split("/")[5]}`);
+    const completedTasksRef: Query = ref(database, `hotel/${req.url.split("/")[5]}`);
     const snapshot = await getFirebaseData(completedTasksRef);
 
     if (snapshot.exists()) {
