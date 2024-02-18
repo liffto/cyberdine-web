@@ -31,6 +31,7 @@ export default function ProductDisplay({restId}:{restId:string}) {
                         alt={ele.name!}
                         height={100}
                         width={100}
+                        priority={index <2?true:false}
                         style={{ objectFit: "cover",height:"100px" }}
                       />
                       </div>

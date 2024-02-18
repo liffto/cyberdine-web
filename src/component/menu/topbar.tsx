@@ -7,7 +7,7 @@ export default function Topbar({data}:{data:any}){
                     <div className="text-xl">
                         {data.hname}
                     </div>
-                    <div className="text-primary">
+                    <div className="text-primary font-bold">
                         {data.haddress}
                     </div>
                 </div>
