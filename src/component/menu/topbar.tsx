@@ -11,7 +11,7 @@ export default function Topbar({data}:{data:any}){
                         {data.haddress}
                     </div>
                 </div>
-                <div className="rounded-full overflow-hidden">
+                <div className="rounded-full overflow-hidden w-[60px] h-[60px]">
                     <Image src={data.logo} alt="restarunt logo" height={60} width={60} />
                 </div>
             </div>
