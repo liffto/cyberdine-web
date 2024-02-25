@@ -7,47 +7,75 @@ import { useEffect, useState } from "react";
 
 export default function ProductDisplay({restId}:{restId:string}) {
   const [menuData,setData] = useState<Menu | null>(null);
+  const [selected,setSelected] = useState<string | null>('All');
     useEffect(()=>{
       FirebaseServices.shared.getOrgMenu(restId,setData);
     },[restId])
-  // console.log(JSON.stringify(menu), "items");
+  console.log((menuData), "items");
+
   return (
     <div className="container mx-auto  ">
+      <div className={`overflow-x-scroll md:container mx-auto py-2 ${selected!="All"?"sticky top-[91px]":""} bg-white border-b`}>
+        <div className="flex gap-4">
+        <div onClick={()=>{
+          setSelected('All')
+        }} className={`ml-4 rounded border border-primary px-2 py-px ${selected=="All"?"text-white bg-primary":"text-primary"} ${selected=="All"?"":""} cursor-pointer`}>
+              All
+            </div>
+        {menuData && Array.from(menuData.menuMap?.keys() as Iterable<string>).map((ele, index) => {
+          return (
+            <div onClick={()=>{
+              setSelected(ele)
+            }}  className={`${index ==  Array.from(menuData.menuMap?.keys() as Iterable<string>)?.length-1?"mr-4":""}  ${selected==ele?"text-white bg-primary":"text-primary"} cursor-pointer rounded border whitespace-nowrap border-primary px-2 py-px text-primary`}>
+              {ele}
+            </div>
+          )
+        })}
+        </div>
+      </div>
+      
       <div>
         {menuData && Array.from(menuData.menuMap?.keys() as Iterable<string>).map((ele, index) => {
           return (
             <div key={index}>
-              {Array.from(menuData.menuMap?.get(ele)?.values() as Iterable<Item>).filter((ele)=>ele.isActive)?.length>0&& <div className="px-4 py-2 my-2 font-bold  bg-secondary text-black capitalize">{ele}</div>}
+              {Array.from(menuData.menuMap?.get(ele)?.values() as Iterable<Item>).filter((ele)=>ele.isActive && (ele.category == selected || selected=='All'))?.length>0&&
+              <>
+              {selected =="All"&&<div className="sticky top-[91px] bg-white" id={ele}>
+                <div className="px-4 py-2 mb-2 font-bold   bg-secondary text-black capitalize ">{ele}</div>
+              </div>}
+               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 py-4 px-4 ">
-                {Array.from(menuData.menuMap?.get(ele)?.values() as Iterable<Item>).filter((ele)=>ele.isActive).map((ele: Item, index: any) => {
+                {Array.from(menuData.menuMap?.get(ele)?.values() as Iterable<Item>).filter((ele)=>ele.isActive && (ele.category == selected || selected=='All')).map((ele: Item, index: any) => {
                   return (
                     <div
                       key={index}
-                      className="rounded-lg boxshadow-3 md:rounded-xl overflow-hidden   max-h-[100px]  flex transform transition-transform hover:scale-105 "
+                      className="rounded-lg boxshadow-3 md:rounded-xl overflow-hidden max-h-[100px] flex "
                     >
-                      <div className="h-[100px]">
+                      <div className="h-full bg-slate-200  flex items-center">
                       <Image
                         src={ele.itemsImageUrl!}
                         alt={ele.name!}
-                        height={100}
-                        width={100}
+                        height={80}
+                        width={80}
                         priority={index <2?true:false}
-                        style={{ objectFit: "cover",height:"100px" }}
+                        style={{ objectFit: "cover",height:"80px" }}
                       />
                       </div>
-                      <div className="flex items-center p-4 m-1 flex-1">
+                      <div className="flex items-center p-2 m-1 flex-1">
                       <div className="flex flex-col  flex-1">
                         <h1 className="text-base capitalize md:text-lg font-bold">{ele.name}</h1>
                         <div className="text-sm md:text-base">{ele.category}</div>
                       </div>
                       <div className="text-lg">
-                      {ele.price}
+                      &#x20B9; {ele.price}
                       </div>
                       </div>
                     </div>
                   );
                 })}
               </div>
+              </>
+        }
             </div>
           );
         })}

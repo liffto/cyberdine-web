@@ -43,8 +43,8 @@ export default async function OrgProductsPage({
       className="restaraunt-backround"
       style={
         {
-          "--primary-bg": "#" + json.data.hcolor?.slice(0,6),
-          "--secondary-bg": lightenColor('#'+json.data.hcolor, 40)+"4a",
+          "--primary-bg": "#" + json.data.hcolor?.slice(2,10),
+          "--secondary-bg": lightenColor('#'+json.data.hcolor?.slice(2,10), 40)+"4a",
         } as React.CSSProperties
       }
     >
