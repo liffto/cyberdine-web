@@ -24,7 +24,7 @@ export default function ProductDisplay({restId}:{restId:string}) {
             </div>
         {menuData && Array.from(menuData.menuMap?.keys() as Iterable<string>).map((ele, index) => {
           return (
-            <div onClick={()=>{
+            <div key={index} onClick={()=>{
               setSelected(ele)
             }}  className={`${index ==  Array.from(menuData.menuMap?.keys() as Iterable<string>)?.length-1?"mr-4":""}  ${selected==ele?"text-white bg-primary":"text-primary"} cursor-pointer rounded border whitespace-nowrap border-primary px-2 py-px text-primary`}>
               {ele}
