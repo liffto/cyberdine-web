@@ -6,9 +6,9 @@ const inter = Inter({ subsets: ["latin"] });
 
 
 
-const APP_NAME = "LT Menu";
-const APP_DEFAULT_TITLE = "LT Menu";
-const APP_TITLE_TEMPLATE = "%s - LT Menu";
+const APP_NAME = "Cyber Dine";
+const APP_DEFAULT_TITLE = "Cyber Dine";
+const APP_TITLE_TEMPLATE = "%s - Cyber Dine";
 const APP_DESCRIPTION =
   "Restraunt management solutions, 'best in business'";
 

@@ -3,12 +3,13 @@
 @tailwind utilities;
 
 :root{
-	--primary-bg:"#FF604D";
-	--secondary-bg:"#FAD5D0"	
+	--primary-bg:#FF604D;
+	--secondary-bg:#FAD5D0;	
+  --app-bg:#D71D25;
 }
 .restaraunt-backround{
-	--primary-bg:"#FF604D" ;
-	--secondary-bg:"#FAD5D0";
+	--primary-bg:#FF604D ;
+	--secondary-bg:#FAD5D0;
 }
 .restaraunt-backround.bg-primary{
 		background-color: var(--primary-bg) !important;
@@ -55,26 +56,26 @@ color: var(--secondary-bg) !important;
 }
 
 .live{
-    background: var(--primary-bg) !important;
+    background:var(--app-bg) !important;
 }
 
 .circle {
-  width: 15px;
-  height: 15px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  box-shadow: 0px 0px 1px 1px #0000001a;
+  box-shadow: 0px 0px 1px 1px #D71D251a;
 }
 
 .pulse {
-  animation: pulse-animation 2s infinite;
+  animation: pulse-animation ease-in-out 2s infinite alternate;
 }
 
 @keyframes pulse-animation {
   0% {
-    box-shadow: 0 0 0 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 0 0px #D71D251a;
   }
   100% {
-    box-shadow: 0 0 0 8px rgba(0, 0, 0, 0);
+    box-shadow: 0 0 0 4px #D71D252a;
   }
 }
 

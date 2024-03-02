@@ -11,9 +11,13 @@ export default function ProductDisplay({ restId }: { restId: string }) {
   const [category, setCategory] = useState<Array<string> | null>(null);
   const [selected, setSelected] = useState<string | null>('All');
   useEffect(() => {
-    FirebaseServices.shared.getRestCategory(restId, setCategory);
-    FirebaseServices.shared.getOrgMenu(restId, setData);
-  }, [restId])
+    if(!category){
+      FirebaseServices.shared.getRestCategory(restId, setCategory);
+    }
+    if(category){
+      FirebaseServices.shared.getOrgMenu(restId, setData);
+    }
+  }, [restId,category])
   const sortMenuData = () => {
     var temp = new Map<string, Map<string, Item>>();
     if (category && menuData) {
@@ -28,6 +32,7 @@ export default function ProductDisplay({ restId }: { restId: string }) {
     }
   }
   useEffect(() => {
+    if(category && menuData)
     sortMenuData();
   }, [category, menuData,sortMenuData])
 
@@ -56,9 +61,9 @@ export default function ProductDisplay({ restId }: { restId: string }) {
               })}
             </div>
           </div>
-          <div className="my-4 mx-4 flex justify-start items-center">
+          <div className="my-2 mx-4 flex justify-start items-center">
             <div className="circle pulse live"></div>
-            <div className="mx-4 text-xl font-semibold text-primary">Live menu</div>
+            <div className="mx-4 font-semibold text-appbg">Live menu</div>
           </div>
 
           <div>
@@ -68,7 +73,7 @@ export default function ProductDisplay({ restId }: { restId: string }) {
                   {Array.from(menuData.menuMap?.get(ele)?.values() as Iterable<Item>).filter((ele) => ele.isActive && (ele.category == selected || selected == 'All'))?.length > 0 &&
                     <>
                       {selected == "All" && <div className="sticky top-[91px] bg-white" id={ele}>
-                        <div className="px-4 py-2 mb-2 font-bold   bg-secondary text-black capitalize ">{ele}</div>
+                        <div className="px-4 py-2 font-bold   bg-secondary text-black capitalize ">{ele}</div>
                       </div>}
 
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 py-4 px-4 ">

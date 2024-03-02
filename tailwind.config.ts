@@ -15,7 +15,9 @@ const config: Config = {
       },
       colors: {
         primary:"var(--primary-bg)",
-        secondary:"var(--secondary-bg)"
+        secondary:"var(--secondary-bg)",
+        appbg:"var(--app-bg)"
+
       }
     },
   },
