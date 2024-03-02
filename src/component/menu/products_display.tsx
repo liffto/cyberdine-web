@@ -15,12 +15,21 @@ export default function ProductDisplay({ restId }: { restId: string }) {
     FirebaseServices.shared.getOrgMenu(restId, setData);
   }, [restId])
 
+  useEffect(() => {
+    sortMenuData();
+  }, [category, menuData])
+
 
   const sortMenuData = () => {
-    var temp = new Menu();
-    for (let index = 0; index < category!.length; index++) {
-      const element = category![index];
-      
+    var temp = new Map<string, Map<string, Item>>();
+    if (category && menuData) {
+      for (let index = 0; index < category.length; index++) {
+        const element = category[index];
+        if (menuData.menuMap?.get(category[index])) {
+          temp.set(element, menuData.menuMap.get(category[index]) ?? new Map());
+        }
+      }
+      menuData.menuMap = temp;
     }
   }
 
@@ -45,6 +54,10 @@ export default function ProductDisplay({ restId }: { restId: string }) {
                 )
               })}
             </div>
+          </div>
+          <div className="my-4 mx-4 flex justify-start items-center">
+            <div className="circle pulse live"></div>
+            <div className="mx-4 text-xl font-semibold text-primary">Live menu</div>
           </div>
 
           <div>
