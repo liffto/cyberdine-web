@@ -18,26 +18,6 @@ export default function ProductDisplay({ restId }: { restId: string }) {
       FirebaseServices.shared.getOrgMenu(restId, setData);
     }
   }, [restId,category])
-  const sortMenuData = () => {
-    var temp = new Map<string, Map<string, Item>>();
-    if (category && menuData) {
-      for (let index = 0; index < category.length; index++) {
-        const element = category[index];
-        if (menuData.menuMap?.get(category[index])) {
-          temp.set(element, menuData.menuMap.get(category[index]) ?? new Map());
-        }
-      }
-      menuData.menuMap = temp;
-      setData(menuData);
-    }
-  }
-  useEffect(() => {
-    if(category && menuData)
-    sortMenuData();
-  }, [category, menuData,sortMenuData])
-
-
-  
 
   return (
     <div className="container mx-auto  ">
@@ -50,11 +30,11 @@ export default function ProductDisplay({ restId }: { restId: string }) {
               }} className={`ml-4 rounded border border-primary px-2 py-px ${selected == "All" ? "text-white bg-primary" : "text-primary"} ${selected == "All" ? "" : ""} cursor-pointer`}>
                 All
               </div>
-              {category && category.map((ele, index) => {
+              {category && category!.map((ele, index) => {
                 return (
                   <div key={index} onClick={() => {
                     setSelected(ele)
-                  }} className={`${index == category?.length - 1 ? "mr-4" : ""}  ${selected == ele ? "text-white bg-primary" : "text-primary"} cursor-pointer rounded border whitespace-nowrap border-primary px-2 py-px text-primary`}>
+                  }} className={`${index == category!.length - 1 ? "mr-4" : ""}  ${selected == ele ? "text-white bg-primary" : "text-primary"} cursor-pointer rounded border whitespace-nowrap border-primary px-2 py-px text-primary`}>
                     {ele}
                   </div>
                 )
@@ -67,10 +47,10 @@ export default function ProductDisplay({ restId }: { restId: string }) {
           </div>
 
           <div>
-            {menuData && Array.from(menuData.menuMap?.keys() as Iterable<string>).map((ele, index) => {
+            {category && category!.map((ele, index) => {
               return (
                 <div key={index}>
-                  {Array.from(menuData.menuMap?.get(ele)?.values() as Iterable<Item>).filter((ele) => ele.isActive && (ele.category == selected || selected == 'All'))?.length > 0 &&
+                  {menuData && menuData.menuMap?.has(ele) && Array.from(menuData.menuMap?.get(ele)?.values() as Iterable<Item>).filter((ele) => ele.isActive && (ele.category == selected || selected == 'All'))?.length > 0 &&
                     <>
                       {selected == "All" && <div className="sticky top-[91px] bg-white" id={ele}>
                         <div className="px-4 py-2 font-bold   bg-secondary text-black capitalize ">{ele}</div>
@@ -98,7 +78,7 @@ export default function ProductDisplay({ restId }: { restId: string }) {
                                   <h1 className="text-base capitalize md:text-lg font-bold">{ele.name}</h1>
                                   <div className="text-sm md:text-base">{ele.category}</div>
                                 </div>
-                                <div className="text-lg">
+                                <div className="font-bold">
                                   &#x20B9; {ele.price}
                                 </div>
                               </div>
@@ -113,8 +93,8 @@ export default function ProductDisplay({ restId }: { restId: string }) {
             })}
           </div>
         </div>
-        : <div className="flex justify-center items-center h-screen">
-          <CircularProgress sx={{ color: 'bg-primary' }} />
+        : <div className="flex justify-center items-center " style={{height:"calc(100vh - 92px)"}}>
+          <CircularProgress sx={{ color: 'var(--primary-bg)' }} />
         </div>}
     </div>
   );
