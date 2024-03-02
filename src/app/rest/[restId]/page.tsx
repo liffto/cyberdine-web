@@ -14,7 +14,7 @@ export default async function OrgProductsPage({
     }/api/rest/${params.restId}/detail`
   );
   const json = await response.json();
-  console.log(json, json.data);
+  console.log("json",json, json.data);
   function lightenColor(hex:string, percent:any) {
     // Parse the hex color to get RGB components
     let r = parseInt(hex.substring(1, 3), 16);
