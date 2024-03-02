@@ -14,12 +14,6 @@ export default function ProductDisplay({ restId }: { restId: string }) {
     FirebaseServices.shared.getRestCategory(restId, setCategory);
     FirebaseServices.shared.getOrgMenu(restId, setData);
   }, [restId])
-
-  useEffect(() => {
-    sortMenuData();
-  }, [category, menuData])
-
-
   const sortMenuData = () => {
     var temp = new Map<string, Map<string, Item>>();
     if (category && menuData) {
@@ -30,8 +24,15 @@ export default function ProductDisplay({ restId }: { restId: string }) {
         }
       }
       menuData.menuMap = temp;
+      setData(menuData);
     }
   }
+  useEffect(() => {
+    sortMenuData();
+  }, [category, menuData,sortMenuData])
+
+
+  
 
   return (
     <div className="container mx-auto  ">
@@ -46,7 +47,7 @@ export default function ProductDisplay({ restId }: { restId: string }) {
               </div>
               {category && category.map((ele, index) => {
                 return (
-                  <div onClick={() => {
+                  <div key={index} onClick={() => {
                     setSelected(ele)
                   }} className={`${index == category?.length - 1 ? "mr-4" : ""}  ${selected == ele ? "text-white bg-primary" : "text-primary"} cursor-pointer rounded border whitespace-nowrap border-primary px-2 py-px text-primary`}>
                     {ele}
