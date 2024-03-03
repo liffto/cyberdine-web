@@ -11,13 +11,13 @@ export default function ProductDisplay({ restId }: { restId: string }) {
   const [category, setCategory] = useState<Array<string> | null>(null);
   const [selected, setSelected] = useState<string | null>('All');
   useEffect(() => {
-    if(!category){
+    if (!category) {
       FirebaseServices.shared.getRestCategory(restId, setCategory);
     }
-    if(category){
+    if (category) {
       FirebaseServices.shared.getOrgMenu(restId, setData);
     }
-  }, [restId,category])
+  }, [restId, category])
 
   return (
     <div className="container mx-auto  ">
@@ -52,7 +52,7 @@ export default function ProductDisplay({ restId }: { restId: string }) {
                 <div key={index}>
                   {menuData && menuData.menuMap?.has(ele) && Array.from(menuData.menuMap?.get(ele)?.values() as Iterable<Item>).filter((ele) => ele.isActive && (ele.category == selected || selected == 'All'))?.length > 0 &&
                     <>
-                      {selected == "All" && <div className="sticky top-[91px] bg-white" id={ele}>
+                      {selected == "All" && <div className="sticky top-[91px] bg-white z-10" id={ele}>
                         <div className="px-4 py-2 font-bold   bg-secondary text-black capitalize ">{ele}</div>
                       </div>}
 
@@ -63,15 +63,18 @@ export default function ProductDisplay({ restId }: { restId: string }) {
                               key={index}
                               className="rounded-md boxshadow-3 md:rounded-md overflow-hidden max-h-[100px] flex "
                             >
-                              <div className="h-full bg-slate-200  flex items-center">
-                                <Image
-                                  src={ele.itemsImageUrl!}
-                                  alt={ele.name!}
-                                  height={80}
-                                  width={80}
-                                  priority={index < 2 ? true : false}
-                                  style={{ objectFit: "cover", height: "80px" }}
-                                />
+                              <div className="relative z-0">
+                                <div className="h-full bg-slate-200  flex items-center">
+                                  <Image
+                                    src={ele.itemsImageUrl!}
+                                    alt={ele.name!}
+                                    height={80}
+                                    width={80}
+                                    priority={index < 2 ? true : false}
+                                    style={{ objectFit: "cover", height: "80px" }}
+                                  />
+                                </div>
+                                {ele.isSpecial && <div className="absolute bottom-0 right-0 text-white bg-primary text-sm w-full text-center">Special</div>}
                               </div>
                               <div className="flex items-center p-2 m-1 flex-1">
                                 <div className="flex flex-col  flex-1">
@@ -93,7 +96,7 @@ export default function ProductDisplay({ restId }: { restId: string }) {
             })}
           </div>
         </div>
-        : <div className="flex justify-center items-center " style={{height:"calc(100vh - 92px)"}}>
+        : <div className="flex justify-center items-center " style={{ height: "calc(100vh - 92px)" }}>
           <CircularProgress sx={{ color: 'var(--primary-bg)' }} />
         </div>}
     </div>
