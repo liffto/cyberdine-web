@@ -5,6 +5,8 @@ export class Item {
     isSpecial: boolean | null = null;
     itemsImageUrl: string | null = null;
     name: string | null = null;
+    foodType: string | null = null;
+    description: string | null = null;
     price: number | null = null;
 
     constructor(data?: Item) {
@@ -15,6 +17,8 @@ export class Item {
             this.isSpecial = data.isSpecial;
             this.itemsImageUrl = data.itemsImageUrl;
             this.name = data.name;
+            this.foodType = data.foodType;
+            this.description = data.description;
             this.price = data.price;
         }
     }
