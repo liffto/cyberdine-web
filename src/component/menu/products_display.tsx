@@ -34,14 +34,17 @@ export default function ProductDisplay({ restId }: { restId: string }) {
       <div className="h-full flex flex-col justify-between">
         <div className="p-6 text-black">
           <div className=" flex justify-between items-center">
-            <div className="font-bold text-xl">{selectedMenuData?.category}</div>
-            <div className="text-appbg text-base font-normal">{selectedMenuData?.foodType}</div>
+            <div className="font-bold text-xl">{selectedMenuData?.name}</div>
+            <div className={`flex justify-center items-center`}>
+              <div className={`w-2 h-2 rounded-full mr-2 ${selectedMenuData?.foodType == "Veg" ? ' bg-green-500' : 'bg-appbg '}`}></div>
+              <div className={`text-base font-normal ${selectedMenuData?.foodType == "Veg" ? ' text-green-500' : 'text-appbg '}`}>{selectedMenuData?.foodType}</div>
+            </div>
           </div>
           <div className="h-[1px] bg-gray-500 my-4"></div>
           <div className="text-lg font-semibold">Description</div>
           <div className="font-medium text-base">{selectedMenuData?.description ? selectedMenuData?.description : "Description not available"}</div>
         </div>
-        <div className="bg-primary text-white text-center fixed w-full bottom-0 py-2">Done</div>
+        <div className="bg-primary text-white text-lg text-center fixed w-full bottom-0 py-4 font-semibold">Done</div>
       </div>
     );
   };
