@@ -9,4 +9,12 @@ export class Menu {
       this.menuMap = JsonUtiles.populateNestedMap(data, Item);
     }
   }
+  getActiveMenuByCat(category:string):Item[] | null{
+    if(!this.menuMap?.has(category)){
+      return null;
+    }
+    const menu = Array.from(this.menuMap?.get(category)?.values() as Iterable<Item>)
+    const filteredMenu = menu.filter((item:Item)=>item.isActive&& (item.category == category || category == "All"))
+    return filteredMenu;
+  }
 }

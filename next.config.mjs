@@ -2,6 +2,7 @@
 const nextConfig = {
   //  (https://firebasestorage.googl
   images: {
+    minimumCacheTTL: 180,
     remotePatterns: [
       {
     protocol: 'https',

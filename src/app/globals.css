@@ -60,14 +60,14 @@ color: var(--secondary-bg) !important;
 }
 
 .circle {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   box-shadow: 0px 0px 1px 1px #D71D251a;
 }
 
 .pulse {
-  animation: pulse-animation ease-in-out 2s infinite alternate;
+  animation: pulse-animation ease-in-out 1.3s infinite alternate;
 }
 
 @keyframes pulse-animation {
