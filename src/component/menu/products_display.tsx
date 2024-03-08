@@ -1,31 +1,19 @@
 "use client";
 import { Item } from "@/model/products/items";
-import { Menu } from "@/model/products/menu";
 import { FirebaseServices } from "@/service/firebase.service";
 import CircularProgress from "@mui/material/CircularProgress";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import MenuItemCard from "./menu_item_card";
+import { MenuDataContext } from "@/context/menu.context";
+import Link from "next/link";
 const DescriptionSheet = dynamic(() => import("./description_sheet"), {
   ssr: false,
 });
 export default function ProductDisplay({ restId }: { restId: string }) {
-  const [menuData, setData] = useState<Menu | null>(null);
   const [selectedMenuData, setSelectedMenuData] = useState<Item | null>(null);
-  const [category, setCategory] = useState<Array<string>>(['All']);
   const [selected, setSelected] = useState<string>("All");
-
-  useEffect(() => {
-    const catUnsub = FirebaseServices.shared.getRestCategory(
-      restId,
-      (cat:Array<string>)=>{setCategory(['All',...cat])}
-    );
-    const menuUnSub = FirebaseServices.shared.getOrgMenu(restId, setData);
-    return () => {
-      catUnsub();
-      menuUnSub();
-    };
-  }, [restId, category]);
+  const { menuData, category } = useContext(MenuDataContext);
 
   const setSelectedData = (ele: Item) => {
     setSelectedMenuData(ele);
@@ -63,10 +51,12 @@ export default function ProductDisplay({ restId }: { restId: string }) {
       {menuData ? (
         <div className="">
           {CategoryList()}
-          <div className="my-2 mx-4 flex justify-start items-center">
+          <Link href={`/rest/${restId}/search`}>
+          <div  className="my-2 mx-4 flex justify-start items-center">
             <div className="circle pulse live"></div>
             <div className="mx-4 font-semibold text-appbg">Live menu</div>
           </div>
+          </Link>
 
           <div>
             {category &&
@@ -94,7 +84,10 @@ export default function ProductDisplay({ restId }: { restId: string }) {
                                 .getActiveMenuByCat(ele)!
                                 .map((ele: Item, index: any) => {
                                   return (
-                                    <MenuItemCard index={index} setSelectedData={setSelectedData} ele={ele} catIndex={catIndex} />
+                                    <div key={index} className="">
+
+                                      <MenuItemCard index={index} setSelectedData={setSelectedData} ele={ele} catIndex={catIndex} />
+                                    </div>
                                     
                                   );
                                 })}
