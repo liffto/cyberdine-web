@@ -28,7 +28,7 @@ function MenuDataProvider({ children }: { children: React.ReactNode }) {
           setCategory(["All", ...cat]);
         }
       );
-      console.log("useEffect count",restId);
+      // console.log("useEffect count",restId);
       const menuUnSub = FirebaseServices.shared.getOrgMenu(restId, setMenuData);
       return () => {
         catUnsub();
