@@ -6,19 +6,17 @@ import { getDatabase } from "firebase/database";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyA4-6BS8G_dd1aRBRjtYuDc8Iy1Xxyq5ic",
-  authDomain: "lt-menu-c2fff.firebaseapp.com",
-  databaseURL: "https://lt-menu-c2fff-default-rtdb.firebaseio.com",
-  projectId: "lt-menu-c2fff",
-  storageBucket: "lt-menu-c2fff.appspot.com",
-  messagingSenderId: "267592842259",
-  appId: "1:267592842259:web:cf076b45c8ca9b0c9d93e6",
-  measurementId: "G-N30NNFGGC2"
+  apiKey: process.env.API_KEY,
+  authDomain: process.env.AUTH_DOMAIN,
+  databaseURL: process.env.NODE_ENV === "development"?'https://lt-menu-c2fff-default-rtdb.firebaseio.com':'https://cyberdine-aeeb1-default-rtdb.firebaseio.com',
+  projectId: process.env.PROJECT_ID,
+  storageBucket: process.env.STORAGE_BUCKET,
+  messagingSenderId: process.env.MESSAGING_SENDER_ID,
+  appId: process.env.APP_ID,
+  measurementId: process.env.MEASUREMENT_ID
 };
-
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
 // Initialize Realtime Database and get a reference to the service
 const database = getDatabase(app);
 
