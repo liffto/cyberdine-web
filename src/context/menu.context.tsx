@@ -21,7 +21,7 @@ function MenuDataProvider({ children }: { children: React.ReactNode }) {
   const [category, setCategory] = useState<Array<string>>(["All"]);
   const { restId } = useParams<{ restId: string }>();
   useEffect(() => {
-    if (restId && menuData==null) {
+    if (restId && restId!="") {
       const catUnsub = FirebaseServices.shared.getRestCategory(
         restId,
         (cat: Array<string>) => {
@@ -35,7 +35,7 @@ function MenuDataProvider({ children }: { children: React.ReactNode }) {
         menuUnSub();
       };
     }
-  }, []);
+  }, [restId]);
   const value = { menuData, setMenuData, category, setCategory };
 
   return (
