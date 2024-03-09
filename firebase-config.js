@@ -5,7 +5,7 @@ import { getDatabase } from "firebase/database";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
-const firebaseConfig = {
+ const firebaseConfig = {
   apiKey: process.env.API_KEY,
   authDomain: process.env.AUTH_DOMAIN,
   databaseURL: process.env.NODE_ENV === "development"?'https://lt-menu-c2fff-default-rtdb.firebaseio.com':'https://cyberdine-aeeb1-default-rtdb.firebaseio.com',
@@ -21,4 +21,4 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
 
-export { database }
+export { database,firebaseConfig }
