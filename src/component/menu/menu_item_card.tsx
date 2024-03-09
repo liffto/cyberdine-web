@@ -63,9 +63,7 @@ export default function MenuItemCard({
             {ele.name}
           </h1>
           <div
-            className={`text-xs md:text-sm ${
-              ele.foodType?.toLowerCase()?.includes("non") ? "text-red-500" : ""
-            }`}
+            className={`text-xs md:text-sm text-gray-700 font-medium`}
           >
             {ele.foodType}
           </div>

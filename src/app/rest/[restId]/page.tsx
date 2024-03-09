@@ -11,7 +11,7 @@ export default async function OrgProductsPage({
       process.env.NODE_ENV == "development"
         ? "http://localhost:3000"
         : "https://www.cyberdine.in"
-    }/api/rest/${params.restId}/detail`,{next:{revalidate:60*60*2}}
+    }/api/rest/${params.restId}/detail`,{next:{revalidate:60*60*1}}
   );
   const json = await response.json();
   console.log("json",json, json.data);
