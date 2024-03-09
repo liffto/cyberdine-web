@@ -15,7 +15,7 @@ export default function SearchComponent() {
   const { menuData, category } = useContext(MenuDataContext);
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const { replace,back } = useRouter();
+  const { replace, back } = useRouter();
   const [filter, setFilter] = useState(false);
 
   function handleCat(term: string) {
@@ -42,7 +42,9 @@ export default function SearchComponent() {
         <div className="px-4 md:container pb-2">
           <div className="flex gap-2 items-center pt-4 pb-2">
             <ArrowCircleLeftIcon
-            onClick={()=>{back()}}
+              onClick={() => {
+                back();
+              }}
               fontSize="large"
               sx={{ color: "var(--primary-bg)" }}
             />
@@ -51,8 +53,10 @@ export default function SearchComponent() {
           <TextField
             placeholder="Dosa"
             fullWidth
-            value={searchParams.get('query')??""}
-            onChange={(ele)=>{handleSearch(ele.target.value)}}
+            value={searchParams.get("query") ?? ""}
+            onChange={(ele) => {
+              handleSearch(ele.target.value);
+            }}
             InputProps={{
               endAdornment: (
                 <InputAdornment
@@ -71,7 +75,7 @@ export default function SearchComponent() {
         {searchParams.get("category") != "All" ? (
           <div className="bg-secondary py-1 px-4 md:container flex items-center">
             <div className="flex-1">{searchParams.get("category")}</div>
-            <div onClick={()=>handleCat("All")} className="">
+            <div onClick={() => handleCat("All")} className="">
               <CancelIcon sx={{ color: "var(--primary-bg)" }} />
             </div>
           </div>
@@ -83,14 +87,18 @@ export default function SearchComponent() {
     <div className="">
       {TopBar()}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 py-4 px-4 ">
-      {menuData
-        ?.getSearchedMenuByCat(
-          searchParams.get("category")!,
-          searchParams.get("query") ?? ""
-        )
-        ?.map((item: Item,index:number) => {
-          return <MenuItemCard index={index} ele={item} />;
-        })}
+        {menuData
+          ?.getSearchedMenuByCat(
+            searchParams.get("category")!,
+            searchParams.get("query") ?? ""
+          )
+          ?.map((item: Item, index: number) => {
+            return (
+              <div className="" key={index}>
+                <MenuItemCard index={index} ele={item} />
+              </div>
+            );
+          })}
       </div>
       <FilterDrawer
         categories={category}
