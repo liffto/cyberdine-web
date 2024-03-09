@@ -1,11 +1,11 @@
 import { Item } from "@/model/products/items";
 import Image from "next/image";
 
-export default function MenuItemCard({index,setSelectedData,ele,catIndex}:{index: any, setSelectedData: (ele: Item) => void, ele: Item, catIndex: number}) {
+export default function MenuItemCard({index,setSelectedData,ele,catIndex}:{index: any, setSelectedData?: (ele: Item) => void, ele: Item, catIndex?: number}) {
     return <div
       key={index}
       onClick={() => {
-        setSelectedData(ele);
+        setSelectedData&&  setSelectedData(ele);
       } }
       className="rounded-md boxshadow-3 md:rounded-md overflow-hidden max-h-[100px] flex "
     >
@@ -16,7 +16,7 @@ export default function MenuItemCard({index,setSelectedData,ele,catIndex}:{index
             alt={ele.name!}
             height={80}
             width={80}
-            priority={catIndex == 0 ? true : false}
+            priority={catIndex?false:catIndex == 0 ? true : false}
             style={{
               objectFit: "cover",
               height: "80px",
