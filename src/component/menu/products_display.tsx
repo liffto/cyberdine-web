@@ -1,19 +1,21 @@
 "use client";
 import { Item } from "@/model/products/items";
 import CircularProgress from "@mui/material/CircularProgress";
-import { useContext, useEffect, useState } from "react";
+import { useContext,  useState } from "react";
 import dynamic from "next/dynamic";
 import MenuItemCard from "./menu_item_card";
 import { MenuDataContext } from "@/context/menu.context";
 import Fab from "@mui/material/Fab";
 import Link from "next/link";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+import TabGroup from "../common/tab";
 const DescriptionSheet = dynamic(() => import("./description_sheet"), {
   ssr: false,
 });
 export default function ProductDisplay({ restId }: { restId: string }) {
   const [selectedMenuData, setSelectedMenuData] = useState<Item | null>(null);
   const [selected, setSelected] = useState<string>("All");
+  const [preference, setPreference] = useState<string>("All");
   const { menuData, category } = useContext(MenuDataContext);
 
   const setSelectedData = (ele: Item) => {
@@ -28,7 +30,7 @@ export default function ProductDisplay({ restId }: { restId: string }) {
       >
         <div className="flex gap-4 px-4">
           {category &&
-            category!.map((ele, index) => {
+            category!.filter((cat)=>(menuData &&menuData.getActiveMenuByCat(cat,preference)&&menuData.getActiveMenuByCat(cat,preference)?.some((ele)=>ele.category == cat)||cat=="All")).map((ele, index) => {
               return (
                 <div
                   key={index}
@@ -56,7 +58,6 @@ export default function ProductDisplay({ restId }: { restId: string }) {
             <div className="circle pulse live"></div>
             <div className="mx-4 font-semibold text-appbg">Live menu</div>
           </div>
-
           <div className="mb-20">
             {category &&
               (selected == "All" ? category : [selected])!.map(
@@ -64,8 +65,8 @@ export default function ProductDisplay({ restId }: { restId: string }) {
                   return (
                     <div key={catIndex}>
                       {menuData &&
-                        menuData.getActiveMenuByCat(ele) &&
-                        menuData.getActiveMenuByCat(ele)!.length > 0 && (
+                        menuData.getActiveMenuByCat(ele,preference) &&
+                        menuData.getActiveMenuByCat(ele,preference)!.length > 0 && (
                           <>
                             {selected == "All" && (
                               <div
@@ -79,9 +80,9 @@ export default function ProductDisplay({ restId }: { restId: string }) {
                             )}
 
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 py-4 px-4 mb-4">
-                              {menuData.getActiveMenuByCat(ele) &&
+                              {menuData.getActiveMenuByCat(ele,preference) &&
                                 menuData
-                                  .getActiveMenuByCat(ele)!
+                                  .getActiveMenuByCat(ele,preference)!
                                   .map((ele: Item, index: any) => {
                                     return (
                                       <div key={index} className="">
@@ -117,9 +118,11 @@ export default function ProductDisplay({ restId }: { restId: string }) {
           selectedMenuData={selectedMenuData}
         />
       )}
+      <div className="fixed bottom-4 inset-x-4 z-10 flex items-center justify-center gap-4">
+        <TabGroup setPreference={setPreference} preference={preference} />
       <Link
         href={`/rest/${restId}/search?query=&category=All`}
-        className="fixed bottom-4 right-4 z-10 bg-primary rounded-full"
+        className=" bg-primary rounded-full"
       >
         <Fab
           sx={{
@@ -134,6 +137,7 @@ export default function ProductDisplay({ restId }: { restId: string }) {
           <SearchRoundedIcon sx={{ color: "white" }} fontSize="medium" />
         </Fab>
       </Link>
+      </div>
     </div>
   );
 }
