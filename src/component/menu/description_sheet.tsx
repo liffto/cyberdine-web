@@ -17,10 +17,10 @@ export default function DescriptionSheet({
 
             <div className={`flex justify-center items-center`}>
               <div
-                className={`w-2 h-2 rounded-full mr-2 bg-primary`}
+                className={`w-2 h-2 rounded-full mr-2 ${selectedMenuData?.foodType != "Veg" ? "bg-primary" : "bg-[#318c00]"}`}
               ></div>
               <div
-                className={`text-base font-normal bg-primary`}
+                className={`text-base font-normal ${selectedMenuData?.foodType != "Veg" ? "text-primary" : "text-[#318c00]"}`}
               >
                 {selectedMenuData?.foodType}
               </div>
