@@ -49,7 +49,7 @@ export default async function OrgProductsPage({
       }
     >
       <Topbar data={json.data} />
-      <ProductDisplay restId={params.restId} table={searchParams.table} topic={json.data?.fcmTopic}  />
+      <ProductDisplay restId={params.restId} table={searchParams.table} topic={json?.data?.fcmTopic} notification={json?.data?.isNoticifation} />
     </div>
   );
 }

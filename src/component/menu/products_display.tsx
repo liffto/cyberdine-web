@@ -13,7 +13,7 @@ import { FcmService } from "@/service/fcm_service";
 const DescriptionSheet = dynamic(() => import("./description_sheet"), {
   ssr: false,
 });
-export default function ProductDisplay({ restId,table,topic }: { restId: string,table:string,topic:string }) {
+export default function ProductDisplay({ restId,table,topic,notification }: { restId: string,table:string,topic:string,notification:boolean }) {
   const [selectedMenuData, setSelectedMenuData] = useState<Item | null>(null);
   const [selected, setSelected] = useState<string>("All");
   const [preference, setPreference] = useState<string>("All");
@@ -76,10 +76,10 @@ export default function ProductDisplay({ restId,table,topic }: { restId: string,
               <div className="circle pulse live"></div>
               <div className="mx-4 font-semibold text-appbg">Live menu</div>
             </div>
-            <div className="bg-primary text-white px-4 rounded flex gap-1" onClick={()=>{sendFcm()}}>
+            {notification&&<div className="bg-primary text-white px-4 rounded flex gap-1" onClick={()=>{sendFcm()}}>
               <div className={`${loading?"":"hidden"}`}><CircularProgress size={10} sx={{ color: "white",fontSize:"10px",height:"10px",width:"10px" }} /></div>
               Request
-            </div>
+            </div>}
           </div>
           <div className="mb-20">
             {category &&
