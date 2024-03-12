@@ -2,9 +2,9 @@ import ProductDisplay from "@/component/menu/products_display";
 import Topbar from "@/component/menu/topbar";
 
 export default async function OrgProductsPage({
-  params,
+  params,searchParams
 }: {
-  params: { restId: string };
+  params: { restId: string };searchParams:{table:string}
 }) {
   const response = await fetch(
     `${
@@ -49,7 +49,7 @@ export default async function OrgProductsPage({
       }
     >
       <Topbar data={json.data} />
-      <ProductDisplay restId={params.restId} />
+      <ProductDisplay restId={params.restId} table={searchParams.table} topic={json.data?.fcmTopic}  />
     </div>
   );
 }

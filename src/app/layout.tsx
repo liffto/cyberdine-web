@@ -13,7 +13,7 @@ const APP_DESCRIPTION =
   "Restraunt management solutions, 'best in business'";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://lt-menu.vercel.app"),
+  metadataBase: new URL("https://cyberdine.in"),
   title: {
     default: APP_DEFAULT_TITLE,
     template: APP_TITLE_TEMPLATE,

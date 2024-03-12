@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
   const decoder = new TextDecoder();
   const decodedString = decoder.decode(rawBody);
   const datas = JSON.parse(decodedString);
-  const { token, data } = datas;
+  const { topic, data } = datas;
   const notificationData = {
     title: data.title, // Assuming title comes from the request body
     body: data.body, // Assuming body comes from the request body
@@ -28,9 +28,9 @@ export async function POST(req: NextRequest) {
 
   const data1 = {
     notification: notificationData, 
-    token,
+    topic,
   };
-  if (!token || !data) {
+  if (!topic || !data) {
     return NextResponse.json({ error: "Missing token or data" });
   }
   try {
