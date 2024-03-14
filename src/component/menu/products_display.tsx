@@ -36,7 +36,9 @@ export default function ProductDisplay({ restId,table,topic,notification }: { re
     console.log("data", data);
     setLoader(true)
     await FcmService.shared.fcmTopic(data);
-    setLoader(false)
+    setTimeout(() => {
+      setLoader(false)
+    }, 1000*60);
   }
 
   function CategoryList() {
@@ -76,9 +78,9 @@ export default function ProductDisplay({ restId,table,topic,notification }: { re
               <div className="circle pulse live"></div>
               <div className="mx-4 font-semibold text-appbg">Live menu</div>
             </div>
-            {notification&&<div className="bg-primary text-white px-4 rounded flex gap-1" onClick={()=>{sendFcm()}}>
+            {notification&&<div className="bg-primary text-white px-4 rounded flex gap-1" onClick={()=>{loading?null:sendFcm()}}>
               <div className={`${loading?"":"hidden"}`}><CircularProgress size={10} sx={{ color: "white",fontSize:"10px",height:"10px",width:"10px" }} /></div>
-              Request
+              {loading?'Requesting':'Request'}
             </div>}
           </div>
           <div className="mb-20">
