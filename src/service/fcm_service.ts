@@ -12,7 +12,7 @@ export class FcmService {
             };
 
             console.log("body", body);
-            let response = await axios.post(`${process.env.NODE_ENV == "development" ? "http://localhost:3000" : "https://cyberdine.in"}/api/request/fcm`, body, { headers });
+            let response = await axios.post(`${process.env.NODE_ENV == "development" ? "http://localhost:3000" : "https://www.cyberdine.in"}/api/request/fcm`, body, { headers });
             console.log("response.status", response.status);
 
             if (response.status! >= 200 && response.status! <= 299 && response.data) {
