@@ -109,7 +109,7 @@ export default function ProductDisplay({
               <div className="circle pulse live"></div>
               <div className="mx-4 font-semibold text-appbg">Live menu</div>
             </div>
-            {!notification && (
+            {notification && (
               <div
                 className={`${wait?"bg-[#707070]":"bg-primary"}  text-white shadow px-4 rounded flex gap-1`}
                 onClick={() => {
