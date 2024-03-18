@@ -13,12 +13,27 @@ import { FcmService } from "@/service/fcm_service";
 const DescriptionSheet = dynamic(() => import("./description_sheet"), {
   ssr: false,
 });
-export default function ProductDisplay({ restId,table,topic,notification }: { restId: string,table:string,topic:string,notification:boolean }) {
+import toast, { Toaster } from 'react-hot-toast';
+
+const notify = () => toast('Notified successfully');
+
+export default function ProductDisplay({
+  restId,
+  table,
+  topic,
+  notification,
+}: {
+  restId: string;
+  table: string;
+  topic: string;
+  notification: boolean;
+}) {
   const [selectedMenuData, setSelectedMenuData] = useState<Item | null>(null);
   const [selected, setSelected] = useState<string>("All");
   const [preference, setPreference] = useState<string>("All");
   const [loading, setLoader] = useState<boolean>(false);
-  
+  const [wait, setWait] = useState<boolean>(false);
+
   const { menuData, category } = useContext(MenuDataContext);
 
   const setSelectedData = (ele: Item) => {
@@ -31,38 +46,53 @@ export default function ProductDisplay({ restId,table,topic,notification }: { re
         'title': `Table ${table}`,
         'body': `Requesting for Captain`
       },
-      'topic': topic.replace(" ","")
+      topic:topic? topic.replace(" ", ""):"",
     };
     console.log("data", data);
-    setLoader(true)
+    setLoader(true);
+    setWait(true);
     await FcmService.shared.fcmTopic(data);
+    setLoader(false);
+    notify()
     setTimeout(() => {
-      setLoader(false)
-    }, 1000*60);
-  }
+      setWait(false);
+    }, 1000 * 60);
+  };
 
   function CategoryList() {
     return (
       <div
-        className={`overflow-x-scroll md:container max-w-screen py-2 ${selected != "All" ? "sticky top-[91px]" : ""
-          } bg-white border-b z-20`}
+        className={`overflow-x-scroll md:container max-w-screen py-2 ${
+          selected != "All" ? "sticky top-[91px]" : ""
+        } bg-white border-b z-20`}
       >
         <div className="flex gap-4 px-4">
           {category &&
-            category!.filter((cat) => (menuData && menuData.getActiveMenuByCat(cat, preference) && menuData.getActiveMenuByCat(cat, preference)?.some((ele) => ele.category == cat) || cat == "All")).map((ele, index) => {
-              return (
-                <div
-                  key={index}
-                  onClick={() => {
-                    setSelected(ele);
-                  }}
-                  className={`    ${selected == ele ? "text-white bg-primary" : "text-primary"
+            category!
+              .filter(
+                (cat) =>
+                  (menuData &&
+                    menuData.getActiveMenuByCat(cat, preference) &&
+                    menuData
+                      .getActiveMenuByCat(cat, preference)
+                      ?.some((ele) => ele.category == cat)) ||
+                  cat == "All"
+              )
+              .map((ele, index) => {
+                return (
+                  <div
+                    key={index}
+                    onClick={() => {
+                      setSelected(ele);
+                    }}
+                    className={`    ${
+                      selected == ele ? "text-white bg-primary" : "text-primary"
                     } cursor-pointer rounded border whitespace-nowrap border-primary px-2 py-px text-primary`}
-                >
-                  {ele}
-                </div>
-              );
-            })}
+                  >
+                    {ele}
+                  </div>
+                );
+              })}
         </div>
       </div>
     );
@@ -73,15 +103,33 @@ export default function ProductDisplay({ restId,table,topic,notification }: { re
       {menuData ? (
         <div className="">
           {CategoryList()}
+          <Toaster position="top-center"  />
           <div className="flex justify-between items-center mx-4">
             <div className="my-2 flex justify-start items-center">
               <div className="circle pulse live"></div>
               <div className="mx-4 font-semibold text-appbg">Live menu</div>
             </div>
-            {notification&&<div className="bg-primary text-white px-4 rounded flex gap-1" onClick={()=>{loading?null:sendFcm()}}>
-              <div className={`${loading?"":"hidden"}`}><CircularProgress size={10} sx={{ color: "white",fontSize:"10px",height:"10px",width:"10px" }} /></div>
-              {loading?'Requesting':'Request'}
-            </div>}
+            {notification && (
+              <div
+                className={`${wait?"bg-[#707070]":"bg-primary"}  text-white shadow px-4 rounded flex gap-1`}
+                onClick={() => {
+                  wait ? null : sendFcm();
+                }}
+              >
+                <div className={`${loading ? "" : "hidden"}`}>
+                  <CircularProgress
+                    size={10}
+                    sx={{
+                      color: "white",
+                      fontSize: "10px",
+                      height: "10px",
+                      width: "10px",
+                    }}
+                  />
+                </div>
+                {loading ? "Requesting" : "Request"}
+              </div>
+            )}
           </div>
           <div className="mb-20">
             {category &&
@@ -91,7 +139,8 @@ export default function ProductDisplay({ restId,table,topic,notification }: { re
                     <div key={catIndex}>
                       {menuData &&
                         menuData.getActiveMenuByCat(ele, preference) &&
-                        menuData.getActiveMenuByCat(ele, preference)!.length > 0 && (
+                        menuData.getActiveMenuByCat(ele, preference)!.length >
+                          0 && (
                           <>
                             {selected == "All" && (
                               <div
