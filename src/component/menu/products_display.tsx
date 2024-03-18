@@ -28,8 +28,8 @@ export default function ProductDisplay({ restId,table,topic,notification }: { re
   const sendFcm = async () => {
     var data = {
       'data': {
-        'title': 'Request Captain',
-        'body': `Request from table ${table}`
+        'title': `Table ${table}`,
+        'body': `Requesting for Captain`
       },
       'topic': topic.replace(" ","")
     };
