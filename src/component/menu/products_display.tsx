@@ -94,7 +94,14 @@ export default function ProductDisplay({
       </div>
     );
   }
-
+  const handleItemClick = (index: any) => {
+    const element = document.getElementById(`${index}`);
+    if (element) {
+        element.scrollIntoView({ behavior: 'smooth',block:"start" });
+    }
+};
+  const [isCircle, setIsCircle] = useState(true);
+  const menuItems = ["Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 6", "Item 7", "Item 8", "Item 9",];
   return (
     <div className="container mx-auto  ">
       {menuData ? (
@@ -127,7 +134,7 @@ export default function ProductDisplay({
           </div>
           {CategoryList()}
           <div className="bg-primary my-6 mx-4 rounded-md" >
-          <Image src="/images/svg/our_special_banner.svg" alt="restarunt logo"   />
+          <Image src="/images/png/our_special_banner.png" alt="restarunt logo" width="443" height="123" priority={true}  />
           </div>
           <Toaster position="top-center" />
           <div className="mb-20">
@@ -196,6 +203,24 @@ export default function ProductDisplay({
           selectedMenuData={selectedMenuData}
         />
       )}
+       <div className="">
+            <div
+                className={`category_shape fixed z-10 bottom-12 right-8 ${isCircle ? "circle" : "rectangle"}`}
+                onClick={() => setIsCircle(!isCircle)}
+            >
+                {isCircle ? (
+                    <div className="category_text">test</div>
+                ) : (
+                    <div className="category_text">
+                        <ul className="">
+                            {category.map((item, index) => (
+                                <li onClick={() => handleItemClick(item)} className="pb-2 cursor-pointer" key={index}>{item}</li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+            </div>
+        </div>
       {/* old filter */}
       {/* <div className="fixed bottom-4 inset-x-4 z-10 flex items-center justify-center gap-4">
         <TabGroup setPreference={setPreference} preference={preference} />

@@ -38,7 +38,7 @@ export default function MenuItemCard({
             />
           ) : (
             <Image
-              src={ele.itemsImageUrl ?? '/images/png/empty_menu_item.png'}
+              src={ele.itemsImageUrl &&ele.itemsImageUrl !=""?ele.itemsImageUrl : '/images/png/empty_menu_item.png'}
               alt={ele.name!}
               height={80}
               width={80}
