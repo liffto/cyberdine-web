@@ -6,13 +6,13 @@ export class FcmService {
     async fcmTopic(body: any): Promise<any | null> {
         try {
             const headers = {
-                "Access-Control-Allow-Origin": "https://www.cyberdine.in",
+                "Access-Control-Allow-Origin": "https://lt-menu.vercel.app",
                 "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
                 "Access-Control-Allow-Headers": "Content-Type, Authorization"
             };
 
             console.log("body", body);
-            let response = await axios.post(`${process.env.NODE_ENV == "development" ? "http://localhost:3000" : "https://www.cyberdine.in"}/api/request/fcm`, body, { headers });
+            let response = await axios.post(`${process.env.NODE_ENV == "development" ? "http://localhost:3000" : "https://lt-menu.vercel.app"}/api/request/fcm`, body, { headers });
             console.log("response.status", response.status);
 
             if (response.status! >= 200 && response.status! <= 299 && response.data) {

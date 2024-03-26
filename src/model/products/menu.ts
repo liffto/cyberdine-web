@@ -17,6 +17,18 @@ export class Menu {
     const filteredMenu = menu.filter((item:Item)=>  item.isActive&& (item.category == category || category == "All") && this.hasPreference(pref,item))
     return filteredMenu;
   }
+
+
+  getMenuList(category:string,pref:string="All"):Item[] | null{
+    if(!this.menuMap?.has(category)){
+      return null;
+    }
+    const menu = Array.from(this.menuMap?.get(category)?.values() as Iterable<Item>)
+    const filteredMenu = menu.filter((item:Item)=>  (item.category == category || category == "All") && this.hasPreference(pref,item))
+    return filteredMenu;
+  }
+
+
   hasPreference(pref:string,item:Item){
     return pref =="" || pref =="All"?true:item.foodType?.toLowerCase() == pref?.toLowerCase()
   }

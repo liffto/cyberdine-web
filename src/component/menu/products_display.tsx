@@ -1,14 +1,13 @@
 "use client";
 import { Item } from "@/model/products/items";
+import SearchIcon from '@mui/icons-material/Search';
 import CircularProgress from "@mui/material/CircularProgress";
 import { useContext, useState } from "react";
 import dynamic from "next/dynamic";
 import MenuItemCard from "./menu_item_card";
 import { MenuDataContext } from "@/context/menu.context";
-import Fab from "@mui/material/Fab";
+import Image from "next/image";
 import Link from "next/link";
-import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
-import TabGroup from "../common/tab";
 import { FcmService } from "@/service/fcm_service";
 const DescriptionSheet = dynamic(() => import("./description_sheet"), {
   ssr: false,
@@ -46,7 +45,7 @@ export default function ProductDisplay({
         'title': `Table ${table}`,
         'body': `Requesting for Captain`
       },
-      topic:topic? topic.replace(" ", ""):"",
+      topic: topic ? topic.replace(" ", "") : "",
     };
     console.log("data", data);
     setLoader(true);
@@ -62,9 +61,8 @@ export default function ProductDisplay({
   function CategoryList() {
     return (
       <div
-        className={`overflow-x-scroll md:container max-w-screen py-2 ${
-          selected != "All" ? "sticky top-[91px]" : ""
-        } bg-white border-b z-20`}
+        className={`overflow-x-scroll md:container max-w-screen py-2 ${selected != "All" ? "sticky top-[91px]" : ""
+          } bg-white border-b z-20 sticky top-[70px]`}
       >
         <div className="flex gap-4 px-4">
           {category &&
@@ -85,9 +83,8 @@ export default function ProductDisplay({
                     onClick={() => {
                       setSelected(ele);
                     }}
-                    className={`    ${
-                      selected == ele ? "text-white bg-primary" : "text-primary"
-                    } cursor-pointer rounded border whitespace-nowrap border-primary px-2 py-px text-primary`}
+                    className={`    ${selected == ele ? "text-white bg-primary" : "text-primary"
+                      } cursor-pointer rounded border whitespace-nowrap border-primary px-2 py-px text-primary`}
                   >
                     {ele}
                   </div>
@@ -102,35 +99,37 @@ export default function ProductDisplay({
     <div className="container mx-auto  ">
       {menuData ? (
         <div className="">
-          {CategoryList()}
-          <Toaster position="top-center"  />
-          <div className="flex justify-between items-center mx-4">
-            <div className="my-2 flex justify-start items-center">
-              <div className="circle pulse live"></div>
-              <div className="mx-4 font-semibold text-appbg">Live menu</div>
-            </div>
+          <div className="sticky top-0 z-20 bg-white w-full flex justify-between items-center px-4 mt-2">
+            <Link
+              href={`/rest/${restId}/search?query=&category=All`}
+              className="w-full"
+            >
+              <div className="my-2 flex justify-start items-center w-full">
+                <div className="border-2 border-gray-300 text-gray-300 rounded-md w-full py-[14px] mr-2">
+                  <SearchIcon sx={{ marginRight: "10px", marginLeft: "10px" }} />
+                  Search
+                </div>
+              </div>
+            </Link>
             {notification && (
               <div
-                className={`${wait?"bg-[#707070]":"bg-primary"}  text-white shadow px-4 rounded flex gap-1`}
+                className={`${wait ? "bg-secondary" : "bg-white"} border-2 border-primary  text-primary shadow px-6 py-1 rounded`}
                 onClick={() => {
                   wait ? null : sendFcm();
                 }}
               >
-                <div className={`${loading ? "" : "hidden"}`}>
-                  <CircularProgress
-                    size={10}
-                    sx={{
-                      color: "white",
-                      fontSize: "10px",
-                      height: "10px",
-                      width: "10px",
-                    }}
-                  />
+                <div className="font-bold text-base">
+                  {"Request"}
                 </div>
-                {loading ? "Requesting" : "Request"}
+                <div className="font-medium text-sm">{"Waiter"}</div>
               </div>
             )}
           </div>
+          {CategoryList()}
+          <div className="bg-primary my-6 mx-4 rounded-md" >
+          <Image src="/images/svg/our_special_banner.svg" alt="restarunt logo"   />
+          </div>
+          <Toaster position="top-center" />
           <div className="mb-20">
             {category &&
               (selected == "All" ? category : [selected])!.map(
@@ -138,25 +137,30 @@ export default function ProductDisplay({
                   return (
                     <div key={catIndex}>
                       {menuData &&
-                        menuData.getActiveMenuByCat(ele, preference) &&
-                        menuData.getActiveMenuByCat(ele, preference)!.length >
-                          0 && (
+                        menuData.getMenuList(ele, preference) &&
+                        menuData.getMenuList(ele, preference)!.length >
+                        0 && (
                           <>
                             {selected == "All" && (
                               <div
-                                className="sticky top-[91px] bg-white z-10"
+                                className="sticky top-[110px] bg-white z-10"
                                 id={ele}
                               >
-                                <div className="px-4 py-2 font-bold   bg-secondary text-black capitalize ">
-                                  {ele}
+                                <div className="px-4 py-2 font-bold   bg-secondary text-black capitalize flex justify-between items-center">
+                                  <div className=" ">
+                                    {ele}
+                                  </div>
+                                  <div className="pr-2">
+                                    {menuData.getMenuList(ele, preference)!.length}
+                                  </div>
                                 </div>
                               </div>
                             )}
 
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 py-4 px-4 mb-4">
-                              {menuData.getActiveMenuByCat(ele, preference) &&
+                              {menuData.getMenuList(ele, preference) &&
                                 menuData
-                                  .getActiveMenuByCat(ele, preference)!
+                                  .getMenuList(ele, preference)!
                                   .map((ele: Item, index: any) => {
                                     return (
                                       <div key={index} className="">
@@ -192,7 +196,8 @@ export default function ProductDisplay({
           selectedMenuData={selectedMenuData}
         />
       )}
-      <div className="fixed bottom-4 inset-x-4 z-10 flex items-center justify-center gap-4">
+      {/* old filter */}
+      {/* <div className="fixed bottom-4 inset-x-4 z-10 flex items-center justify-center gap-4">
         <TabGroup setPreference={setPreference} preference={preference} />
         <Link
           href={`/rest/${restId}/search?query=&category=All`}
@@ -211,7 +216,7 @@ export default function ProductDisplay({
             <SearchRoundedIcon sx={{ color: "white" }} fontSize="medium" />
           </Fab>
         </Link>
-      </div>
+      </div> */}
     </div>
   );
 }
