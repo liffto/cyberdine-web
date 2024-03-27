@@ -52,7 +52,6 @@ export default function ProductDisplay({
       },
       topic: topic ? topic.replace(" ", "") : "",
     };
-    console.log("data", data);
     setWait(true);
     await FcmService.shared.fcmTopic(data);
     notify()
@@ -106,8 +105,6 @@ export default function ProductDisplay({
       }
     }
   };
-  console.log("filterList", filterList);
-  console.log("selfilterList", selfilterList);
 
 
   useEffect(() => {
@@ -190,7 +187,7 @@ export default function ProductDisplay({
             </Link>
             {notification && (
               <div
-                className={`${wait ? "bg-secondary" : "bg-white"} border-2 border-primary  text-primary shadow w-[35%] py-1 rounded`}
+                className={`${wait ? "bg-secondary" : "bg-white"} border-2 border-primary  text-primary shadow w-[45%] py-1 rounded`}
                 onClick={() => {
                   wait ? null : sendFcm();
                 }}

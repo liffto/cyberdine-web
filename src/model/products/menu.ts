@@ -17,8 +17,19 @@ export class Menu {
       return null;
     }
     const menu = Array.from(this.menuMap?.get(category)?.values() as Iterable<Item>)
-    const filteredMenu = menu.filter((item: Item) => pref.some((each) => each == item.foodType ) )
-    return pref && pref.length > 0 ? filteredMenu : menu;
+    const filteredMenu = menu.filter((item: Item) => pref.some((each) => each == item.foodType))
+    if (pref.length == 1 && pref.includes('Our Special')) {
+      const ourSpeical = menu.filter((item: Item) => item.isSpecial == true)
+      return ourSpeical;
+
+    } else if (pref.length > 1 && pref.includes('Our Special')) {
+      const ourSpeical = filteredMenu.filter((item: Item) => item.isSpecial == true)
+      return ourSpeical && ourSpeical.length > 0 ? ourSpeical : filteredMenu;
+
+    } else {
+      return pref && pref.length > 0 ? filteredMenu : menu;
+
+    }
   }
 
   getSearchedMenuByCat(category: string, searchString: string = "",): Item[] | null {
