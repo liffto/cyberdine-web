@@ -12,20 +12,20 @@ const MenuDataContext = createContext<{
 }>({
   menuData: null,
   setMenuData: () => {},
-  category: ["All"],
+  category: [],
   setCategory: () => {},
 });
 
 function MenuDataProvider({ children }: { children: React.ReactNode }) {
   const [menuData, setMenuData] = useState<Menu | null>(null);
-  const [category, setCategory] = useState<Array<string>>(["All"]);
+  const [category, setCategory] = useState<Array<string>>([]);
   const { restId } = useParams<{ restId: string }>();
   useEffect(() => {
     if (restId && restId!="") {
       const catUnsub = FirebaseServices.shared.getRestCategory(
         restId,
         (cat: Array<string>) => {
-          setCategory(["All", ...cat]);
+          setCategory(cat);
         }
       );
       // console.log("useEffect count",restId);

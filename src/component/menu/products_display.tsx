@@ -2,13 +2,14 @@
 import { Item } from "@/model/products/items";
 import SearchIcon from '@mui/icons-material/Search';
 import CircularProgress from "@mui/material/CircularProgress";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import MenuItemCard from "./menu_item_card";
 import { MenuDataContext } from "@/context/menu.context";
 import Image from "next/image";
 import Link from "next/link";
 import { FcmService } from "@/service/fcm_service";
+import CloseIcon from '@mui/icons-material/Close';
 const DescriptionSheet = dynamic(() => import("./description_sheet"), {
   ssr: false,
 });
@@ -20,18 +21,22 @@ export default function ProductDisplay({
   restId,
   table,
   topic,
+  bgColor,
   notification,
 }: {
   restId: string;
   table: string;
   topic: string;
+  bgColor: string;
   notification: boolean;
 }) {
   const [selectedMenuData, setSelectedMenuData] = useState<Item | null>(null);
   const [selected, setSelected] = useState<string>("All");
   const [preference, setPreference] = useState<string>("All");
-  const [loading, setLoader] = useState<boolean>(false);
   const [wait, setWait] = useState<boolean>(false);
+  const [selfilterList, setSelFilterList] = useState<Array<string>>([]);
+  const [filterList, setFilterList] = useState<Array<string>>([]);
+  const [isCircle, setIsCircle] = useState<boolean>(true);
 
   const { menuData, category } = useContext(MenuDataContext);
 
@@ -48,48 +53,113 @@ export default function ProductDisplay({
       topic: topic ? topic.replace(" ", "") : "",
     };
     console.log("data", data);
-    setLoader(true);
     setWait(true);
     await FcmService.shared.fcmTopic(data);
-    setLoader(false);
     notify()
     setTimeout(() => {
       setWait(false);
     }, 1000 * 60);
   };
 
+  const handleCatClick = (cat: string, isFromSelected: boolean) => {
+    if (isFromSelected) {
+      if (cat === 'Our Special') {
+        if (!selfilterList.includes('Our Special')) {
+          setSelFilterList(prevCats => [...prevCats, cat]);
+          setFilterList(prevSelectedCats => prevSelectedCats.filter(selectedCat => selectedCat !== cat));
+        } else {
+          setSelFilterList(prevSelectedCats => prevSelectedCats.filter(selectedCat => selectedCat !== cat));
+        }
+      } else {
+        if (selfilterList.includes('Veg') && (cat === 'Non Veg' || cat === 'Egg')) {
+          setSelFilterList(prevCats => [...prevCats, cat]);
+          setSelFilterList(prevSelectedCats => prevSelectedCats.filter(selectedCat => selectedCat !== "Veg"));
+          setFilterList(prevSelectedCats => prevSelectedCats.filter(selectedCat => selectedCat !== cat));
+          setFilterList(prevCats => [...prevCats, "Veg"]);
+        } else if ((selfilterList.includes('Non Veg') || selfilterList.includes('Egg')) && (cat === 'Veg')) {
+          setSelFilterList(prevCats => [...prevCats, cat]);
+          setSelFilterList(prevSelectedCats => prevSelectedCats.filter(selectedCat => selectedCat !== "Non Veg" && selectedCat !== "Egg"));
+          setFilterList(prevSelectedCats => prevSelectedCats.filter(selectedCat => selectedCat !== cat));
+          if (selfilterList.includes('Non Veg') && selfilterList.includes('Egg')) {
+            setFilterList(prevCats => [...prevCats, ...["Non Veg", "Egg"]]);
+          }else if (selfilterList.includes('Egg')) {
+            setFilterList(prevCats => [...prevCats, "Egg"]);
+          } else {
+            setFilterList(prevCats => [...prevCats, "Non Veg"]);
+          }
+        } else {
+          setSelFilterList(prevCats => [...prevCats, cat]);
+          setFilterList(prevSelectedCats => prevSelectedCats.filter(selectedCat => selectedCat !== cat));
+        }
+      }
+    } else {
+      if (cat === 'Our Special') {
+        setFilterList(prevSelectedCats => [...prevSelectedCats, cat]);
+        setSelFilterList(prevSelectedCats => prevSelectedCats.filter(selectedCat => selectedCat !== cat));
+      } else {
+        if (selfilterList.includes('Veg') && (cat === 'Non Veg' || cat === 'Egg')) {
+          setFilterList([]);
+        } else {
+          setFilterList(prevSelectedCats => [...prevSelectedCats, cat]);
+        }
+        setSelFilterList(prevCats => prevCats.filter(prevCat => prevCat !== cat));
+      }
+    }
+  };
+  console.log("filterList", filterList);
+  console.log("selfilterList", selfilterList);
+
+
+  useEffect(() => {
+    const cat = ['Veg', 'Egg', 'Non Veg', 'Our Special'];
+    setFilterList(cat);
+  }, [])
+
   function CategoryList() {
     return (
       <div
-        className={`overflow-x-scroll md:container max-w-screen py-2 ${selected != "All" ? "sticky top-[91px]" : ""
-          } bg-white border-b z-20 sticky top-[70px]`}
+        className={`overflow-x-scroll md:container max-w-screen py-2 bg-white z-20 sticky top-[62px]`}
       >
         <div className="flex gap-4 px-4">
-          {category &&
-            category!
-              .filter(
-                (cat) =>
-                  (menuData &&
-                    menuData.getActiveMenuByCat(cat, preference) &&
-                    menuData
-                      .getActiveMenuByCat(cat, preference)
-                      ?.some((ele) => ele.category == cat)) ||
-                  cat == "All"
-              )
-              .map((ele, index) => {
-                return (
-                  <div
-                    key={index}
-                    onClick={() => {
-                      setSelected(ele);
-                    }}
-                    className={`    ${selected == ele ? "text-white bg-primary" : "text-primary"
-                      } cursor-pointer rounded border whitespace-nowrap border-primary px-2 py-px text-primary`}
-                  >
-                    {ele}
+          {selfilterList!
+            .map((ele, index) => {
+              return (
+                <div
+                  key={index}
+                  onClick={() => {
+                    handleCatClick(ele, false)
+                  }}
+                  className={`cursor-pointer rounded border whitespace-nowrap border-primary px-2 py-px text-gray-600`}
+                >
+                  <div className="flex justify-center items-center gap-2">
+                    <div className="w-3 h-3">
+                      <Image src={ele == "Veg" ? "/images/svg/veg_icon.svg" : ele == "Non Veg" ? "/images/svg/non_veg_icon.svg" : ele == "Egg" ? "/images/svg/egg_icon.svg" : "/images/svg/our_special_icon.svg"} alt={ele} width={14} height={14} />
+                    </div>
+                    <div className="">{ele}</div>
+                    <div className="rounded-full border border-primary text-primary w-4 h-4 flex justify-center items-center"><CloseIcon sx={{ fontSize: "10px" }} /></div>
                   </div>
-                );
-              })}
+                </div>
+              );
+            })}
+          {filterList!
+            .map((ele, index) => {
+              return (
+                <div
+                  key={index}
+                  onClick={() => {
+                    handleCatClick(ele, true)
+                  }}
+                  className={`cursor-pointer rounded border whitespace-nowrap border-gray-400 px-2 py-px text-gray-600`}
+                >
+                  <div className="flex justify-center items-center gap-2">
+                    <div className="w-3 h-3">
+                      <Image src={ele == "Veg" ? "/images/svg/veg_icon.svg" : ele == "Non Veg" ? "/images/svg/non_veg_icon.svg" : ele == "Egg" ? "/images/svg/egg_icon.svg" : "/images/svg/our_special_icon.svg"} alt={ele} width={14} height={14} />
+                    </div>
+                    <div className="">{ele}</div>
+                  </div>
+                </div>
+              );
+            })}
         </div>
       </div>
     );
@@ -97,11 +167,11 @@ export default function ProductDisplay({
   const handleItemClick = (index: any) => {
     const element = document.getElementById(`${index}`);
     if (element) {
-        element.scrollIntoView({ behavior: 'smooth',block:"start" });
+      element.scrollIntoView({ behavior: 'smooth', block: "start" });
     }
-};
-  const [isCircle, setIsCircle] = useState(true);
-  const menuItems = ["Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 6", "Item 7", "Item 8", "Item 9",];
+  };
+
+
   return (
     <div className="container mx-auto  ">
       {menuData ? (
@@ -112,7 +182,7 @@ export default function ProductDisplay({
               className="w-full"
             >
               <div className="my-2 flex justify-start items-center w-full">
-                <div className="border-2 border-gray-300 text-gray-300 rounded-md w-full py-[14px] mr-2">
+                <div className="border-2 border-gray-300 text-gray-300 rounded-md w-full py-[10px] mr-2">
                   <SearchIcon sx={{ marginRight: "10px", marginLeft: "10px" }} />
                   Search
                 </div>
@@ -120,73 +190,86 @@ export default function ProductDisplay({
             </Link>
             {notification && (
               <div
-                className={`${wait ? "bg-secondary" : "bg-white"} border-2 border-primary  text-primary shadow px-6 py-1 rounded`}
+                className={`${wait ? "bg-secondary" : "bg-white"} border-2 border-primary  text-primary shadow w-[35%] py-1 rounded`}
                 onClick={() => {
                   wait ? null : sendFcm();
                 }}
               >
-                <div className="font-bold text-base">
-                  {"Request"}
+                <div className="flex justify-center items-center">
+                  <div className="">
+                    <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M11.5781 6.10578V5.86245C11.5745 5.68408 11.502 5.51403 11.3759 5.38791C11.2497 5.2618 11.0796 5.18941 10.9012 5.18591H8.5988C8.42043 5.18941 8.25033 5.2618 8.12414 5.38791C7.99796 5.51403 7.92547 5.68408 7.92188 5.86245V6.10578C9.13096 5.88872 10.369 5.88872 11.5781 6.10578ZM9.14062 3.61719V4.52966H10.3594V3.61719C9.96197 3.73706 9.53803 3.73706 9.14062 3.61719Z" fill={bgColor} />
+                      <path d="M9.7515 3.04988C10.5937 3.04988 11.2764 2.36714 11.2764 1.52494C11.2764 0.682738 10.5937 0 9.7515 0C8.9093 0 8.22656 0.682738 8.22656 1.52494C8.22656 2.36714 8.9093 3.04988 9.7515 3.04988Z" fill={bgColor} />
+                      <path d="M15.8546 8.93428C14.7272 7.8947 13.3461 7.17017 11.85 6.83348C11.8296 6.83098 11.8095 6.82655 11.7899 6.82027C10.4479 6.52361 9.05738 6.52345 7.71534 6.8198C7.69576 6.82589 7.67564 6.8301 7.65525 6.83236C6.15907 7.16949 4.77796 7.89442 3.65067 8.93433C2.11612 10.3583 1.23581 12.2159 1.14844 14.2315H18.3568C18.2694 12.2159 17.3891 10.3583 15.8546 8.93428Z" fill={bgColor} />
+                      <path d="M16.6875 16.7168H2.8125V18.3105H16.6875V16.7168Z" fill={bgColor} />
+                      <path d="M19.5 14.8887H0V16.0605H19.5V14.8887Z" fill={bgColor} />
+                      <path d="M19.5 18.9668H0V20.1387H19.5V18.9668Z" fill={bgColor} />
+                    </svg>
+                  </div>
+                  <div className="ml-2">
+                    <div className="font-bold text-sm">
+                      {"Request"}
+                    </div>
+                    <div className="font-medium text-xs">{"Waiter"}</div>
+                  </div>
                 </div>
-                <div className="font-medium text-sm">{"Waiter"}</div>
               </div>
             )}
           </div>
           {CategoryList()}
-          <div className="bg-primary my-6 mx-4 rounded-md" >
-          <Image src="/images/png/our_special_banner.png" alt="restarunt logo" width="443" height="123" priority={true}  />
+          <div className="bg-primary my-2 mx-4 rounded-md" >
+            <Image src="/images/svg/our_special_banner.svg" alt="restarunt logo" width="443" height="123" priority={true} />
           </div>
           <Toaster position="top-center" />
           <div className="mb-20">
-            {category &&
-              (selected == "All" ? category : [selected])!.map(
-                (ele, catIndex) => {
-                  return (
-                    <div key={catIndex}>
-                      {menuData &&
-                        menuData.getMenuList(ele, preference) &&
-                        menuData.getMenuList(ele, preference)!.length >
-                        0 && (
-                          <>
-                            {selected == "All" && (
-                              <div
-                                className="sticky top-[110px] bg-white z-10"
-                                id={ele}
-                              >
-                                <div className="px-4 py-2 font-bold   bg-secondary text-black capitalize flex justify-between items-center">
-                                  <div className=" ">
-                                    {ele}
-                                  </div>
-                                  <div className="pr-2">
-                                    {menuData.getMenuList(ele, preference)!.length}
-                                  </div>
+            {category && category!.map(
+              (ele, catIndex) => {
+                return (
+                  <div key={catIndex}>
+                    {menuData &&
+                      menuData.getMenuList(ele, selfilterList) &&
+                      menuData.getMenuList(ele, selfilterList)!.length >
+                      0 && (
+                        <>
+                          {selected == "All" && (
+                            <div
+                              className="sticky top-[110px] bg-white z-10"
+                              id={ele}
+                            >
+                              <div className="px-4 py-2 font-bold   bg-secondary text-black capitalize flex justify-between items-center">
+                                <div className=" ">
+                                  {ele}
+                                </div>
+                                <div className="pr-2">
+                                  {menuData.getMenuList(ele, selfilterList)!.length}
                                 </div>
                               </div>
-                            )}
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 py-4 px-4 mb-4">
-                              {menuData.getMenuList(ele, preference) &&
-                                menuData
-                                  .getMenuList(ele, preference)!
-                                  .map((ele: Item, index: any) => {
-                                    return (
-                                      <div key={index} className="">
-                                        <MenuItemCard
-                                          index={index}
-                                          setSelectedData={setSelectedData}
-                                          ele={ele}
-                                          catIndex={catIndex}
-                                        />
-                                      </div>
-                                    );
-                                  })}
                             </div>
-                          </>
-                        )}
-                    </div>
-                  );
-                }
-              )}
+                          )}
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 py-4 px-4 mb-4">
+                            {menuData.getMenuList(ele, selfilterList) &&
+                              menuData
+                                .getMenuList(ele, selfilterList)!
+                                .map((ele: Item, index: any) => {
+                                  return (
+                                    <div key={index} className="">
+                                      <MenuItemCard
+                                        index={index}
+                                        setSelectedData={setSelectedData}
+                                        ele={ele}
+                                        catIndex={catIndex}
+                                      />
+                                    </div>
+                                  );
+                                })}
+                          </div>
+                        </>
+                      )}
+                  </div>
+                );
+              }
+            )}
           </div>
         </div>
       ) : (
@@ -200,27 +283,31 @@ export default function ProductDisplay({
       {selectedMenuData && (
         <DescriptionSheet
           setSelectedMenuData={setSelectedMenuData}
-          selectedMenuData={selectedMenuData}
-        />
+          selectedMenuData={selectedMenuData} bgColor={bgColor} />
       )}
-       <div className="">
-            <div
-                className={`category_shape fixed z-10 bottom-12 right-8 ${isCircle ? "circle" : "rectangle"}`}
-                onClick={() => setIsCircle(!isCircle)}
-            >
-                {isCircle ? (
-                    <div className="category_text">test</div>
-                ) : (
-                    <div className="category_text">
-                        <ul className="">
-                            {category.map((item, index) => (
-                                <li onClick={() => handleItemClick(item)} className="pb-2 cursor-pointer" key={index}>{item}</li>
-                            ))}
-                        </ul>
-                    </div>
-                )}
+      <div className="">
+        <div
+          className={`category_shape fixed z-10 bottom-8 right-8 ${isCircle ? "circle" : "rectangle"}`}
+          onClick={() => setIsCircle(!isCircle)}
+        >
+          {isCircle ? (
+            <div className="category_text text-center flex justify-center items-center flex-col">
+              <div className="">
+                <Image src="/images/png/menu_icon.png" alt="menu icon" width="12" height="12" priority={true} />
+              </div>
+              <div className="p-1 text-sm">Menu</div>
             </div>
+          ) : (
+            <div className="category_text">
+              <ul className="">
+                {category.map((item, index) => (
+                  <li onClick={() => handleItemClick(item)} className="pb-2 cursor-pointer capitalize text-lg font-medium" key={index}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
+      </div>
       {/* old filter */}
       {/* <div className="fixed bottom-4 inset-x-4 z-10 flex items-center justify-center gap-4">
         <TabGroup setPreference={setPreference} preference={preference} />

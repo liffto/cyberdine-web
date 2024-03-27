@@ -8,7 +8,8 @@ import { getDatabase } from "firebase/database";
  const firebaseConfig = {
   apiKey: process.env.API_KEY,
   authDomain: process.env.AUTH_DOMAIN,
-  databaseURL: process.env.NODE_ENV === "development"?'https://lt-menu-c2fff-default-rtdb.firebaseio.com':'https://cyberdine-aeeb1-default-rtdb.firebaseio.com',
+  // databaseURL: process.env.NODE_ENV === "development"?'https://lt-menu-c2fff-default-rtdb.firebaseio.com':'https://cyberdine-aeeb1-default-rtdb.firebaseio.com',
+  databaseURL: 'https://lt-menu-c2fff-default-rtdb.firebaseio.com',
   projectId: process.env.PROJECT_ID,
   storageBucket: process.env.STORAGE_BUCKET,
   messagingSenderId: process.env.MESSAGING_SENDER_ID,
