@@ -1,15 +1,16 @@
 "use client";
-import FilterDrawer from "@/component/search/filter";
 import { MenuDataContext } from "@/context/menu.context";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import { useContext, useState } from "react";
-import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
+import { useContext, useEffect, useState } from "react";
 import CancelIcon from "@mui/icons-material/Cancel";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { Item } from "@/model/products/items";
 import MenuItemCard from "../menu/menu_item_card";
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import SearchIcon from '@mui/icons-material/Search';
+import Image from "next/image";
+import CloseIcon from '@mui/icons-material/Close';
 
 export default function SearchComponent() {
   const { menuData, category } = useContext(MenuDataContext);
@@ -18,6 +19,8 @@ export default function SearchComponent() {
   const { replace, back } = useRouter();
   const [filter, setFilter] = useState(false);
   const [query, setQuery] = useState("");
+  const [selfilterList, setSelFilterList] = useState<Array<string>>([]);
+  const [filterList, setFilterList] = useState<Array<string>>([]);
 
   function handleCat(term: string) {
     const params = new URLSearchParams(searchParams);
@@ -28,37 +31,79 @@ export default function SearchComponent() {
     }
     replace(`${pathname}?${params.toString()}`);
   }
+
+  const handleCatClick = (cat: string, isFromSelected: boolean) => {
+    if (isFromSelected) {
+      if (cat === 'Our Special') {
+        if (!selfilterList.includes('Our Special')) {
+          setSelFilterList(prevCats => [...prevCats, cat]);
+          setFilterList(prevSelectedCats => prevSelectedCats.filter(selectedCat => selectedCat !== cat));
+        } else {
+          setSelFilterList(prevSelectedCats => prevSelectedCats.filter(selectedCat => selectedCat !== cat));
+        }
+      } else {
+        if (selfilterList.includes('Veg') && (cat === 'Non Veg' || cat === 'Egg')) {
+          setSelFilterList(prevCats => [...prevCats, cat]);
+          setSelFilterList(prevSelectedCats => prevSelectedCats.filter(selectedCat => selectedCat !== "Veg"));
+          setFilterList(prevSelectedCats => prevSelectedCats.filter(selectedCat => selectedCat !== cat));
+          setFilterList(prevCats => [...prevCats, "Veg"]);
+        } else if ((selfilterList.includes('Non Veg') || selfilterList.includes('Egg')) && (cat === 'Veg')) {
+          setSelFilterList(prevCats => [...prevCats, cat]);
+          setSelFilterList(prevSelectedCats => prevSelectedCats.filter(selectedCat => selectedCat !== "Non Veg" && selectedCat !== "Egg"));
+          setFilterList(prevSelectedCats => prevSelectedCats.filter(selectedCat => selectedCat !== cat));
+          if (selfilterList.includes('Non Veg') && selfilterList.includes('Egg')) {
+            setFilterList(prevCats => [...prevCats, ...["Non Veg", "Egg"]]);
+          } else if (selfilterList.includes('Egg')) {
+            setFilterList(prevCats => [...prevCats, "Egg"]);
+          } else {
+            setFilterList(prevCats => [...prevCats, "Non Veg"]);
+          }
+        } else {
+          setSelFilterList(prevCats => [...prevCats, cat]);
+          setFilterList(prevSelectedCats => prevSelectedCats.filter(selectedCat => selectedCat !== cat));
+        }
+      }
+    } else {
+      if (cat === 'Our Special') {
+        setFilterList(prevSelectedCats => [...prevSelectedCats, cat]);
+        setSelFilterList(prevSelectedCats => prevSelectedCats.filter(selectedCat => selectedCat !== cat));
+      } else {
+        if (selfilterList.includes('Veg') && (cat === 'Non Veg' || cat === 'Egg')) {
+          setFilterList([]);
+        } else {
+          setFilterList(prevSelectedCats => [...prevSelectedCats, cat]);
+        }
+        setSelFilterList(prevCats => prevCats.filter(prevCat => prevCat !== cat));
+      }
+    }
+  };
+
+
   function TopBar() {
     return (
-      <div className="sticky top-0 shadow bg-white z-40">
-        <div className="px-4 md:container pb-2">
-          <div className="flex gap-2 items-center pt-4 pb-2">
-            {/* <ArrowCircleLeftIcon
-              onClick={() => {
-                back();
-              }}
-              fontSize="large"
-              sx={{ color: "var(--primary-bg)" }}
-            /> */}
-            <div className="rounded-full overflow-hidden p-2 aspect-square flex items-center cursor-pointer"  style={{ background: "var(--primary-bg)" }}>
-              <KeyboardBackspaceIcon
-                onClick={() => {
-                  back();
-                }}
-                fontSize="small"
-                sx={{ color: "white" }}
-              />
-            </div>
-            <h2 className="text-xl md:text-2xl font-bold">Search</h2>
-          </div>
+      <div className="sticky top-0 bg-white z-40">
+        <div className="px-4 md:container py-2">
           <TextField
-            placeholder="Search your favorite dish"
+            placeholder="Search"
             fullWidth
             value={query ?? ""}
             onChange={(ele) => {
               setQuery(ele.target.value ?? "");
             }}
             InputProps={{
+              startAdornment: (
+                <InputAdornment
+                  onClick={() => {
+                    back();
+                  }}
+                  position="end"
+                  className="cursor-pointer"
+                >
+                  <div className="">
+                    <ArrowBackIosIcon sx={{ color: "black" }} />
+                  </div>
+                </InputAdornment>
+              ),
               endAdornment: (
                 <InputAdornment
                   onClick={() => {
@@ -68,7 +113,7 @@ export default function SearchComponent() {
                   className="cursor-pointer"
                 >
                   <div className="">
-                    <FilterAltIcon sx={{ color: "var(--primary-bg)" }} />
+                    <SearchIcon sx={{ color: "black" }} />
                   </div>
                 </InputAdornment>
               ),
@@ -86,27 +131,93 @@ export default function SearchComponent() {
       </div>
     );
   }
+
+  function CategoryList() {
+    return (
+      <div
+        className={`overflow-x-scroll md:container max-w-screen py-2 bg-white z-20 sticky top-[62px]`}
+      >
+        <div className="flex gap-4 px-4">
+          {selfilterList!
+            .map((ele, index) => {
+              return (
+                <div
+                  key={index}
+                  onClick={() => {
+                    handleCatClick(ele, false)
+                  }}
+                  className={`cursor-pointer rounded border whitespace-nowrap border-primary px-2 py-px text-gray-600`}
+                >
+                  <div className="flex justify-center items-center gap-2">
+                    <div className="w-3 h-3">
+                      <Image src={ele == "Veg" ? "/images/svg/veg_icon.svg" : ele == "Non Veg" ? "/images/svg/non_veg_icon.svg" : ele == "Egg" ? "/images/svg/egg_icon.svg" : "/images/svg/our_special_icon.svg"} alt={ele} width={14} height={14} />
+                    </div>
+                    <div className="">{ele}</div>
+                    <div className="rounded-full border border-primary text-primary w-4 h-4 flex justify-center items-center"><CloseIcon sx={{ fontSize: "10px" }} /></div>
+                  </div>
+                </div>
+              );
+            })}
+          {filterList!
+            .map((ele, index) => {
+              return (
+                <div
+                  key={index}
+                  onClick={() => {
+                    handleCatClick(ele, true)
+                  }}
+                  className={`cursor-pointer rounded border whitespace-nowrap border-gray-400 px-2 py-px text-gray-600`}
+                >
+                  <div className="flex justify-center items-center gap-2">
+                    <div className="w-3 h-3">
+                      <Image src={ele == "Veg" ? "/images/svg/veg_icon.svg" : ele == "Non Veg" ? "/images/svg/non_veg_icon.svg" : ele == "Egg" ? "/images/svg/egg_icon.svg" : "/images/svg/our_special_icon.svg"} alt={ele} width={14} height={14} />
+                    </div>
+                    <div className="">{ele}</div>
+                  </div>
+                </div>
+              );
+            })}
+        </div>
+      </div>
+    );
+  }
+
+  useEffect(() => {
+    const cat = ['Veg', 'Egg', 'Non Veg', 'Our Special'];
+    setFilterList(cat);
+  }, [])
+
   return (
     <div className="">
       {TopBar()}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 py-4 px-4 ">
-        {menuData
-          ?.getSearchedMenuByCat(searchParams.get("category")!, query ?? "")
-          ?.map((item: Item, index: number) => {
-            return (
-              <div className="" key={index}>
-                <MenuItemCard index={index} ele={item} />
-              </div>
-            );
-          })}
+      {CategoryList()}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 py-4 ">
+
+        {menuData && menuData
+          ?.getSearchedMenu(query ?? "",selfilterList) &&
+          menuData
+            ?.getSearchedMenu(query ?? "",selfilterList)
+            ?.map((item: Item, index: number) => {
+              return (
+                <div className="" key={index}>
+                  <div
+                    className="sticky top-[102px] bg-white z-10 pb-3"
+                  >
+                    <div className="px-4 py-2 font-bold   bg-secondary text-black capitalize flex justify-between items-center">
+                      <div className=" ">
+                        {item.category}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="px-4">
+                    {<MenuItemCard index={index} ele={item} />}
+                  </div>
+                </div>
+              );
+            })
+        }
+
       </div>
-      <FilterDrawer
-        categories={category}
-        selectedCategory={searchParams.get("category") ?? "All"}
-        setSelectedCategory={handleCat}
-        isOpen={filter}
-        toggleDrawer={setFilter}
-      />
     </div>
   );
 }

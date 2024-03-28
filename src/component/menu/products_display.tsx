@@ -31,8 +31,6 @@ export default function ProductDisplay({
   notification: boolean;
 }) {
   const [selectedMenuData, setSelectedMenuData] = useState<Item | null>(null);
-  const [selected, setSelected] = useState<string>("All");
-  const [preference, setPreference] = useState<string>("All");
   const [wait, setWait] = useState<boolean>(false);
   const [selfilterList, setSelFilterList] = useState<Array<string>>([]);
   const [filterList, setFilterList] = useState<Array<string>>([]);
@@ -228,9 +226,9 @@ export default function ProductDisplay({
                       menuData.getMenuList(ele, selfilterList)!.length >
                       0 && (
                         <>
-                          {selected == "All" && (
+                          {(
                             <div
-                              className="sticky top-[110px] bg-white z-10"
+                              className="sticky top-[102px] bg-white z-10"
                               id={ele}
                             >
                               <div className="px-4 py-2 font-bold   bg-secondary text-black capitalize flex justify-between items-center">
