@@ -7,10 +7,10 @@ import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import { Item } from "@/model/products/items";
 import MenuItemCard from "../menu/menu_item_card";
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import SearchIcon from '@mui/icons-material/Search';
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import SearchIcon from "@mui/icons-material/Search";
 import Image from "next/image";
-import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function SearchComponent() {
   const { menuData, category } = useContext(MenuDataContext);
@@ -34,50 +34,83 @@ export default function SearchComponent() {
 
   const handleCatClick = (cat: string, isFromSelected: boolean) => {
     if (isFromSelected) {
-      if (cat === 'Our Special') {
-        if (!selfilterList.includes('Our Special')) {
-          setSelFilterList(prevCats => [...prevCats, cat]);
-          setFilterList(prevSelectedCats => prevSelectedCats.filter(selectedCat => selectedCat !== cat));
+      if (cat === "Our Special") {
+        if (!selfilterList.includes("Our Special")) {
+          setSelFilterList((prevCats) => [...prevCats, cat]);
+          setFilterList((prevSelectedCats) =>
+            prevSelectedCats.filter((selectedCat) => selectedCat !== cat)
+          );
         } else {
-          setSelFilterList(prevSelectedCats => prevSelectedCats.filter(selectedCat => selectedCat !== cat));
+          setSelFilterList((prevSelectedCats) =>
+            prevSelectedCats.filter((selectedCat) => selectedCat !== cat)
+          );
         }
       } else {
-        if (selfilterList.includes('Veg') && (cat === 'Non Veg' || cat === 'Egg')) {
-          setSelFilterList(prevCats => [...prevCats, cat]);
-          setSelFilterList(prevSelectedCats => prevSelectedCats.filter(selectedCat => selectedCat !== "Veg"));
-          setFilterList(prevSelectedCats => prevSelectedCats.filter(selectedCat => selectedCat !== cat));
-          setFilterList(prevCats => [...prevCats, "Veg"]);
-        } else if ((selfilterList.includes('Non Veg') || selfilterList.includes('Egg')) && (cat === 'Veg')) {
-          setSelFilterList(prevCats => [...prevCats, cat]);
-          setSelFilterList(prevSelectedCats => prevSelectedCats.filter(selectedCat => selectedCat !== "Non Veg" && selectedCat !== "Egg"));
-          setFilterList(prevSelectedCats => prevSelectedCats.filter(selectedCat => selectedCat !== cat));
-          if (selfilterList.includes('Non Veg') && selfilterList.includes('Egg')) {
-            setFilterList(prevCats => [...prevCats, ...["Non Veg", "Egg"]]);
-          } else if (selfilterList.includes('Egg')) {
-            setFilterList(prevCats => [...prevCats, "Egg"]);
+        if (
+          selfilterList.includes("Veg") &&
+          (cat === "Non Veg" || cat === "Egg")
+        ) {
+          setSelFilterList((prevCats) => [...prevCats, cat]);
+          setSelFilterList((prevSelectedCats) =>
+            prevSelectedCats.filter((selectedCat) => selectedCat !== "Veg")
+          );
+          setFilterList((prevSelectedCats) =>
+            prevSelectedCats.filter((selectedCat) => selectedCat !== cat)
+          );
+          setFilterList((prevCats) => [...prevCats, "Veg"]);
+        } else if (
+          (selfilterList.includes("Non Veg") ||
+            selfilterList.includes("Egg")) &&
+          cat === "Veg"
+        ) {
+          setSelFilterList((prevCats) => [...prevCats, cat]);
+          setSelFilterList((prevSelectedCats) =>
+            prevSelectedCats.filter(
+              (selectedCat) =>
+                selectedCat !== "Non Veg" && selectedCat !== "Egg"
+            )
+          );
+          setFilterList((prevSelectedCats) =>
+            prevSelectedCats.filter((selectedCat) => selectedCat !== cat)
+          );
+          if (
+            selfilterList.includes("Non Veg") &&
+            selfilterList.includes("Egg")
+          ) {
+            setFilterList((prevCats) => [...prevCats, ...["Non Veg", "Egg"]]);
+          } else if (selfilterList.includes("Egg")) {
+            setFilterList((prevCats) => [...prevCats, "Egg"]);
           } else {
-            setFilterList(prevCats => [...prevCats, "Non Veg"]);
+            setFilterList((prevCats) => [...prevCats, "Non Veg"]);
           }
         } else {
-          setSelFilterList(prevCats => [...prevCats, cat]);
-          setFilterList(prevSelectedCats => prevSelectedCats.filter(selectedCat => selectedCat !== cat));
+          setSelFilterList((prevCats) => [...prevCats, cat]);
+          setFilterList((prevSelectedCats) =>
+            prevSelectedCats.filter((selectedCat) => selectedCat !== cat)
+          );
         }
       }
     } else {
-      if (cat === 'Our Special') {
-        setFilterList(prevSelectedCats => [...prevSelectedCats, cat]);
-        setSelFilterList(prevSelectedCats => prevSelectedCats.filter(selectedCat => selectedCat !== cat));
+      if (cat === "Our Special") {
+        setFilterList((prevSelectedCats) => [...prevSelectedCats, cat]);
+        setSelFilterList((prevSelectedCats) =>
+          prevSelectedCats.filter((selectedCat) => selectedCat !== cat)
+        );
       } else {
-        if (selfilterList.includes('Veg') && (cat === 'Non Veg' || cat === 'Egg')) {
+        if (
+          selfilterList.includes("Veg") &&
+          (cat === "Non Veg" || cat === "Egg")
+        ) {
           setFilterList([]);
         } else {
-          setFilterList(prevSelectedCats => [...prevSelectedCats, cat]);
+          setFilterList((prevSelectedCats) => [...prevSelectedCats, cat]);
         }
-        setSelFilterList(prevCats => prevCats.filter(prevCat => prevCat !== cat));
+        setSelFilterList((prevCats) =>
+          prevCats.filter((prevCat) => prevCat !== cat)
+        );
       }
     }
   };
-
 
   function TopBar() {
     return (
@@ -135,88 +168,115 @@ export default function SearchComponent() {
   function CategoryList() {
     return (
       <div
-        className={`overflow-x-scroll md:container max-w-screen py-2 bg-white z-20 sticky top-[62px]`}
+        className={`overflow-x-scroll md:container max-w-screen py-2 bg-white z-20 sticky top-[72px]`}
       >
         <div className="flex gap-4 px-4">
-          {selfilterList!
-            .map((ele, index) => {
-              return (
-                <div
-                  key={index}
-                  onClick={() => {
-                    handleCatClick(ele, false)
-                  }}
-                  className={`cursor-pointer rounded border whitespace-nowrap border-primary px-2 py-px text-gray-600`}
-                >
-                  <div className="flex justify-center items-center gap-2">
-                    <div className="w-3 h-3">
-                      <Image src={ele == "Veg" ? "/images/svg/veg_icon.svg" : ele == "Non Veg" ? "/images/svg/non_veg_icon.svg" : ele == "Egg" ? "/images/svg/egg_icon.svg" : "/images/svg/our_special_icon.svg"} alt={ele} width={14} height={14} />
-                    </div>
-                    <div className="">{ele}</div>
-                    <div className="rounded-full border border-primary text-primary w-4 h-4 flex justify-center items-center"><CloseIcon sx={{ fontSize: "10px" }} /></div>
+          {selfilterList!.map((ele, index) => {
+            return (
+              <div
+                key={index}
+                onClick={() => {
+                  handleCatClick(ele, false);
+                }}
+                className={`cursor-pointer rounded border whitespace-nowrap border-primary px-2 py-px text-gray-600`}
+              >
+                <div className="flex justify-center items-center gap-2">
+                  <div className="w-3 h-3">
+                    <Image
+                      src={
+                        ele == "Veg"
+                          ? "/images/svg/veg_icon.svg"
+                          : ele == "Non Veg"
+                          ? "/images/svg/non_veg_icon.svg"
+                          : ele == "Egg"
+                          ? "/images/svg/egg_icon.svg"
+                          : "/images/svg/our_special_icon.svg"
+                      }
+                      alt={ele}
+                      width={14}
+                      height={14}
+                    />
+                  </div>
+                  <div className="">{ele}</div>
+                  <div className="rounded-full border border-primary text-primary w-4 h-4 flex justify-center items-center">
+                    <CloseIcon sx={{ fontSize: "10px" }} />
                   </div>
                 </div>
-              );
-            })}
-          {filterList!
-            .map((ele, index) => {
-              return (
-                <div
-                  key={index}
-                  onClick={() => {
-                    handleCatClick(ele, true)
-                  }}
-                  className={`cursor-pointer rounded border whitespace-nowrap border-gray-400 px-2 py-px text-gray-600`}
-                >
-                  <div className="flex justify-center items-center gap-2">
-                    <div className="w-3 h-3">
-                      <Image src={ele == "Veg" ? "/images/svg/veg_icon.svg" : ele == "Non Veg" ? "/images/svg/non_veg_icon.svg" : ele == "Egg" ? "/images/svg/egg_icon.svg" : "/images/svg/our_special_icon.svg"} alt={ele} width={14} height={14} />
-                    </div>
-                    <div className="">{ele}</div>
+              </div>
+            );
+          })}
+          {filterList!.map((ele, index) => {
+            return (
+              <div
+                key={index}
+                onClick={() => {
+                  handleCatClick(ele, true);
+                }}
+                className={`cursor-pointer rounded border whitespace-nowrap border-gray-400 px-2 py-px text-gray-600`}
+              >
+                <div className="flex justify-center items-center gap-2">
+                  <div className="w-3 h-3">
+                    <Image
+                      src={
+                        ele == "Veg"
+                          ? "/images/svg/veg_icon.svg"
+                          : ele == "Non Veg"
+                          ? "/images/svg/non_veg_icon.svg"
+                          : ele == "Egg"
+                          ? "/images/svg/egg_icon.svg"
+                          : "/images/svg/our_special_icon.svg"
+                      }
+                      alt={ele}
+                      width={14}
+                      height={14}
+                    />
                   </div>
+                  <div className="">{ele}</div>
                 </div>
-              );
-            })}
+              </div>
+            );
+          })}
         </div>
       </div>
     );
   }
 
   useEffect(() => {
-    const cat = ['Veg', 'Egg', 'Non Veg', 'Our Special'];
+    const cat = ["Veg", "Egg", "Non Veg", "Our Special"];
     setFilterList(cat);
-  }, [])
+  }, []);
 
   return (
     <div className="">
       {TopBar()}
       {CategoryList()}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 py-4 ">
-
-        {menuData && menuData
-          ?.getSearchedMenu(query ?? "",selfilterList) &&
-          menuData
-            ?.getSearchedMenu(query ?? "",selfilterList)
-            ?.map((item: Item, index: number) => {
-              return (
+        {menuData &&
+          menuData.getSearchedMenu(query, selfilterList) &&
+          Array.from(
+            menuData.getSearchedMenu(query, selfilterList)!.entries()
+          ).map((value, index) => {
+            return (
+              <div className="">
                 <div className="" key={index}>
-                  <div
-                    className="sticky top-[102px] bg-white z-10 pb-3"
-                  >
+                  <div className="sticky top-[115px] bg-white z-10 pb-3">
                     <div className="px-4 py-2 font-bold   bg-secondary text-black capitalize flex justify-between items-center">
-                      <div className=" ">
-                        {item.category}
-                      </div>
+                      <div className=" ">{value[0]}</div>
                     </div>
                   </div>
                   <div className="px-4">
-                    {<MenuItemCard index={index} ele={item} />}
+                    {value[1].map((item) => {
+                      return (
+                        <div className="pb-2">
+                          <MenuItemCard index={index} ele={item} />
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
-              );
-            })
-        }
-
+              </div>
+            );
+          })}
       </div>
     </div>
   );
