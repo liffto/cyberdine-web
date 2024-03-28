@@ -10,55 +10,77 @@ export class Menu {
     }
   }
 
-
-
   getMenuList(category: string, pref: Array<string> = []): Item[] | null {
     if (!this.menuMap?.has(category)) {
       return null;
     }
-    const menu = Array.from(this.menuMap?.get(category)?.values() as Iterable<Item>)
-    if (pref.length == 1 && pref.includes('Our Special')) {
-      const ourSpeical = menu.filter((item: Item) => item.isSpecial == true)
+    const menu = Array.from(
+      this.menuMap?.get(category)?.values() as Iterable<Item>
+    );
+    if (pref.length == 1 && pref.includes("Our Special")) {
+      const ourSpeical = menu.filter((item: Item) => item.isSpecial == true);
       return ourSpeical;
-
-    } else if (pref.length > 1 && pref.includes('Our Special')) {
-      const ourSpeical = menu.filter((item: Item) => item.isSpecial == true && pref.some((each) => each == item.foodType))
+    } else if (pref.length > 1 && pref.includes("Our Special")) {
+      const ourSpeical = menu.filter(
+        (item: Item) =>
+          item.isSpecial == true && pref.some((each) => each == item.foodType)
+      );
       return ourSpeical;
-
     } else {
-      const filteredMenu = menu.filter((item: Item) => pref.some((each) => each == item.foodType))
+      const filteredMenu = menu.filter((item: Item) =>
+        pref.some((each) => each == item.foodType)
+      );
       return pref && pref.length > 0 ? filteredMenu : menu;
-
     }
   }
 
-  getSearchedMenu(searchString: string = "", pref: Array<string> = []): Item[] | null {
+  getSearchedMenu(
+    searchString: string = "",
+    pref: Array<string> = []
+  ): Map<string,Item[]> | null {
     let response: Item[] = [];
     if (searchString == "") {
-      return []
-    }
-    else if (this.menuMap != null) {
+      return null;
+    } else if (this.menuMap != null) {
       const categories = Array.from(this.menuMap!.values());
       categories.map((value, key) => {
-        response = response.concat(Array.from(value.values()))
-      })
-      const menu = response.flat().filter((item) => item.name?.toLowerCase()?.includes(searchString?.toLowerCase()))
-      if (pref.length == 1 && pref.includes('Our Special')) {
-        const ourSpeical = menu.filter((item: Item) => item.isSpecial == true)
-        return ourSpeical;
-
-      } else if (pref.length > 1 && pref.includes('Our Special')) {
-        const ourSpeical = menu.filter((item: Item) => item.isSpecial == true && pref.some((each) => each == item.foodType))
-        return ourSpeical;
-
+        response = response.concat(Array.from(value.values()));
+      });
+      const menu = response
+        .flat()
+        .filter((item) =>
+          item.name?.toLowerCase()?.includes(searchString?.toLowerCase())
+        );
+      if (pref.length == 1 && pref.includes("Our Special")) {
+        const ourSpeical = menu.filter((item: Item) => item.isSpecial == true);
+        
+        return this.convertListToArray(ourSpeical);
+      } else if (pref.length > 1 && pref.includes("Our Special")) {
+        const ourSpeical = menu.filter(
+          (item: Item) =>
+            item.isSpecial == true && pref.some((each) => each == item.foodType)
+        );
+        return this.convertListToArray(ourSpeical);
       } else {
-        const filteredMenu = menu.filter((item: Item) => pref.some((each) => each == item.foodType))
-        return pref && pref.length > 0 ? filteredMenu : menu;
-
+        const filteredMenu = menu.filter((item: Item) =>
+          pref.some((each) => each == item.foodType)
+        );
+        return this.convertListToArray(pref && pref.length > 0 ? filteredMenu : menu); 
       }
-    }
-    else {
+    } else {
       return null;
     }
+  }
+
+  convertListToArray(menu: Item[]) {
+    const tempMap = new Map();
+    menu.forEach((obj) => {
+      const { category } = obj;
+      if (!tempMap.has(category)) {
+        tempMap.set(category, []);
+      }
+      tempMap.get(category).push(obj);
+    });
+    return tempMap;
   }
 }
