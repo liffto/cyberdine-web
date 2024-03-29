@@ -10,6 +10,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FcmService } from "@/service/fcm_service";
 import CloseIcon from '@mui/icons-material/Close';
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 const DescriptionSheet = dynamic(() => import("./description_sheet"), {
   ssr: false,
 });
@@ -79,7 +80,7 @@ export default function ProductDisplay({
           setFilterList(prevSelectedCats => prevSelectedCats.filter(selectedCat => selectedCat !== cat));
           if (selfilterList.includes('Non Veg') && selfilterList.includes('Egg')) {
             setFilterList(prevCats => [...prevCats, ...["Non Veg", "Egg"]]);
-          }else if (selfilterList.includes('Egg')) {
+          } else if (selfilterList.includes('Egg')) {
             setFilterList(prevCats => [...prevCats, "Egg"]);
           } else {
             setFilterList(prevCats => [...prevCats, "Non Veg"]);
@@ -171,7 +172,7 @@ export default function ProductDisplay({
     <div className="container mx-auto  ">
       {menuData ? (
         <div className="">
-          <div className="sticky top-0 z-20 bg-white w-full flex justify-between items-center px-4 mt-2">
+          <div className="sticky top-0 z-20 bg-white w-full flex justify-between items-center px-4">
             <Link
               href={`/rest/${restId}/search?query=&category=All`}
               className="w-full"
@@ -282,7 +283,7 @@ export default function ProductDisplay({
       )}
       <div className="">
         <div
-          className={`category_shape fixed z-10 bottom-8 right-8 ${isCircle ? "circle" : "rectangle"}`}
+          className={`category_shape fixed z-10 bottom-14 right-6 ${isCircle ? "circle" : "rectangle"}`}
           onClick={() => setIsCircle(!isCircle)}
         >
           {isCircle ? (
@@ -303,6 +304,20 @@ export default function ProductDisplay({
           )}
         </div>
       </div>
+      <Link
+        href={`/rest/${restId}/cart`}
+        className="w-full"
+      >
+        <div className="fixed bottom-0 bg-primary w-full px-4 py-2">
+          <div className="text-white flex justify-between items-center">
+            <div className="">
+              <div className="text-sm font-bold">2 Items Shortlisted</div>
+              <div className="text-xs">Confirm Now</div>
+            </div>
+            <ArrowRightIcon fontSize="large" />
+          </div>
+        </div>
+      </Link>
       {/* old filter */}
       {/* <div className="fixed bottom-4 inset-x-4 z-10 flex items-center justify-center gap-4">
         <TabGroup setPreference={setPreference} preference={preference} />

@@ -41,7 +41,7 @@ export default function DescriptionSheet({
 
                 <div className={`flex justify-center items-center`}>
                   <Image
-                    src={selectedMenuData?.foodType != "Veg" ? "/images/svg/veg_icon.svg" : "/images/svg/non_veg_icon.svg"}
+                    src={selectedMenuData?.foodType == "Veg" ? "/images/svg/veg_icon.svg" : "/images/svg/non_veg_icon.svg"}
                     alt={selectedMenuData.name!}
                     height={16}
                     width={16}
@@ -65,13 +65,10 @@ export default function DescriptionSheet({
             </div>}
           </div>
           <div
-            onClick={() => {
-              setSelectedMenuData(null);
-            }}
             className={` text-white text-lg text-center flex justify-evenly items-center w-full py-2 font-semibold`} style={{ backgroundColor: bgColor }}
           >
-            <div className="" onClick={()=>{setSelectedMenuData(null);}} >Cancel</div>
-            <div className="bg-white px-8 py-2 rounded-md font-bold text-base" style={{color: bgColor}} >ADD TO CART</div>
+            <div className="" onClick={() => { setSelectedMenuData(null); }} >Cancel</div>
+            <div className="bg-white px-8 py-2 rounded-md font-bold text-base" style={{ color: bgColor }} >ADD TO CART</div>
           </div>
         </div>
       </div>
