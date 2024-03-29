@@ -1,42 +1,83 @@
 "use client";
+import { CartMenu } from "@/model/orders/cart_menu";
 import { Menu } from "@/model/products/menu";
 import { FirebaseServices } from "@/service/firebase.service";
 import { useParams } from "next/navigation";
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useCallback } from "react";
 
 const MenuDataContext = createContext<{
   menuData: Menu | null;
   setMenuData: React.Dispatch<React.SetStateAction<Menu | null>>;
   category: string[];
   setCategory: React.Dispatch<React.SetStateAction<string[]>>;
+  cartMenuData: CartMenu | null;
+  setCartMenuData: React.Dispatch<React.SetStateAction<CartMenu | null>>;
+  deviceId: string | null;
 }>({
   menuData: null,
-  setMenuData: () => {},
+  setMenuData: () => { },
   category: [],
-  setCategory: () => {},
+  setCategory: () => { },
+  cartMenuData: null,
+  setCartMenuData: () => { },
+  deviceId: null,
 });
 
 function MenuDataProvider({ children }: { children: React.ReactNode }) {
   const [menuData, setMenuData] = useState<Menu | null>(null);
+  const [cartMenuData, setCartMenuData] = useState<CartMenu | null>(null);
   const [category, setCategory] = useState<Array<string>>([]);
   const { restId } = useParams<{ restId: string }>();
+  const [deviceId, setDeviceId] = useState<string>('');
   useEffect(() => {
-    if (restId && restId!="") {
+    const getDeviceId = generateDeviceId();
+    setDeviceId(getDeviceId);
+    if (restId && restId != "") {
       const catUnsub = FirebaseServices.shared.getRestCategory(
         restId,
         (cat: Array<string>) => {
           setCategory(cat);
         }
       );
-      // console.log("useEffect count",restId);
-      const menuUnSub = FirebaseServices.shared.getOrgMenu(restId, setMenuData);
+      const menuUnSub = FirebaseServices.shared.getOrgMenu(restId, setMenuData);      
+      
+      const cartMenuUnSub = FirebaseServices.shared.getCartMenu(restId,getDeviceId, setCartMenuData);
       return () => {
         catUnsub();
         menuUnSub();
+        cartMenuUnSub();
       };
     }
-  }, [restId]);
-  const value = { menuData, setMenuData, category, setCategory };
+  }, [restId,deviceId]);
+
+  const generateDeviceId = useCallback(() => {
+    const navigatorInfo = window.navigator;
+    const screenInfo = window.screen;
+
+    const ua = navigatorInfo.userAgent;
+    const screenResolution = `${screenInfo.width}x${screenInfo.height}`;
+    const language = navigatorInfo.language || '';
+
+    // Concatenate browser properties to create a simple device ID
+    const deviceId = `${ua}-${screenResolution}-${language}`;
+
+    // Convert to a hash for better privacy
+    const hash = hashCode(deviceId);
+
+    return hash.toString();
+  }, []);
+
+  const hashCode = (str: string): number => {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      const char = str.charCodeAt(i);
+      hash = (hash << 5) - hash + char;
+      hash = hash & hash; // Convert to 32bit integer
+    }
+    return hash;
+  };
+
+  const value = { menuData, setMenuData, category, setCategory, cartMenuData, setCartMenuData, deviceId };
 
   return (
     <MenuDataContext.Provider value={value}>

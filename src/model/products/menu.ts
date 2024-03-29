@@ -1,5 +1,6 @@
 import { JsonUtiles } from "@/utils/jsonUtiles";
 import { Item } from "./items";
+import { FirebaseServices } from "@/service/firebase.service";
 
 export class Menu {
   menuMap: Map<string, Map<string, Item>> | null = new Map();
@@ -37,7 +38,7 @@ export class Menu {
   getSearchedMenu(
     searchString: string = "",
     pref: Array<string> = []
-  ): Map<string,Item[]> | null {
+  ): Map<string, Item[]> | null {
     let response: Item[] = [];
     if (searchString == "") {
       return null;
@@ -53,7 +54,7 @@ export class Menu {
         );
       if (pref.length == 1 && pref.includes("Our Special")) {
         const ourSpeical = menu.filter((item: Item) => item.isSpecial == true);
-        
+
         return this.convertListToArray(ourSpeical);
       } else if (pref.length > 1 && pref.includes("Our Special")) {
         const ourSpeical = menu.filter(
@@ -65,7 +66,7 @@ export class Menu {
         const filteredMenu = menu.filter((item: Item) =>
           pref.some((each) => each == item.foodType)
         );
-        return this.convertListToArray(pref && pref.length > 0 ? filteredMenu : menu); 
+        return this.convertListToArray(pref && pref.length > 0 ? filteredMenu : menu);
       }
     } else {
       return null;
@@ -83,4 +84,17 @@ export class Menu {
     });
     return tempMap;
   }
+
+  async addQantity(menu: Item, count: number,restId: string,deviceId: string,callback: Function) {
+    let res = this.menuMap!.get(menu.category!)?.get(menu.id!);
+    if (res != undefined) {
+      res.quantity = 0;
+      res.quantity = count;
+      var response = await FirebaseServices.shared.addToCart(res,restId,deviceId);
+      if(response != null){
+        callback()
+      }
+    }
+  }
+
 }

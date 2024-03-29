@@ -38,7 +38,6 @@ export async function POST(req: NextRequest) {
 
   try {
     const response = await messaging.send(message);
-    console.log("Message sent successfully:", response);
     return NextResponse.json({ message: "Notification sent!" });
   } catch (error) {
     console.error("Error sending message:", error);

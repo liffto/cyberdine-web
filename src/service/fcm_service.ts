@@ -11,9 +11,7 @@ export class FcmService {
                 "Access-Control-Allow-Headers": "Content-Type, Authorization"
             };
 
-            console.log("body", body);
             let response = await axios.post(`${process.env.NODE_ENV == "development" ? "http://localhost:3000" : "https://lt-menu.vercel.app"}/api/request/fcm`, body, { headers });
-            console.log("response.status", response.status);
 
             if (response.status! >= 200 && response.status! <= 299 && response.data) {
                 return response.data["data"] != null ? response.data["data"] : null;

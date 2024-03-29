@@ -1,23 +1,44 @@
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Image from "next/image";
 import CloseIcon from '@mui/icons-material/Close';
+import { useContext, useState } from "react";
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import { MenuDataContext } from "@/context/menu.context";
 
 export default function DescriptionSheet({
   setSelectedMenuData,
   selectedMenuData,
   bgColor,
+  restId,
+  deviceId
 }: {
   setSelectedMenuData: any;
   selectedMenuData: any;
   bgColor: string;
+  restId: string;
+  deviceId: string;
 }) {
   const description = () => {
+    const [itemCount, setItemCount] = useState<number>(0);
+    const { menuData } = useContext(MenuDataContext);
+
+    const itemCountFunc = (type: string) => {
+      let temp = itemCount;
+      if (type == "add") {
+        temp = temp + 1;
+      } else {
+        temp = temp - 1;
+      }
+      setItemCount(temp);
+    };
+
     return (
       <div className="h-full flex flex-col justify-between">
         <div onClick={() => { setSelectedMenuData(null); }} className="text-white bg-black text-center rounded-full w-12 py-3 mx-auto mb-4">
           <CloseIcon />
         </div>
-        <div className="bg-white">
+        <div className="bg-white" style={{ borderRadius: '20px 20px 0 0' }} >
           {selectedMenuData.itemsImageUrl && (
             <div className="rounded overflow-hidden mb-3 ">
               <Image
@@ -25,11 +46,12 @@ export default function DescriptionSheet({
                 alt={selectedMenuData.name!}
                 height={163}
                 width={475}
-                priority={false}
+                priority={true}
                 style={{
                   objectFit: "cover",
                   height: "250px",
-                  background: "var(--secondary-bg)"
+                  background: "var(--secondary-bg)",
+                  borderRadius: '20px 20px 0 0'
                 }}
               />
             </div>
@@ -40,17 +62,19 @@ export default function DescriptionSheet({
                 <div className="font-bold text-xl">{selectedMenuData?.name}</div>
 
                 <div className={`flex justify-center items-center`}>
-                  <Image
-                    src={selectedMenuData?.foodType == "Veg" ? "/images/svg/veg_icon.svg" : "/images/svg/non_veg_icon.svg"}
-                    alt={selectedMenuData.name!}
-                    height={16}
-                    width={16}
-                    priority={false}
-                    style={{
-                      objectFit: "cover",
-                      background: "var(--secondary-bg)"
-                    }}
-                  />
+                  <div className="">
+                    <Image
+                      src={selectedMenuData?.foodType == "Veg" ? "/images/svg/veg_icon.svg" : "/images/svg/non_veg_icon.svg"}
+                      alt={selectedMenuData.name!}
+                      height={16}
+                      width={16}
+                      priority={false}
+                      style={{
+                        objectFit: "cover",
+                        background: "var(--secondary-bg)"
+                      }}
+                    />
+                  </div>
                   <div
                     className={`ml-2 text-base font-normal text-black`}
                   >
@@ -58,18 +82,29 @@ export default function DescriptionSheet({
                   </div>
                 </div>
               </div>
-              <div className={`font-bold text-black`}>&#x20B9; {selectedMenuData?.price}</div>
+              <div className={`font-medium text-gray-400`}>&#x20B9; {selectedMenuData?.price}</div>
             </div>
             {selectedMenuData?.description && <div className="font-medium text-base mb-2">
               {selectedMenuData?.description}
             </div>}
           </div>
-          <div
-            className={` text-white text-lg text-center flex justify-evenly items-center w-full py-2 font-semibold`} style={{ backgroundColor: bgColor }}
+          {itemCount == 0 ? <div
+            className={` text-white text-lg text-center flex justify-between px-4 items-center w-full py-3 font-semibold`} style={{ backgroundColor: bgColor }}
           >
-            <div className="" onClick={() => { setSelectedMenuData(null); }} >Cancel</div>
-            <div className="bg-white px-8 py-2 rounded-md font-bold text-base" style={{ color: bgColor }} >ADD TO CART</div>
-          </div>
+            <div className="pl-8" onClick={() => { setSelectedMenuData(null); }} >Cancel</div>
+            <div onClick={() => { itemCountFunc("add"); }} className="bg-white px-8 py-2 rounded-md font-semibold text-xl" style={{ color: bgColor }} >ADD TO WISHLIST</div>
+          </div> : <div
+            className={` text-white text-lg text-center flex justify-between px-4 items-center w-full py-3 font-semibold`} style={{ backgroundColor: bgColor }}
+          >
+            <div className="" >
+              <div className="flex justify-start items-center">
+                <div onClick={() => { itemCountFunc("remove"); }} className="bg-black w-14 h-11 pt-2 rounded-l-md"><RemoveIcon /></div>
+                <div className="font-bold bg-white text-lg text-black w-14 h-11 pt-[8px]">{itemCount}</div>
+                <div onClick={() => { itemCountFunc("add"); }} className="bg-black w-14 h-11 pt-2 rounded-r-md"><AddIcon /></div>
+              </div>
+            </div>
+            <div onClick={() => { menuData?.addQantity(selectedMenuData, itemCount, restId,deviceId,setSelectedMenuData(null)) }} className="bg-white px-8 py-2 rounded-md font-bold text-xl w-[48%]" style={{ color: bgColor }} >ADD</div>
+          </div>}
         </div>
       </div>
     );

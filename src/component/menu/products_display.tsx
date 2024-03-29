@@ -17,6 +17,7 @@ const DescriptionSheet = dynamic(() => import("./description_sheet"), {
 import toast, { Toaster } from 'react-hot-toast';
 
 const notify = () => toast('Notified successfully');
+const soldOutNotify = () => toast('Temporarily out of stock');
 
 export default function ProductDisplay({
   restId,
@@ -36,11 +37,16 @@ export default function ProductDisplay({
   const [selfilterList, setSelFilterList] = useState<Array<string>>([]);
   const [filterList, setFilterList] = useState<Array<string>>([]);
   const [isCircle, setIsCircle] = useState<boolean>(true);
+  const [preOrderData, setPreOrderData] = useState<boolean>(true);
 
-  const { menuData, category } = useContext(MenuDataContext);
+  const { menuData, category, cartMenuData, deviceId } = useContext(MenuDataContext);
 
   const setSelectedData = (ele: Item) => {
-    setSelectedMenuData(ele);
+    if (!ele.isActive) {
+      soldOutNotify()
+    } else {
+      setSelectedMenuData(ele);
+    }
   };
 
   const sendFcm = async () => {
@@ -105,6 +111,22 @@ export default function ProductDisplay({
     }
   };
 
+  const getQuantityFromOrder = () => {
+    if (cartMenuData) {
+      cartMenuData?.getMenuList()?.forEach((each) => {
+        let response = menuData?.getMenuList(each.category!, [])?.find((val) => val.id == each.id);
+        if (response != undefined) {
+          response.quantity = each.quantity;
+          setPreOrderData(false)
+        }
+      })
+    }
+
+  }
+
+  useEffect(() => {
+    getQuantityFromOrder()
+  }, [cartMenuData,preOrderData])
 
   useEffect(() => {
     const cat = ['Veg', 'Egg', 'Non Veg', 'Our Special'];
@@ -114,9 +136,9 @@ export default function ProductDisplay({
   function CategoryList() {
     return (
       <div
-        className={`overflow-x-scroll md:container max-w-screen py-2 bg-white z-20 sticky top-[62px]`}
+        className={`overflow-x-scroll md:container max-w-screen py-2 bg-[#fafafa] z-20 sticky top-[54px]`}
       >
-        <div className="flex gap-4 px-4">
+        <div className="flex gap-3 px-4">
           {selfilterList!
             .map((ele, index) => {
               return (
@@ -125,14 +147,14 @@ export default function ProductDisplay({
                   onClick={() => {
                     handleCatClick(ele, false)
                   }}
-                  className={`cursor-pointer rounded border whitespace-nowrap border-primary px-2 py-px text-gray-600`}
+                  className={`cursor-pointer rounded border whitespace-nowrap border-primary px-2 py-px text-gray-600 bg-secondary `}
                 >
-                  <div className="flex justify-center items-center gap-2">
-                    <div className="w-3 h-3">
+                  <div className="flex justify-center items-center gap-2 py-1">
+                    <div className={`w-3 h-3`}>
                       <Image src={ele == "Veg" ? "/images/svg/veg_icon.svg" : ele == "Non Veg" ? "/images/svg/non_veg_icon.svg" : ele == "Egg" ? "/images/svg/egg_icon.svg" : "/images/svg/our_special_icon.svg"} alt={ele} width={14} height={14} />
                     </div>
-                    <div className="">{ele}</div>
-                    <div className="rounded-full border border-primary text-primary w-4 h-4 flex justify-center items-center"><CloseIcon sx={{ fontSize: "10px" }} /></div>
+                    <div className="font-medium text-sm">{ele}</div>
+                    <div className=" rounded-full font-bold border border-primary text-primary w-4 h-4 flex justify-center items-center"><CloseIcon sx={{ fontSize: "10px", fontWeight: "bold" }} /></div>
                   </div>
                 </div>
               );
@@ -145,13 +167,13 @@ export default function ProductDisplay({
                   onClick={() => {
                     handleCatClick(ele, true)
                   }}
-                  className={`cursor-pointer rounded border whitespace-nowrap border-gray-400 px-2 py-px text-gray-600`}
+                  className={`cursor-pointer rounded border whitespace-nowrap border-gray-300 px-2 py-px text-gray-600 bg-white`}
                 >
-                  <div className="flex justify-center items-center gap-2">
+                  <div className="flex justify-center items-center gap-2 py-1 px-2">
                     <div className="w-3 h-3">
                       <Image src={ele == "Veg" ? "/images/svg/veg_icon.svg" : ele == "Non Veg" ? "/images/svg/non_veg_icon.svg" : ele == "Egg" ? "/images/svg/egg_icon.svg" : "/images/svg/our_special_icon.svg"} alt={ele} width={14} height={14} />
                     </div>
-                    <div className="">{ele}</div>
+                    <div className="font-medium text-sm">{ele}</div>
                   </div>
                 </div>
               );
@@ -167,31 +189,30 @@ export default function ProductDisplay({
     }
   };
 
-
   return (
     <div className="container mx-auto  ">
       {menuData ? (
         <div className="">
-          <div className="sticky top-0 z-20 bg-white w-full flex justify-between items-center px-4">
+          <div className="sticky top-0 z-20 bg-[#fafafa] w-full flex justify-between items-center px-4">
             <Link
               href={`/rest/${restId}/search?query=&category=All`}
               className="w-full"
             >
-              <div className="my-2 flex justify-start items-center w-full">
-                <div className="border-2 border-gray-300 text-gray-300 rounded-md w-full py-[10px] mr-2">
+              <div className="my-2 flex justify-start items-center w-full bg-white">
+                <div className="border border-gray-300 text-gray-300 rounded w-full py-[6px] mr-2 text-sm">
                   <SearchIcon sx={{ marginRight: "10px", marginLeft: "10px" }} />
-                  Search
+                  Search for dish
                 </div>
               </div>
             </Link>
             {notification && (
               <div
-                className={`${wait ? "bg-secondary" : "bg-white"} border-2 border-primary  text-primary shadow w-[45%] py-1 rounded`}
+                className={`${wait ? "bg-secondary" : "bg-white"} border border-primary  text-primary w-[45%]  rounded p-[4px]`}
                 onClick={() => {
                   wait ? null : sendFcm();
                 }}
               >
-                <div className="flex justify-center items-center">
+                <div className="flex justify-center items-center pl-3 ">
                   <div className="">
                     <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M11.5781 6.10578V5.86245C11.5745 5.68408 11.502 5.51403 11.3759 5.38791C11.2497 5.2618 11.0796 5.18941 10.9012 5.18591H8.5988C8.42043 5.18941 8.25033 5.2618 8.12414 5.38791C7.99796 5.51403 7.92547 5.68408 7.92188 5.86245V6.10578C9.13096 5.88872 10.369 5.88872 11.5781 6.10578ZM9.14062 3.61719V4.52966H10.3594V3.61719C9.96197 3.73706 9.53803 3.73706 9.14062 3.61719Z" fill={bgColor} />
@@ -202,20 +223,20 @@ export default function ProductDisplay({
                       <path d="M19.5 18.9668H0V20.1387H19.5V18.9668Z" fill={bgColor} />
                     </svg>
                   </div>
-                  <div className="ml-2">
-                    <div className="font-bold text-sm">
-                      {"Request"}
+                  <div className="ml-3 leading-3 mt-[2px]">
+                    <div className="font-bold text-sm p-0 leading-3" >
+                      {"Request"} <span className="font-medium text-xs">{"Waiter"}</span>
                     </div>
-                    <div className="font-medium text-xs">{"Waiter"}</div>
                   </div>
                 </div>
               </div>
             )}
           </div>
           {CategoryList()}
-          <div className="bg-primary my-2 mx-4 rounded-md" >
-            <Image src="/images/svg/our_special_banner.svg" alt="restarunt logo" width="443" height="123" priority={true} />
-          </div>
+          {selfilterList.length == 0 &&
+            <div onClick={() => { handleCatClick("Our Special", true) }} className="bg-primary mt-2 mb-4 mx-4 rounded-md" >
+              <Image src="/images/svg/our_special_banner.svg" alt="restarunt logo" width="443" height="123" priority={true} />
+            </div>}
           <Toaster position="top-center" />
           <div className="mb-20">
             {category && category!.map(
@@ -229,10 +250,10 @@ export default function ProductDisplay({
                         <>
                           {(
                             <div
-                              className="sticky top-[102px] bg-white z-10"
+                              className="sticky top-[100px] bg-[#fafafa] z-10"
                               id={ele}
                             >
-                              <div className="px-4 py-2 font-bold   bg-secondary text-black capitalize flex justify-between items-center">
+                              <div className="px-4 py-2 font-bold text-sm bg-secondary text-black capitalize flex justify-between items-center">
                                 <div className=" ">
                                   {ele}
                                 </div>
@@ -243,7 +264,7 @@ export default function ProductDisplay({
                             </div>
                           )}
 
-                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 py-4 px-4 mb-4">
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 py-4 px-4">
                             {menuData.getMenuList(ele, selfilterList) &&
                               menuData
                                 .getMenuList(ele, selfilterList)!
@@ -279,19 +300,19 @@ export default function ProductDisplay({
       {selectedMenuData && (
         <DescriptionSheet
           setSelectedMenuData={setSelectedMenuData}
-          selectedMenuData={selectedMenuData} bgColor={bgColor} />
+          selectedMenuData={selectedMenuData} bgColor={bgColor} restId={restId} deviceId={deviceId ?? ""} />
       )}
       <div className="">
         <div
-          className={`category_shape fixed z-10 bottom-14 right-6 ${isCircle ? "circle" : "rectangle"}`}
+          className={`category_shape fixed z-10 bottom-16 right-6 ${isCircle ? "circle" : "rectangle"}`}
           onClick={() => setIsCircle(!isCircle)}
         >
           {isCircle ? (
             <div className="category_text text-center flex justify-center items-center flex-col">
               <div className="">
-                <Image src="/images/png/menu_icon.png" alt="menu icon" width="12" height="12" priority={true} />
+                <Image src="/images/svg/menu_icon.svg" alt="menu icon" width="16" height="16" priority={true} />
               </div>
-              <div className="p-1 text-sm">Menu</div>
+              <div className="p-1 text-xs font-semibold">Menu</div>
             </div>
           ) : (
             <div className="category_text">
@@ -304,41 +325,20 @@ export default function ProductDisplay({
           )}
         </div>
       </div>
-      <Link
+      {cartMenuData && cartMenuData?.getMenuList() && <Link
         href={`/rest/${restId}/cart`}
         className="w-full"
       >
-        <div className="fixed bottom-0 bg-primary w-full px-4 py-2">
-          <div className="text-white flex justify-between items-center">
+        <div className="fixed bottom-0 z-20 bg-primary w-full px-4 py-3">
+          <div className="text-[#fafafa] flex justify-between items-center">
             <div className="">
-              <div className="text-sm font-bold">2 Items Shortlisted</div>
-              <div className="text-xs">Confirm Now</div>
+              <div className="text-sm font-semibold">{cartMenuData?.getMenuList()?.length} Items in wishlist</div>
+              <div className="text-xs">View Now</div>
             </div>
             <ArrowRightIcon fontSize="large" />
           </div>
         </div>
-      </Link>
-      {/* old filter */}
-      {/* <div className="fixed bottom-4 inset-x-4 z-10 flex items-center justify-center gap-4">
-        <TabGroup setPreference={setPreference} preference={preference} />
-        <Link
-          href={`/rest/${restId}/search?query=&category=All`}
-          className=" bg-primary rounded-full"
-        >
-          <Fab
-            sx={{
-              background: "var(--primary-bg)",
-              "&:hover": {
-                background: "var(--primary-bg)",
-              },
-            }}
-            size="medium"
-            aria-label="add"
-          >
-            <SearchRoundedIcon sx={{ color: "white" }} fontSize="medium" />
-          </Fab>
-        </Link>
-      </div> */}
+      </Link>}
     </div>
   );
 }

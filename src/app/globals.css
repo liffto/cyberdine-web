@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.body{
+  background-color: #fafafa;
+}
+
 :root{
 	--primary-bg:#FF604D;
 	--secondary-bg:#FAD5D0;	
