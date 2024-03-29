@@ -19,19 +19,19 @@ export default function DescriptionSheet({
   restId: string;
   deviceId: string;
 }) {
-  const description = () => {
-    const [itemCount, setItemCount] = useState<number>(0);
-    const { menuData } = useContext(MenuDataContext);
+  const [itemCount, setItemCount] = useState<number>(0);
+  const { menuData } = useContext(MenuDataContext);
 
-    const itemCountFunc = (type: string) => {
-      let temp = itemCount;
-      if (type == "add") {
-        temp = temp + 1;
-      } else {
-        temp = temp - 1;
-      }
-      setItemCount(temp);
-    };
+  const itemCountFunc = (type: string) => {
+    let temp = itemCount;
+    if (type == "add") {
+      temp = temp + 1;
+    } else {
+      temp = temp - 1;
+    }
+    setItemCount(temp);
+  };
+  const description = () => {
 
     return (
       <div className="h-full flex flex-col justify-between">
@@ -103,7 +103,7 @@ export default function DescriptionSheet({
                 <div onClick={() => { itemCountFunc("add"); }} className="bg-black w-14 h-11 pt-2 rounded-r-md"><AddIcon /></div>
               </div>
             </div>
-            <div onClick={() => { menuData?.addQantity(selectedMenuData, itemCount, restId,deviceId,setSelectedMenuData(null)) }} className="bg-white px-8 py-2 rounded-md font-bold text-xl w-[48%]" style={{ color: bgColor }} >ADD</div>
+            <div onClick={() => { menuData?.addQantity(selectedMenuData, itemCount, restId, deviceId, setSelectedMenuData(null)) }} className="bg-white px-8 py-2 rounded-md font-bold text-xl w-[48%]" style={{ color: bgColor }} >ADD</div>
           </div>}
         </div>
       </div>
