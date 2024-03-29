@@ -45,4 +45,14 @@ export class FirebaseServices {
             return null;
         });
     }
+
+    async removeToCart(menu: Item, restId: string,deviceId: string) {
+        const updateMenu = await ref(database, `/order/${restId}/${deviceId}/${menu.category}/${menu.id}`);
+        await set(updateMenu, null).then(() => {
+            return true;
+        }).catch((error) => {
+            console.error(error);
+            return null;
+        });
+    }
 }

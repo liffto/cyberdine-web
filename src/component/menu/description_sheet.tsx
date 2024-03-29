@@ -11,7 +11,7 @@ export default function DescriptionSheet({
   selectedMenuData,
   bgColor,
   restId,
-  deviceId
+  deviceId,
 }: {
   setSelectedMenuData: any;
   selectedMenuData: any;
@@ -19,20 +19,20 @@ export default function DescriptionSheet({
   restId: string;
   deviceId: string;
 }) {
-  const [itemCount, setItemCount] = useState<number>(0);
-  const { menuData } = useContext(MenuDataContext);
+  const [itemCount, setItemCount] = useState<number>(selectedMenuData.quantity && selectedMenuData.quantity != undefined ? selectedMenuData.quantity : null);
+  const { menuData, cartMenuData } = useContext(MenuDataContext);
 
   const itemCountFunc = (type: string) => {
     let temp = itemCount;
     if (type == "add") {
       temp = temp + 1;
-    } else {
+    } else if(temp > 0) {
       temp = temp - 1;
     }
     setItemCount(temp);
   };
-  const description = () => {
 
+  const description = () => {
     return (
       <div className="h-full flex flex-col justify-between">
         <div onClick={() => { setSelectedMenuData(null); }} className="text-white bg-black text-center rounded-full w-12 py-3 mx-auto mb-4">
@@ -88,7 +88,7 @@ export default function DescriptionSheet({
               {selectedMenuData?.description}
             </div>}
           </div>
-          {itemCount == 0 ? <div
+          {itemCount == null ? <div
             className={` text-white text-lg text-center flex justify-between px-4 items-center w-full py-3 font-semibold`} style={{ backgroundColor: bgColor }}
           >
             <div className="pl-8" onClick={() => { setSelectedMenuData(null); }} >Cancel</div>
@@ -103,7 +103,7 @@ export default function DescriptionSheet({
                 <div onClick={() => { itemCountFunc("add"); }} className="bg-black w-14 h-11 pt-2 rounded-r-md"><AddIcon /></div>
               </div>
             </div>
-            <div onClick={() => { menuData?.addQantity(selectedMenuData, itemCount, restId, deviceId, setSelectedMenuData(null)) }} className="bg-white px-8 py-2 rounded-md font-bold text-xl w-[48%]" style={{ color: bgColor }} >ADD</div>
+            <div onClick={() => { menuData?.addQantity(selectedMenuData, itemCount, restId, deviceId, cartMenuData?.getMenuList() ?? [], setSelectedMenuData(null)) }} className="bg-white px-8 py-2 rounded-md font-bold text-xl w-[48%]" style={{ color: bgColor }} >{itemCount ==0 ? "REMOVE" : "ADD"}</div>
           </div>}
         </div>
       </div>

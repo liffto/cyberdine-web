@@ -2,9 +2,9 @@ import CartComponent from "@/component/cart/cart";
 import Topbar from "@/component/menu/topbar";
 
 export default async function MenuSearch({
-    params,
+    params,searchParams
 }: {
-    params: { restId: string };
+    params: { restId: string };searchParams:{table:string}
 }) {
     const response = await fetch(
         `${process.env.NODE_ENV == "development"
@@ -46,7 +46,7 @@ export default async function MenuSearch({
                 } as React.CSSProperties
             }>
             <Topbar data={json.data} />
-            <CartComponent />
+            <CartComponent restId={params.restId} bgColor={"#" + json.data.hcolor?.slice(2, 10)} table={searchParams.table} topic={json?.data?.fcmTopic} />
         </div>
     );
 }

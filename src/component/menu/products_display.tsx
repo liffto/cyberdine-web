@@ -136,7 +136,7 @@ export default function ProductDisplay({
   function CategoryList() {
     return (
       <div
-        className={`overflow-x-scroll md:container max-w-screen py-2 bg-[#fafafa] z-20 sticky top-[54px]`}
+        className={`overflow-x-scroll md:container max-w-screen py-2 bg-[#fafafa] z-20 sticky top-[53px]`}
       >
         <div className="flex gap-3 px-4">
           {selfilterList!
@@ -207,7 +207,7 @@ export default function ProductDisplay({
             </Link>
             {notification && (
               <div
-                className={`${wait ? "bg-secondary" : "bg-white"} border border-primary  text-primary w-[45%]  rounded p-[4px]`}
+                className={`bg-white border border-primary w-[45%]  rounded p-[4px]`}
                 onClick={() => {
                   wait ? null : sendFcm();
                 }}
@@ -215,16 +215,16 @@ export default function ProductDisplay({
                 <div className="flex justify-center items-center pl-3 ">
                   <div className="">
                     <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M11.5781 6.10578V5.86245C11.5745 5.68408 11.502 5.51403 11.3759 5.38791C11.2497 5.2618 11.0796 5.18941 10.9012 5.18591H8.5988C8.42043 5.18941 8.25033 5.2618 8.12414 5.38791C7.99796 5.51403 7.92547 5.68408 7.92188 5.86245V6.10578C9.13096 5.88872 10.369 5.88872 11.5781 6.10578ZM9.14062 3.61719V4.52966H10.3594V3.61719C9.96197 3.73706 9.53803 3.73706 9.14062 3.61719Z" fill={bgColor} />
-                      <path d="M9.7515 3.04988C10.5937 3.04988 11.2764 2.36714 11.2764 1.52494C11.2764 0.682738 10.5937 0 9.7515 0C8.9093 0 8.22656 0.682738 8.22656 1.52494C8.22656 2.36714 8.9093 3.04988 9.7515 3.04988Z" fill={bgColor} />
-                      <path d="M15.8546 8.93428C14.7272 7.8947 13.3461 7.17017 11.85 6.83348C11.8296 6.83098 11.8095 6.82655 11.7899 6.82027C10.4479 6.52361 9.05738 6.52345 7.71534 6.8198C7.69576 6.82589 7.67564 6.8301 7.65525 6.83236C6.15907 7.16949 4.77796 7.89442 3.65067 8.93433C2.11612 10.3583 1.23581 12.2159 1.14844 14.2315H18.3568C18.2694 12.2159 17.3891 10.3583 15.8546 8.93428Z" fill={bgColor} />
-                      <path d="M16.6875 16.7168H2.8125V18.3105H16.6875V16.7168Z" fill={bgColor} />
-                      <path d="M19.5 14.8887H0V16.0605H19.5V14.8887Z" fill={bgColor} />
-                      <path d="M19.5 18.9668H0V20.1387H19.5V18.9668Z" fill={bgColor} />
+                      <path d="M11.5781 6.10578V5.86245C11.5745 5.68408 11.502 5.51403 11.3759 5.38791C11.2497 5.2618 11.0796 5.18941 10.9012 5.18591H8.5988C8.42043 5.18941 8.25033 5.2618 8.12414 5.38791C7.99796 5.51403 7.92547 5.68408 7.92188 5.86245V6.10578C9.13096 5.88872 10.369 5.88872 11.5781 6.10578ZM9.14062 3.61719V4.52966H10.3594V3.61719C9.96197 3.73706 9.53803 3.73706 9.14062 3.61719Z" fill={wait ? "#c2beb4" : bgColor} />
+                      <path d="M9.7515 3.04988C10.5937 3.04988 11.2764 2.36714 11.2764 1.52494C11.2764 0.682738 10.5937 0 9.7515 0C8.9093 0 8.22656 0.682738 8.22656 1.52494C8.22656 2.36714 8.9093 3.04988 9.7515 3.04988Z" fill={wait ? "#c2beb4" : bgColor} />
+                      <path d="M15.8546 8.93428C14.7272 7.8947 13.3461 7.17017 11.85 6.83348C11.8296 6.83098 11.8095 6.82655 11.7899 6.82027C10.4479 6.52361 9.05738 6.52345 7.71534 6.8198C7.69576 6.82589 7.67564 6.8301 7.65525 6.83236C6.15907 7.16949 4.77796 7.89442 3.65067 8.93433C2.11612 10.3583 1.23581 12.2159 1.14844 14.2315H18.3568C18.2694 12.2159 17.3891 10.3583 15.8546 8.93428Z" fill={wait ? "#c2beb4" : bgColor} />
+                      <path d="M16.6875 16.7168H2.8125V18.3105H16.6875V16.7168Z" fill={wait ? "#c2beb4" : bgColor} />
+                      <path d="M19.5 14.8887H0V16.0605H19.5V14.8887Z" fill={wait ? "#c2beb4" : bgColor} />
+                      <path d="M19.5 18.9668H0V20.1387H19.5V18.9668Z" fill={wait ? "#c2beb4" : bgColor} />
                     </svg>
                   </div>
                   <div className="ml-3 leading-3 mt-[2px]">
-                    <div className="font-bold text-sm p-0 leading-3" >
+                    <div className={`${wait ? "text-[#c2beb4]" : "text-primary" } font-bold text-sm p-0 leading-3`} >
                       {"Request"} <span className="font-medium text-xs">{"Waiter"}</span>
                     </div>
                   </div>
@@ -326,7 +326,7 @@ export default function ProductDisplay({
         </div>
       </div>
       {cartMenuData && cartMenuData?.getMenuList() && <Link
-        href={`/rest/${restId}/cart`}
+        href={`/rest/${restId}/cart?table=${table}`}
         className="w-full"
       >
         <div className="fixed bottom-0 z-20 bg-primary w-full px-4 py-3">
