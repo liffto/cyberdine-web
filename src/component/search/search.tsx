@@ -257,17 +257,17 @@ export default function SearchComponent() {
             menuData.getSearchedMenu(query, selfilterList)!.entries()
           ).map((value, index) => {
             return (
-              <div className="">
-                <div className="" key={index}>
+              <div className="" key={index}>
+                <div className="" >
                   <div className="sticky top-[115px] bg-white z-10 pb-3">
                     <div className="px-4 py-2 font-bold   bg-secondary text-black capitalize flex justify-between items-center">
                       <div className=" ">{value[0]}</div>
                     </div>
                   </div>
                   <div className="px-4">
-                    {value[1].map((item) => {
+                    {value[1].map((item,key) => {
                       return (
-                        <div className="pb-2">
+                        <div className="pb-2" key={key} >
                           <MenuItemCard index={index} ele={item} />
                         </div>
                       );
