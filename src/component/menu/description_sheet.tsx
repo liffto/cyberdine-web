@@ -26,11 +26,22 @@ export default function DescriptionSheet({
     let temp = itemCount;
     if (type == "add") {
       temp = temp + 1;
-    } else if(temp > 0) {
+    } else if (temp > 0) {
       temp = temp - 1;
     }
     setItemCount(temp);
   };
+
+  const checkOrderList = () => {
+    menuData?.addQantity(selectedMenuData, itemCount, restId, deviceId, (val: any) => {
+      if(val == "remove" && cartMenuData?.getMenuList()?.length == 1 && (cartMenuData.getMenuList()![0].quantity == 1) ){
+        cartMenuData.makeCartMenuEmpty()
+      }
+      setSelectedMenuData(null);
+
+    })
+
+  }
 
   const description = () => {
     return (
@@ -92,7 +103,7 @@ export default function DescriptionSheet({
             className={` text-white text-lg text-center flex justify-between px-4 items-center w-full py-3 font-semibold`} style={{ backgroundColor: bgColor }}
           >
             <div className="pl-8" onClick={() => { setSelectedMenuData(null); }} >Cancel</div>
-            <div onClick={() => { itemCountFunc("add"); }} className="bg-white px-8 py-2 rounded-md font-semibold text-xl" style={{ color: bgColor }} >ADD TO WISHLIST</div>
+            <div onClick={() => { itemCountFunc("add"); }} className="bg-white px-4 py-2 rounded-md font-semibold text-xl" style={{ color: bgColor }} >ADD TO WISHLIST</div>
           </div> : <div
             className={` text-white text-lg text-center flex justify-between px-4 items-center w-full py-3 font-semibold`} style={{ backgroundColor: bgColor }}
           >
@@ -103,7 +114,7 @@ export default function DescriptionSheet({
                 <div onClick={() => { itemCountFunc("add"); }} className="bg-black w-14 h-11 pt-2 rounded-r-md"><AddIcon /></div>
               </div>
             </div>
-            <div onClick={() => { menuData?.addQantity(selectedMenuData, itemCount, restId, deviceId, cartMenuData?.getMenuList() ?? [], setSelectedMenuData(null)) }} className="bg-white px-8 py-2 rounded-md font-bold text-xl w-[48%]" style={{ color: bgColor }} >{itemCount ==0 ? "REMOVE" : "ADD"}</div>
+            <div onClick={() => { checkOrderList() }} className="bg-white px-8 py-2 rounded-md font-bold text-xl w-[48%]" style={{ color: bgColor }} >{itemCount == 0 ? "REMOVE" : "ADD"}</div>
           </div>}
         </div>
       </div>

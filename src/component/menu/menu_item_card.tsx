@@ -75,8 +75,8 @@ export default function MenuItemCard({
           </div>
         </div>
         {
-          ele.quantity != undefined && ele.quantity > 0 ? <div className="">
-            <div className={`font-bold text-black pr-1 text-2xl`}>{ele.quantity}</div>
+          ele.quantity != undefined && ele.quantity > 0 ? <div className="flex flex-col justify-center items-center pr-3">
+            <div className={`font-bold text-black text-2xl`}>{ele.quantity}</div>
             <div className={`text-xs md:text-sm font-medium text-black`}>Qty</div>
           </div> :
             <div className={`font-bold pr-1 ${!ele.isActive ? "text-gray-300" : "text-gray-700"}`}>&#x20B9; {ele.price}</div>}

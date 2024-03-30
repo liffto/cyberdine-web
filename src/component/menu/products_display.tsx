@@ -2,7 +2,7 @@
 import { Item } from "@/model/products/items";
 import SearchIcon from '@mui/icons-material/Search';
 import CircularProgress from "@mui/material/CircularProgress";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import MenuItemCard from "./menu_item_card";
 import { MenuDataContext } from "@/context/menu.context";
@@ -38,6 +38,7 @@ export default function ProductDisplay({
   const [filterList, setFilterList] = useState<Array<string>>([]);
   const [isCircle, setIsCircle] = useState<boolean>(true);
   const [preOrderData, setPreOrderData] = useState<boolean>(true);
+  const categoryRef = useRef<HTMLDivElement>(null);
 
   const { menuData, category, cartMenuData, deviceId } = useContext(MenuDataContext);
 
@@ -126,12 +127,27 @@ export default function ProductDisplay({
 
   useEffect(() => {
     getQuantityFromOrder()
-  }, [cartMenuData,preOrderData])
+  }, [cartMenuData, preOrderData])
 
   useEffect(() => {
     const cat = ['Veg', 'Egg', 'Non Veg', 'Our Special'];
     setFilterList(cat);
+    // Function to handle clicks outside the div
+    const handleClickOutside = (event: any) => {
+      if (categoryRef.current && !categoryRef.current.contains(event.target)) {
+        setIsCircle(true); // Clicked outside the div, set isCircle to true
+      }
+    };
+
+    // Attach the event listener to the document body
+    document.body.addEventListener('click', handleClickOutside);
+
+    // Cleanup the event listener when the component unmounts
+    return () => {
+      document.body.removeEventListener('click', handleClickOutside);
+    };
   }, [])
+  
 
   function CategoryList() {
     return (
@@ -147,7 +163,7 @@ export default function ProductDisplay({
                   onClick={() => {
                     handleCatClick(ele, false)
                   }}
-                  className={`cursor-pointer rounded border whitespace-nowrap border-primary px-2 py-px text-gray-600 bg-secondary `}
+                  className={`cursor-pointer rounded border whitespace-nowrap border-primary px-2 py-px text-gray-600 `}
                 >
                   <div className="flex justify-center items-center gap-2 py-1">
                     <div className={`w-3 h-3`}>
@@ -224,7 +240,7 @@ export default function ProductDisplay({
                     </svg>
                   </div>
                   <div className="ml-3 leading-3 mt-[2px]">
-                    <div className={`${wait ? "text-[#c2beb4]" : "text-primary" } font-bold text-sm p-0 leading-3`} >
+                    <div className={`${wait ? "text-[#c2beb4]" : "text-primary"} font-bold text-sm p-0 leading-3`} >
                       {"Request"} <span className="font-medium text-xs">{"Waiter"}</span>
                     </div>
                   </div>
@@ -315,7 +331,7 @@ export default function ProductDisplay({
               <div className="p-1 text-xs font-semibold">Menu</div>
             </div>
           ) : (
-            <div className="category_text">
+            <div ref={categoryRef} className="category_text">
               <ul className="">
                 {category.map((item, index) => (
                   <li onClick={() => handleItemClick(item)} className="pb-2 cursor-pointer capitalize text-lg font-medium" key={index}>{item}</li>
@@ -325,7 +341,7 @@ export default function ProductDisplay({
           )}
         </div>
       </div>
-      {cartMenuData && cartMenuData?.getMenuList() && <Link
+      {cartMenuData && cartMenuData?.getMenuList() && cartMenuData?.getMenuList()?.length != 0 && <Link
         href={`/rest/${restId}/cart?table=${table}`}
         className="w-full"
       >

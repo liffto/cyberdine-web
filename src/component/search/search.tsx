@@ -11,9 +11,16 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import SearchIcon from "@mui/icons-material/Search";
 import Image from "next/image";
 import CloseIcon from "@mui/icons-material/Close";
+import DescriptionSheet from "../menu/description_sheet";
 
-export default function SearchComponent() {
-  const { menuData, category } = useContext(MenuDataContext);
+export default function SearchComponent({
+  restId,
+  bgColor,
+}: {
+  restId: string;
+  bgColor: string;
+}) {
+  const { menuData, category, deviceId } = useContext(MenuDataContext);
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace, back } = useRouter();
@@ -21,6 +28,12 @@ export default function SearchComponent() {
   const [query, setQuery] = useState("");
   const [selfilterList, setSelFilterList] = useState<Array<string>>([]);
   const [filterList, setFilterList] = useState<Array<string>>([]);
+  const [selectedMenuData, setSelectedMenuData] = useState<Item | null>(null);
+
+
+  const setSelectedData = (ele: Item) => {
+    setSelectedMenuData(ele);
+  };
 
   function handleCat(term: string) {
     const params = new URLSearchParams(searchParams);
@@ -187,10 +200,10 @@ export default function SearchComponent() {
                         ele == "Veg"
                           ? "/images/svg/veg_icon.svg"
                           : ele == "Non Veg"
-                          ? "/images/svg/non_veg_icon.svg"
-                          : ele == "Egg"
-                          ? "/images/svg/egg_icon.svg"
-                          : "/images/svg/our_special_icon.svg"
+                            ? "/images/svg/non_veg_icon.svg"
+                            : ele == "Egg"
+                              ? "/images/svg/egg_icon.svg"
+                              : "/images/svg/our_special_icon.svg"
                       }
                       alt={ele}
                       width={14}
@@ -221,10 +234,10 @@ export default function SearchComponent() {
                         ele == "Veg"
                           ? "/images/svg/veg_icon.svg"
                           : ele == "Non Veg"
-                          ? "/images/svg/non_veg_icon.svg"
-                          : ele == "Egg"
-                          ? "/images/svg/egg_icon.svg"
-                          : "/images/svg/our_special_icon.svg"
+                            ? "/images/svg/non_veg_icon.svg"
+                            : ele == "Egg"
+                              ? "/images/svg/egg_icon.svg"
+                              : "/images/svg/our_special_icon.svg"
                       }
                       alt={ele}
                       width={14}
@@ -265,10 +278,10 @@ export default function SearchComponent() {
                     </div>
                   </div>
                   <div className="px-4">
-                    {value[1].map((item,key) => {
+                    {value[1].map((item, key) => {
                       return (
                         <div className="pb-2" key={key} >
-                          <MenuItemCard index={index} ele={item} />
+                          <MenuItemCard index={index} ele={item} setSelectedData={setSelectedData} />
                         </div>
                       );
                     })}
@@ -278,6 +291,11 @@ export default function SearchComponent() {
             );
           })}
       </div>
+      {selectedMenuData && (
+        <DescriptionSheet
+          setSelectedMenuData={setSelectedData}
+          selectedMenuData={selectedMenuData} bgColor={bgColor} restId={restId} deviceId={deviceId ?? ""} />
+      )}
     </div>
   );
 }

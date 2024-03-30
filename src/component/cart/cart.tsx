@@ -24,7 +24,7 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
     const [wait, setWait] = useState<boolean>(false);
 
     const setSelectedData = (ele: Item) => {
-        if(cartMenuData){
+        if(cartMenuData && cartMenuData?.getMenuList()?.length != 0){
             setSelectedMenuData(ele);
         }else{
             back();
@@ -52,7 +52,7 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
             <Toaster position="top-center" />
             <div className="border border-primary mx-4 mt-2"></div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 py-4 px-4">
-                {cartMenuData && cartMenuData.getMenuList() &&
+                {cartMenuData && cartMenuData.getMenuList() && cartMenuData.getMenuList()?.length != 0 &&
                     cartMenuData
                         .getMenuList()!
                         .map((ele: Item, index: any) => {
@@ -68,14 +68,14 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
                         })}
             </div>
             <div
-                className={` fixed bottom-0 bg-primary text-white text-lg text-center flex justify-evenly items-center w-full py-2 font-semibold`}
+                className={` fixed bottom-0 bg-primary text-white text-lg text-center flex justify-evenly items-center w-full py-3 font-semibold`}
             >
                 <div className="" onClick={() => {
                     back();
                 }} >Select More</div>
                 <div onClick={() => {
                     wait ? null : sendFcm();
-                }} className={`${wait ? "text-gray-300" : " text-primary" } bg-white px-8 py-2 rounded-sm font-bold text-base `} >Request Waiter</div>
+                }} className={`${wait ? "text-gray-300" : " text-primary" } bg-white px-8 py-2 rounded-sm font-bold text-xl `} >Request Waiter</div>
             </div>
             {selectedMenuData && (
                 <DescriptionSheet
