@@ -34,7 +34,7 @@ export default function DescriptionSheet({
 
   const checkOrderList = () => {
     menuData?.addQantity(selectedMenuData, itemCount, restId, deviceId, (val: any) => {
-      if(val == "remove" && cartMenuData && cartMenuData?.getMenuList()!.length < 2 && (cartMenuData.getMenuList()![0].quantity == 1) ){
+      if(val == "remove" && cartMenuData && cartMenuData?.getMenuList()!.length < 2 && (itemCount == 0) ){
         console.log("test1");
         
         cartMenuData.makeCartMenuEmpty()
