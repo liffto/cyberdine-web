@@ -15,9 +15,10 @@ interface CartComponentProps {
     bgColor: string,
     table: string;
     topic: string;
+    notification: boolean;
 }
 
-const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, topic }) => {
+const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, topic, notification }) => {
     const { back } = useRouter();
     const [selectedMenuData, setSelectedMenuData] = useState<Item | null>(null);
     const { menuData, category, cartMenuData, deviceId } = useContext(MenuDataContext);
@@ -73,9 +74,9 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
                 <div className="" onClick={() => {
                     back();
                 }} >Select More</div>
-                <div onClick={() => {
+                {notification && <div onClick={() => {
                     wait ? null : sendFcm();
-                }} className={`${wait ? "text-gray-300" : " text-primary" } bg-white px-8 py-2 rounded-sm font-bold text-xl `} >Request Waiter</div>
+                }} className={`${wait ? "text-gray-300" : " text-primary" } bg-white px-8 py-2 rounded-sm font-bold text-xl `} >Request Waiter</div>}
             </div>
             {selectedMenuData && (
                 <DescriptionSheet

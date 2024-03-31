@@ -2,7 +2,7 @@ import Image from "next/image"
 import StorefrontIcon from '@mui/icons-material/Storefront';
 export default function Topbar({ data }: { data: any }) {
     return (
-        <div className="pt-4 pb-2 px-4 md:container bg-[#fafafa]">
+        <div className="pt-4 px-4 md:container bg-[#fafafa]">
             <div className="flex items-center">
                 <div className="flex-1">
                     <div className="text-xl truncate font-bold">

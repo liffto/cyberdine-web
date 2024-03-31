@@ -125,6 +125,15 @@ export default function ProductDisplay({
 
   }
 
+  const handleItemClick = (index: any) => {
+    const element = document.getElementById(`${index}`);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: "start" });
+    }
+  };
+
+  
+
   useEffect(() => {
     getQuantityFromOrder()
   }, [cartMenuData, preOrderData])
@@ -152,7 +161,7 @@ export default function ProductDisplay({
   function CategoryList() {
     return (
       <div
-        className={`overflow-x-scroll md:container max-w-screen py-2 bg-[#fafafa] z-20 sticky top-[53px]`}
+        className={`overflow-x-scroll md:container max-w-screen py-2 bg-[#fafafa] z-20 sticky top-[55px]`}
       >
         <div className="flex gap-3 px-4">
           {selfilterList!
@@ -198,24 +207,18 @@ export default function ProductDisplay({
       </div>
     );
   }
-  const handleItemClick = (index: any) => {
-    const element = document.getElementById(`${index}`);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: "start" });
-    }
-  };
 
   return (
     <div className="container mx-auto  ">
       {menuData ? (
         <div className="">
-          <div className="sticky top-0 z-20 bg-[#fafafa] w-full flex justify-between items-center px-4">
+          <div className="sticky top-0 z-20 bg-[#fafafa] w-full flex justify-between items-center px-4 pt-2">
             <Link
               href={`/rest/${restId}/search?query=&category=All`}
               className="w-full"
             >
               <div className="my-2 flex justify-start items-center w-full bg-white">
-                <div className="border border-gray-300 text-gray-300 rounded w-full py-[6px] mr-2 text-sm">
+                <div className={`border border-gray-300 text-gray-300 rounded w-full py-[6px] ${notification ? "mr-2" : "" }  text-sm`}>
                   <SearchIcon sx={{ marginRight: "10px", marginLeft: "10px" }} />
                   Search for dish
                 </div>
@@ -266,7 +269,7 @@ export default function ProductDisplay({
                         <>
                           {(
                             <div
-                              className="sticky top-[100px] bg-[#fafafa] z-10"
+                              className="sticky top-[102px] bg-[#fafafa] z-10"
                               id={ele}
                             >
                               <div className="px-4 py-2 font-bold text-sm bg-secondary text-black capitalize flex justify-between items-center">
@@ -320,7 +323,7 @@ export default function ProductDisplay({
       )}
       <div className="">
         <div
-          className={`category_shape fixed z-10 bottom-16 right-6 ${isCircle ? "circle" : "rectangle"}`}
+          className={`category_shape fixed z-10 ${cartMenuData && cartMenuData?.getMenuList() && cartMenuData?.getMenuList()?.length != 0 ? "bottom-16" : "bottom-6"}  right-6 ${isCircle ? "circle" : "rectangle"}`}
           onClick={() => setIsCircle(!isCircle)}
         >
           {isCircle ? (

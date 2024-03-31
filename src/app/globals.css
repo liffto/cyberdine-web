@@ -110,8 +110,8 @@ color: var(--secondary-bg) !important;
 }
 
 .category_shape.rectangle {
-  width: 250px;
-  height: 250px;
+  width: 280px;
+  height: 300px;
   border-radius: 0;
   border-radius: 4%;
   justify-content: start;

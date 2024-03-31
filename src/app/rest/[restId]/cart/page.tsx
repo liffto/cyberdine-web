@@ -46,7 +46,7 @@ export default async function MenuSearch({
                 } as React.CSSProperties
             }>
             <Topbar data={json.data} />
-            <CartComponent restId={params.restId} bgColor={"#" + json.data.hcolor?.slice(2, 10)} table={searchParams.table} topic={json?.data?.fcmTopic} />
+            <CartComponent restId={params.restId} bgColor={"#" + json.data.hcolor?.slice(2, 10)} table={searchParams.table} topic={json?.data?.fcmTopic} notification={json?.data?.isNoticifation}  />
         </div>
     );
 }
