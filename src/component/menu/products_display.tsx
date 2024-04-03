@@ -180,7 +180,7 @@ export default function ProductDisplay({
                       <Image src={ele == "Veg" ? "/images/svg/veg_icon.svg" : ele == "Non Veg" ? "/images/svg/non_veg_icon.svg" : ele == "Egg" ? "/images/svg/egg_icon.svg" : "/images/svg/our_special_icon.svg"} alt={ele} width={14} height={14} />
                     </div>
                     <div className="font-medium text-sm">{ele}</div>
-                    <div className=" rounded-full font-bold border border-primary text-primary w-4 h-4 flex justify-center items-center"><CloseIcon sx={{ fontSize: "10px", fontWeight: "bold" }} /></div>
+                    <div className=" rounded-full font-bold bg-primary border border-primary text-white w-4 h-4 flex justify-center items-center"><CloseIcon sx={{ fontSize: "10px", fontWeight: "bold" }} /></div>
                   </div>
                 </div>
               );
