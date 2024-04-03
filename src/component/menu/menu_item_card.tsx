@@ -66,7 +66,7 @@ export default function MenuItemCard({
           </div>
         )}
       </div>
-      <div className={`relative z-0 flex items-center p-2 flex-1 ${ele.quantity != undefined && ele.quantity > 0 ? "border-y-2 border-r-2 border-primary" : "bg-white"}`}>
+      <div className={`relative z-0 flex items-center rounded-e-md p-2 flex-1 ${ele.quantity != undefined && ele.quantity > 0 ? "border-y-2 border-r-2 border-primary" : "bg-white"}`}>
         <div className="flex flex-col  flex-1 pl-1">
           <h1 className={`text-base capitalize md:text-lg font-bold ${!ele.isActive ? "text-gray-400" : "text-black"}`}>
             {ele.name}
