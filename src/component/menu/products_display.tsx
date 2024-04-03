@@ -51,6 +51,7 @@ export default function ProductDisplay({
   };
 
   const sendFcm = async () => {
+    if(table !=null&& table != undefined){
     var data = {
       'data': {
         'title': `Table ${table}`,
@@ -64,6 +65,7 @@ export default function ProductDisplay({
     setTimeout(() => {
       setWait(false);
     }, 1000 * 60);
+    }
   };
 
   const handleCatClick = (cat: string, isFromSelected: boolean) => {
