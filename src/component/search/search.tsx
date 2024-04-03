@@ -1,7 +1,7 @@
 "use client";
 import { MenuDataContext } from "@/context/menu.context";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import CancelIcon from "@mui/icons-material/Cancel";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -29,7 +29,7 @@ export default function SearchComponent({
   const [selfilterList, setSelFilterList] = useState<Array<string>>([]);
   const [filterList, setFilterList] = useState<Array<string>>([]);
   const [selectedMenuData, setSelectedMenuData] = useState<Item | null>(null);
-
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const setSelectedData = (ele: Item) => {
     setSelectedMenuData(ele);
@@ -125,6 +125,14 @@ export default function SearchComponent({
     }
   };
 
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+    const cat = ["Veg", "Egg", "Non Veg", "Our Special"];
+    setFilterList(cat);
+  }, []);
+
   function TopBar() {
     return (
       <div className="sticky top-0 bg-white z-40">
@@ -133,9 +141,11 @@ export default function SearchComponent({
             placeholder="Search"
             fullWidth
             value={query ?? ""}
+            inputRef={inputRef}
             onChange={(ele) => {
               setQuery(ele.target.value ?? "");
             }}
+            sx={inputStyles}
             InputProps={{
               startAdornment: (
                 <InputAdornment
@@ -254,10 +264,32 @@ export default function SearchComponent({
     );
   }
 
-  useEffect(() => {
-    const cat = ["Veg", "Egg", "Non Veg", "Our Special"];
-    setFilterList(cat);
-  }, []);
+
+  const inputStyles = {
+    '& .MuiInputBase-input': {
+      color: '#000', // Change text color
+    },
+    '& .MuiInput-root:hover::before': {
+      borderBottomColor: '#d1d5db', // Change border color on hover
+    },
+    '& .MuiInput-root::before': {
+      borderBottomColor: '#d1d5db', // Default border color
+    },
+    '& .MuiInput-root::after': {
+      borderBottomColor: '#d1d5db', // Change border color when focused
+    },
+    '& .MuiOutlinedInput-root': {
+      '&:hover .MuiOutlinedInput-notchedOutline': {
+        borderColor: '#000', // Change border color on hover
+      },
+      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+        borderColor: '#000', // Change border color when focused
+      },
+    },
+    '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
+      borderColor: '#000', // Default border color
+    },
+  };
 
   return (
     <div className="">
@@ -281,7 +313,7 @@ export default function SearchComponent({
                     {value[1].map((item, key) => {
                       return (
                         <div className="pb-2" key={key} >
-                          <MenuItemCard index={index} ele={item} setSelectedData={setSelectedData} />
+                          <MenuItemCard index={index} ele={item} setSelectedData={setSelectedData} bgColor={bgColor} />
                         </div>
                       );
                     })}

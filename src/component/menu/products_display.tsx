@@ -128,11 +128,12 @@ export default function ProductDisplay({
   const handleItemClick = (index: any) => {
     const element = document.getElementById(`${index}`);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: "start" });
+      const offset = element.getBoundingClientRect().top;
+      window.scrollTo({ top: window.scrollY + offset, behavior: 'smooth' });
     }
   };
 
-  
+
 
   useEffect(() => {
     getQuantityFromOrder()
@@ -156,7 +157,7 @@ export default function ProductDisplay({
       document.body.removeEventListener('click', handleClickOutside);
     };
   }, [])
-  
+
 
   function CategoryList() {
     return (
@@ -218,7 +219,7 @@ export default function ProductDisplay({
               className="w-full"
             >
               <div className="my-2 flex justify-start items-center w-full bg-white">
-                <div className={`border border-gray-300 text-gray-300 rounded w-full py-[6px] ${notification ? "mr-2" : "" }  text-sm`}>
+                <div className={`border border-gray-300 text-gray-300 rounded w-full py-[6px] ${notification ? "mr-2" : ""}  text-sm`}>
                   <SearchIcon sx={{ marginRight: "10px", marginLeft: "10px" }} />
                   Search for dish
                 </div>
@@ -261,28 +262,25 @@ export default function ProductDisplay({
             {category && category!.map(
               (ele, catIndex) => {
                 return (
-                  <div key={catIndex}>
+                  <div key={catIndex} id={ele}>
                     {menuData &&
                       menuData.getMenuList(ele, selfilterList) &&
                       menuData.getMenuList(ele, selfilterList)!.length >
                       0 && (
                         <>
-                          {(
-                            <div
-                              className="sticky top-[102px] bg-[#fafafa] z-10"
-                              id={ele}
-                            >
-                              <div className="px-4 py-2 font-bold text-sm bg-secondary text-black capitalize flex justify-between items-center">
-                                <div className=" ">
-                                  {ele}
-                                </div>
-                                <div className="pr-2">
-                                  {menuData.getMenuList(ele, selfilterList)!.length}
-                                </div>
+                          <div
+                            className="sticky top-[102px] bg-[#fafafa] z-10"
+
+                          >
+                            <div className="px-4 py-2 font-bold text-sm bg-secondary text-black capitalize flex justify-between items-center">
+                              <div className=" ">
+                                {ele}
+                              </div>
+                              <div className="pr-2">
+                                {menuData.getMenuList(ele, selfilterList)!.length}
                               </div>
                             </div>
-                          )}
-
+                          </div>
                           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 py-4 px-4">
                             {menuData.getMenuList(ele, selfilterList) &&
                               menuData
@@ -294,8 +292,7 @@ export default function ProductDisplay({
                                         index={index}
                                         setSelectedData={setSelectedData}
                                         ele={ele}
-                                        catIndex={catIndex}
-                                      />
+                                        catIndex={catIndex} bgColor={bgColor}                                      />
                                     </div>
                                   );
                                 })}
@@ -337,7 +334,10 @@ export default function ProductDisplay({
             <div ref={categoryRef} className="category_text">
               <ul className="">
                 {category.map((item, index) => (
-                  <li onClick={() => handleItemClick(item)} className="pb-2 cursor-pointer capitalize text-lg font-medium" key={index}>{item}</li>
+                  menuData &&
+                  menuData.getMenuList(item, selfilterList) &&
+                  menuData.getMenuList(item, selfilterList)!.length >
+                  0 && <li onClick={() => handleItemClick(item)} className="pb-2 cursor-pointer capitalize text-lg font-medium" key={index}>{item}</li>
                 ))}
               </ul>
             </div>

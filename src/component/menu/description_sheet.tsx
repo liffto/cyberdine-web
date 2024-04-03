@@ -5,6 +5,12 @@ import { useContext, useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { MenuDataContext } from "@/context/menu.context";
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import toast, { Toaster } from "react-hot-toast";
+
+const itemAdd = () => toast('Item successfully added to wishlist');
+const itemRemove = () => toast('Item successfully removed to wishlist');
 
 export default function DescriptionSheet({
   setSelectedMenuData,
@@ -19,24 +25,36 @@ export default function DescriptionSheet({
   restId: string;
   deviceId: string;
 }) {
-  const [itemCount, setItemCount] = useState<number>(selectedMenuData.quantity && selectedMenuData.quantity != undefined ? selectedMenuData.quantity : null);
+  const [itemCount, setItemCount] = useState<number | null>(selectedMenuData.quantity && selectedMenuData.quantity != undefined ? selectedMenuData.quantity : null);
   const { menuData, cartMenuData } = useContext(MenuDataContext);
 
-  const itemCountFunc = (type: string) => {
-    let temp = itemCount;
-    if (type == "add") {
-      temp = temp + 1;
+  const addToWishList = () => {
+    let temp: number | null;
+    temp = itemCount;
+    if (temp == 0 || temp == null) {
+      temp = 1;
+      itemAdd();
     } else if (temp > 0) {
-      temp = temp - 1;
+      temp = null;
+      itemRemove();
     }
     setItemCount(temp);
+    checkOrderList(temp);
   };
 
-  const checkOrderList = () => {
-    menuData?.addQantity(selectedMenuData, itemCount, restId, deviceId, (val: any) => {
-      if(val == "remove" && cartMenuData && cartMenuData?.getMenuList()!.length < 2 && (itemCount == 0) ){
-        console.log("test1");
-        
+  // const itemCountFunc = () => {
+  //   let temp = itemCount;
+  //   if (temp == 0) {
+  //     temp = temp + 1;
+  //   } else if (temp > 0) {
+  //     temp = temp - 1;
+  //   }
+  //   setItemCount(temp);
+  // };
+
+  const checkOrderList = (count:number|null) => {
+    menuData?.addQantity(selectedMenuData, count, restId, deviceId, (val: any) => {
+      if (val == "remove" && cartMenuData && cartMenuData?.getMenuList()!.length < 2 && (itemCount == 1)) {
         cartMenuData.makeCartMenuEmpty()
       }
       setSelectedMenuData(null);
@@ -48,6 +66,7 @@ export default function DescriptionSheet({
   const description = () => {
     return (
       <div className="h-full flex flex-col justify-between">
+        <Toaster position="top-center" />
         <div onClick={() => { setSelectedMenuData(null); }} className="text-white bg-black text-center rounded-full w-12 py-3 mx-auto mb-4">
           <CloseIcon />
         </div>
@@ -101,23 +120,12 @@ export default function DescriptionSheet({
               {selectedMenuData?.description}
             </div>}
           </div>
-          {itemCount == null ? <div
-            className={` text-white text-lg text-center flex justify-between px-4 items-center w-full py-3 font-semibold`} style={{ backgroundColor: bgColor }}
+          <div
+            className={`text-lg text-center flex justify-between px-4 items-center w-full py-3 font-semibold`} style={{ backgroundColor: bgColor }}
           >
-            <div className="pl-8" onClick={() => { setSelectedMenuData(null); }} >Cancel</div>
-            <div onClick={() => { itemCountFunc("add"); }} className="bg-white px-4 py-2 rounded-md font-semibold text-xl" style={{ color: bgColor }} >ADD TO WISHLIST</div>
-          </div> : <div
-            className={` text-white text-lg text-center flex justify-between px-4 items-center w-full py-3 font-semibold`} style={{ backgroundColor: bgColor }}
-          >
-            <div className="" >
-              <div className="flex justify-start items-center">
-                <div onClick={() => { itemCountFunc("remove"); }} className="bg-black w-14 h-11 pt-2 rounded-l-md"><RemoveIcon /></div>
-                <div className="font-bold bg-white text-lg text-black w-14 h-11 pt-[8px]">{itemCount}</div>
-                <div onClick={() => { itemCountFunc("add"); }} className="bg-black w-14 h-11 pt-2 rounded-r-md"><AddIcon /></div>
-              </div>
-            </div>
-            <div onClick={() => { checkOrderList() }} className="bg-white px-8 py-2 rounded-md font-bold text-xl w-[48%]" style={{ color: bgColor }} >{itemCount == 0 ? "REMOVE" : "ADD"}</div>
-          </div>}
+            <div className="flex-1 bg-white px-4 py-2 rounded font-semibold text-xl" onClick={() => { setSelectedMenuData(null); }} style={{ color: bgColor }} >Cancel</div>
+            <div onClick={() => { addToWishList(); }} className="border-2 border-white px-[6px] ml-3 py-[7px] rounded"  >{itemCount != null ? <BookmarkIcon sx={{ color: "white" }} /> : <BookmarkBorderIcon sx={{ color: "white" }} />}</div>
+          </div>
         </div>
       </div>
     );

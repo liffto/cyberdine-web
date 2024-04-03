@@ -1,17 +1,20 @@
 import { Item } from "@/model/products/items";
 import Image from "next/image";
 import { useState } from "react";
+import BookmarkSharpIcon from '@mui/icons-material/BookmarkSharp';
 
 export default function MenuItemCard({
   index,
   setSelectedData,
   ele,
   catIndex,
+  bgColor,
 }: {
   index: any;
   setSelectedData?: (ele: Item) => void;
   ele: Item;
   catIndex?: number;
+  bgColor: string;
 }) {
   const [imageError, setImageError] = useState(false);
 
@@ -24,7 +27,7 @@ export default function MenuItemCard({
       onClick={() => {
         setSelectedData && setSelectedData(ele);
       }}
-      className="rounded-md boxshadow-3 md:rounded-md overflow-hidden max-h-[100px] flex "
+      className={`"rounded-md boxshadow-3 md:rounded-md overflow-hidden max-h-[100px] flex`}
     >
       <div className="relative z-0">
         <div className={`h-full bg-slate-200  flex items-center`}>
@@ -63,7 +66,7 @@ export default function MenuItemCard({
           </div>
         )}
       </div>
-      <div className={`flex items-center p-2 flex-1 ${ele.quantity != undefined && ele.quantity > 0 ? "bg-secondary" : "bg-white"}`}>
+      <div className={`relative z-0 flex items-center p-2 flex-1 ${ele.quantity != undefined && ele.quantity > 0 ? "border-y-2 border-r-2 border-primary" : "bg-white"}`}>
         <div className="flex flex-col  flex-1 pl-1">
           <h1 className={`text-base capitalize md:text-lg font-bold ${!ele.isActive ? "text-gray-400" : "text-black"}`}>
             {ele.name}
@@ -75,11 +78,17 @@ export default function MenuItemCard({
           </div>
         </div>
         {
-          ele.quantity != undefined && ele.quantity > 0 ? <div className="flex flex-col justify-center items-center pr-3">
-            <div className={`font-bold text-black text-2xl`}>{ele.quantity}</div>
-            <div className={`text-xs md:text-sm font-medium text-black`}>Qty</div>
-          </div> :
-            <div className={`font-bold pr-1 ${!ele.isActive ? "text-gray-300" : "text-gray-700"}`}>&#x20B9; {ele.price}</div>}
+          // ele.quantity != undefined && ele.quantity > 0 ?
+          //  <div className="flex flex-col justify-center items-center pr-3">
+          //   <div className={`font-bold text-black text-2xl`}>{ele.quantity}</div>
+          //   <div className={`text-xs md:text-sm font-medium text-black`}>Qty</div>
+          // </div> 
+          // :
+          <div className={`font-bold pr-1 ${!ele.isActive ? "text-gray-300" : "text-gray-700"}`}>&#x20B9; {ele.price}</div>
+        }
+        {ele.quantity != undefined && ele.quantity > 0  &&<div className="absolute -top-[5px] right-4">
+          <BookmarkSharpIcon sx={{ color: bgColor }} />
+        </div>}
       </div>
     </div>
   );

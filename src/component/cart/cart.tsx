@@ -62,8 +62,7 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
                                     <MenuItemCard
                                         index={index}
                                         setSelectedData={setSelectedData}
-                                        ele={ele}
-                                    />
+                                        ele={ele} bgColor={bgColor}                                    />
                                 </div>
                             );
                         })}
