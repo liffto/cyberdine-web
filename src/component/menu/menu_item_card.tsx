@@ -27,7 +27,7 @@ export default function MenuItemCard({
       onClick={() => {
         setSelectedData && setSelectedData(ele);
       }}
-      className={`rounded-md boxshadow-3 md:rounded-md overflow-hidden max-h-[100px] flex`}
+      className={`rounded-md boxshadow-3 md:rounded-md overflow-hidden max-h-[100px] flex bg-white  ${ele.quantity != undefined && ele.quantity > 0 ? "border-2 border-primary" : ""}`}
     >
       <div className="relative z-0">
         <div className={`h-full bg-slate-200  flex items-center`}>
@@ -66,7 +66,7 @@ export default function MenuItemCard({
           </div>
         )}
       </div>
-      <div className={`relative z-0 flex items-center rounded-e-md p-2 flex-1 ${ele.quantity != undefined && ele.quantity > 0 ? "border-y-2 border-r-2 border-primary" : "bg-white"}`}>
+      <div className={`relative z-0 flex items-center rounded-e-md p-2 flex-1`}>
         <div className="flex flex-col  flex-1 pl-1">
           <h1 className={`text-base capitalize md:text-lg font-bold ${!ele.isActive ? "text-gray-400" : "text-black"}`}>
             {ele.name}
@@ -86,7 +86,7 @@ export default function MenuItemCard({
           // :
           <div className={`font-bold pr-1 ${!ele.isActive ? "text-gray-300" : "text-gray-700"}`}>&#x20B9; {ele.price}</div>
         }
-        {ele.quantity != undefined && ele.quantity > 0  &&<div className="absolute -top-[5px] right-4">
+        {ele.quantity != undefined && ele.quantity > 0  &&<div className="absolute -top-[5px] right-2">
           <BookmarkSharpIcon sx={{ color: bgColor }} />
         </div>}
       </div>
