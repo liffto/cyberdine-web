@@ -27,7 +27,7 @@ export default function MenuItemCard({
       onClick={() => {
         setSelectedData && setSelectedData(ele);
       }}
-      className={`"rounded-md boxshadow-3 md:rounded-md overflow-hidden max-h-[100px] flex`}
+      className={`rounded-md boxshadow-3 md:rounded-md overflow-hidden max-h-[100px] flex`}
     >
       <div className="relative z-0">
         <div className={`h-full bg-slate-200  flex items-center`}>
