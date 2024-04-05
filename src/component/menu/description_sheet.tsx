@@ -10,7 +10,7 @@ import BookmarkIcon from '@mui/icons-material/Bookmark';
 import toast, { Toaster } from "react-hot-toast";
 
 const itemAdd = () => toast('Item successfully added to wishlist');
-const itemRemove = () => toast('Item successfully removed to wishlist');
+const itemRemove = () => toast('Item successfully removed from wishlist');
 
 export default function DescriptionSheet({
   setSelectedMenuData,
