@@ -91,7 +91,7 @@ export default function DescriptionSheet({
           <div className="px-4 py-2 text-black">
             <div className="mb-2">
               <div className=" flex justify-between items-center">
-                <div className="font-bold text-xl">{selectedMenuData?.name}</div>
+                <div className="flex-1 font-bold text-xl">{selectedMenuData?.capitalizeNameFirstLetter()}</div>
 
                 <div className={`flex justify-center items-center`}>
                   <div className="">
@@ -117,7 +117,7 @@ export default function DescriptionSheet({
               <div className={`font-medium text-gray-400`}>&#x20B9; {selectedMenuData?.price}</div>
             </div>
             {selectedMenuData?.description && <div className="font-medium text-base mb-2">
-              {selectedMenuData?.description}
+              {selectedMenuData?.capitalizeDescriptionFirstLetter()}
             </div>}
           </div>
           <div

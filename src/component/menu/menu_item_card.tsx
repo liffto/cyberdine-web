@@ -69,7 +69,7 @@ export default function MenuItemCard({
       <div className={`relative z-0 flex items-center rounded-e-md p-2 flex-1`}>
         <div className="flex flex-col  flex-1 pl-1">
           <h1 className={`text-base capitalize md:text-lg font-bold ${!ele.isActive ? "text-gray-400" : "text-black"}`}>
-            {ele.name}
+            {ele.capitalizeNameFirstLetter()}
           </h1>
           <div
             className={`text-xs md:text-sm  ${!ele.isActive ? "text-gray-300" : "text-gray-800"} font-medium`}
