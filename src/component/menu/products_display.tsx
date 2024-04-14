@@ -54,7 +54,7 @@ export default function ProductDisplay({
     if(table !=null&& table != undefined){
     var data = {
       'data': {
-        'title': `Table ${table}`,
+        'title': `Table ${table} `,
         'body': `Requesting for Captain`
       },
       topic: `${restId}table${table}`,
