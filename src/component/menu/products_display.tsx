@@ -57,7 +57,7 @@ export default function ProductDisplay({
         'title': `Table ${table}`,
         'body': `Requesting for Captain`
       },
-      topic: restId != "MUM070324htl" ? `${restId}table${table}` : topic ? topic.replace(" ", "") : "",
+      topic: `${restId}table${table}`,
     };
     setWait(true);
     await FcmService.shared.fcmTopic(data);
