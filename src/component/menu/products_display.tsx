@@ -212,7 +212,7 @@ export default function ProductDisplay({
   }
 
   return (
-    <div className="container mx-auto  ">
+    <div className="md:container mx-auto  ">
       {menuData ? (
         <div className="">
           <div className="sticky top-0 z-20 bg-[#fafafa] w-full flex justify-between items-center px-4 pt-2">

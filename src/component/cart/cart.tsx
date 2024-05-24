@@ -49,7 +49,7 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
     };
 
     return (
-        <div className="container mx-auto">
+        <div className="md:container mx-auto">
             <Toaster position="top-center" />
             <div className="border border-primary mx-4 mt-2"></div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 py-4 px-4">

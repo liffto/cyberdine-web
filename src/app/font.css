@@ -1,0 +1,17 @@
+@font-face {
+    font-family: "Nexa-Bold";
+    src: url("../../public/fonts/Nexa-Bold.otf");
+    font-display: swap;
+}
+@font-face {
+    font-family: "Nexa-Regular";
+    src: url("../../public/fonts/Nexa-Regular.otf");
+}
+@font-face {
+    font-family: "Nexa-Light";
+    src: url("../../public/fonts/Nexa-Light.otf");
+}
+
+.nexa-bold{
+    font-family: "Nexa-Bold";
+}

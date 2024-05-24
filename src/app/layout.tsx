@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import "./font.css";
+import AOSProvider from "@/providers/aos";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -58,7 +60,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <AOSProvider>
       <body className={inter.className}>{children}</body>
+      </AOSProvider>
     </html>
   );
 }

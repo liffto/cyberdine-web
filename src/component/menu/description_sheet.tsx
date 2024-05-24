@@ -145,6 +145,7 @@ export default function DescriptionSheet({
             borderTopRightRadius: "20px",
           },
         }}
+        closeAfterTransition
         onClose={() => {
           setSelectedMenuData(null);
         }}
