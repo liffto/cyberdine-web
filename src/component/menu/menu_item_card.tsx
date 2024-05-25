@@ -61,7 +61,7 @@ export default function MenuItemCard({
           </div>
         )}
         {!ele.isActive && (
-          <div className="absolute bottom-[38%] right-0 text-white bg-appbg text-sm w-full text-center">
+          <div className="absolute bottom-[38%] right-0 text-white bg-[#d71d25] text-sm w-full text-center">
             Sold Out
           </div>
         )}
