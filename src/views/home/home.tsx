@@ -2,6 +2,7 @@ import TopBar from "@/component/common/topbar";
 import GivePremium from "@/component/home/give_premium";
 import GrowYourBusiness from "@/component/home/grow_your_business";
 import OurClients from "@/component/home/our_clients";
+import WhyUseOurApp from "@/component/home/why_use_app";
 
 export default function HomePage() {
     return (
@@ -10,6 +11,7 @@ export default function HomePage() {
         <GrowYourBusiness />
         <OurClients />
         <GivePremium />
+        <WhyUseOurApp />
         </>
     );
 }
