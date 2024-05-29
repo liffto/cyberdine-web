@@ -4,6 +4,7 @@ import GivePremium from "@/component/home/give_premium";
 import GrowYourBusiness from "@/component/home/grow_your_business";
 import HowOurPageWorks from "@/component/home/how_app_works";
 import OurClients from "@/component/home/our_clients";
+import PickPlan from "@/component/home/pick_plan";
 import WhyUseOurApp from "@/component/home/why_use_app";
 
 export default function HomePage() {
@@ -16,6 +17,7 @@ export default function HomePage() {
         <WhyUseOurApp />
         <HowOurPageWorks />
         <DemoLinkComponent />
+        <PickPlan />
         </>
     );
 }

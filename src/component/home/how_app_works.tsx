@@ -7,7 +7,7 @@ const cards: any[] = [
 ];
 export default function HowOurPageWorks() {
   return (
-    <div className=" container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 justify-between pt-8 md:pt-12 lg:pt-16">
+    <div className=" container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 justify-between pt-8 md:pt-12 lg:pt-16">
       {cards.map((card, index) => {
         return (
           <div data-aos="zoom-in-up" key={card.title} >
@@ -39,10 +39,10 @@ function HowWorksCard({ card, index }: { card: any; index: number }) {
         priority
       ></Image>
       <div className="font-bold text-xl lg:text-[45px] pt-2 md:pt-4 lg:pt-6">0{index}</div>
-      <div className="font-bold text-sm lg:text-[26px] lg:leading-8 pt-4">
+      <div className="font-bold text-sm lg:text-[26px] lg:leading-8 md:pt-2 lg:pt-4">
         {card.title}
       </div>
-      <div className=" text-xs lg:text-sm pt-4">{card.description}</div>
+      <div className=" text-xs lg:text-sm md:pt-2 lg:pt-4">{card.description}</div>
     </>
   );
 }

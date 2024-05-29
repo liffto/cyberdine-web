@@ -10,7 +10,8 @@ export default function DemoLinkComponent() {
         Just scan the QR code via phone camera or click the link below
       </div>
       <div data-aos="zoom-in-up" data-aos-anchor-placement="center-bottom" className="pt-3 md:pt-6">
-        <Image src={"/images/svg/qr_example.svg"} alt={"sample qr"} height={454} width={389} />
+        <Image className="hidden lg:block " src={"/images/svg/qr_example.svg"} alt={"sample qr"} height={454} width={389} />
+        <Image className="lg:hidden" src={"/images/svg/qr_example.svg"} alt={"sample qr"} height={300} width={250} />
       </div>
       <div className="text-primary font-bold text-sm md:text-[26px] pt-3 md:pt-6">
         Click to View Sample menu
