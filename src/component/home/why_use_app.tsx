@@ -33,7 +33,7 @@ export default function WhyUseOurApp() {
     <div className="container pt-8 md:pt-12 lg:pt-16">
       <div className="flex flex-col lg:flex-row items-center gap-4">
         <TextAndButtons />
-        <div className="flex-1 grid grid-cols-2 gap-4 lg:gap-6 pt-4 lg:pt-0">
+        <div data-aos="zoom-in" data-aos-anchor-placement="center-bottom" className="flex-1 grid grid-cols-2 gap-4 lg:gap-6 pt-4 lg:pt-0">
             {cards.map((card,index)=>{
                 return (
                     <div key={card.title}  className="rounded-md lg:rounded-lg  boxshadow-4 p-4 lg:p-6">
@@ -50,7 +50,7 @@ export default function WhyUseOurApp() {
 }
 function TextAndButtons() {
   return (
-    <div className="flex-1 flex flex-col items-center lg:items-start ">
+    <div data-aos="fade-right" className="flex-1 flex flex-col items-center lg:items-start ">
       <div className="text-lg lg:text-[45px] lg:leading-[2.8rem] uppercase font-bold">
         Why You must use our app
       </div>
