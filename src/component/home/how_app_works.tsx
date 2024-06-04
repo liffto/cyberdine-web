@@ -20,7 +20,7 @@ export default function HowOurPageWorks() {
 }
 function HowWorksCard({ card, index }: { card: any; index: number }) {
   return (
-    <>
+    <div className="max-w-[300px] md:max-w-auto mx-auto">
         <Image
         className="lg:hidden bg-secondary rounded-t-md"
         src={card.image}
@@ -43,6 +43,6 @@ function HowWorksCard({ card, index }: { card: any; index: number }) {
         {card.title}
       </div>
       <div className=" text-xs lg:text-sm md:pt-2 lg:pt-4">{card.description}</div>
-    </>
+    </div>
   );
 }

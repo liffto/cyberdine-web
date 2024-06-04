@@ -1,10 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import MenuIcon from '@mui/icons-material/Menu';
-export default function TopBar() {
-  return (
-    <div className="h-[50px] md:h-[80px] sticky top-0 bg-appbg" style={{ boxShadow: "0px 0px 6px 0px #00000040",zIndex:100 }}>
-      <div className="h-full flex items-center container py-2 md:py-4  mx-auto">
+
+export default function Footer() {
+    return (
+        <div>
+            <div className="h-full flex items-center container py-2 md:py-4  mx-auto">
         <div className="flex-1 lg:flex-none ">
           <Image
             className="md:hidden"
@@ -29,14 +29,8 @@ export default function TopBar() {
             <Link href="/">Contact</Link>
         </div>
         
-        <div className="hidden lg:flex items-center justify-center bg-primary text-white rounded-md  lg:w-[150px] h-[45px] text-sm lg:text-lg">
-          Sign In
-        </div>
-      
-        <div className="lg:hidden">
-        <MenuIcon />
-        </div>
+        
       </div>
-    </div>
-  );
+        </div>
+    );
 }

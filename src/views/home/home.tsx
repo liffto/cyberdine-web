@@ -9,7 +9,7 @@ import WhyUseOurApp from "@/component/home/why_use_app";
 
 export default function HomePage() {
     return (
-        <>
+        <div className="overflow-x-hidden max-w-screen">
         <TopBar />
         <GrowYourBusiness />
         <OurClients />
@@ -18,6 +18,6 @@ export default function HomePage() {
         <HowOurPageWorks />
         <DemoLinkComponent />
         <PickPlan />
-        </>
+        </div>
     );
 }
