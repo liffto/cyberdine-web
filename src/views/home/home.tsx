@@ -1,5 +1,7 @@
+import Footer from "@/component/common/footer";
 import TopBar from "@/component/common/topbar";
 import DemoLinkComponent from "@/component/home/demo_link";
+import DemoVideoComponent from "@/component/home/demo_video";
 import GivePremium from "@/component/home/give_premium";
 import GrowYourBusiness from "@/component/home/grow_your_business";
 import HowOurPageWorks from "@/component/home/how_app_works";
@@ -17,7 +19,9 @@ export default function HomePage() {
         <WhyUseOurApp />
         <HowOurPageWorks />
         <DemoLinkComponent />
+        <DemoVideoComponent />
         <PickPlan />
+        <Footer />
         </div>
     );
 }

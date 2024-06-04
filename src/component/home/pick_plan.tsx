@@ -10,12 +10,12 @@ export default function PickPlan() {
         Pick the perfect plan for your preferences
       </div>
       <div
-        data-aos="zoom-in-up"
+       
         className="container pt-3 md:pt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 "
       >
-        <div className="h-[45vh] md:h-[60vh] bg-white w-[220px] md:min-w-full rounded md:rounded-lg mx-auto"></div>
-        <div className="h-[45vh] md:h-[60vh] bg-white w-[220px] md:min-w-full rounded md:rounded-lg mx-auto"></div>
-        <div className="h-[45vh] md:h-[60vh] bg-white w-[220px] md:min-w-full rounded md:rounded-lg mx-auto"></div>
+        <div data-aos={"fade-left"} data-aos-anchor-placement="center-bottom" className="h-[45vh] md:h-[60vh] bg-white w-[220px] md:min-w-full rounded md:rounded-lg mx-auto"></div>
+        <div data-aos={"fade-in"} data-aos-anchor-placement="center-bottom"  className="h-[45vh] md:h-[60vh] bg-white w-[220px] md:min-w-full rounded md:rounded-lg mx-auto"></div>
+        <div data-aos={"fade-right"} data-aos-anchor-placement="center-bottom"  className="h-[45vh] md:h-[60vh] bg-white w-[220px] md:min-w-full rounded md:rounded-lg mx-auto"></div>
       </div>
     </div>
   );
