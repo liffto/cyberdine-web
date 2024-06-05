@@ -12,13 +12,16 @@ import SearchIcon from "@mui/icons-material/Search";
 import Image from "next/image";
 import CloseIcon from "@mui/icons-material/Close";
 import DescriptionSheet from "../menu/description_sheet";
+import BasicMenuItemCard from "../menu/basic_menu_item_card";
 
 export default function SearchComponent({
   restId,
   bgColor,
+  plan
 }: {
   restId: string;
   bgColor: string;
+  plan: string;
 }) {
   const { menuData, category, deviceId } = useContext(MenuDataContext);
   const searchParams = useSearchParams();
@@ -269,25 +272,16 @@ export default function SearchComponent({
     '& .MuiInputBase-input': {
       color: '#000', // Change text color
     },
-    '& .MuiInput-root:hover::before': {
-      borderBottomColor: '#d1d5db', // Change border color on hover
-    },
-    '& .MuiInput-root::before': {
-      borderBottomColor: '#d1d5db', // Default border color
-    },
-    '& .MuiInput-root::after': {
-      borderBottomColor: '#d1d5db', // Change border color when focused
-    },
     '& .MuiOutlinedInput-root': {
       '&:hover .MuiOutlinedInput-notchedOutline': {
-        borderColor: '#000', // Change border color on hover
+        border: '1px solid #000', // Change border color on hover
       },
       '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-        borderColor: '#000', // Change border color when focused
+        border: '1px solid #000', // Change border color when focused
       },
     },
     '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
-      borderColor: '#000', // Default border color
+      border: '1px solid #000', // Default border color
     },
   };
 
@@ -295,7 +289,7 @@ export default function SearchComponent({
     <div className="">
       {TopBar()}
       {CategoryList()}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 py-4 ">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 md:gap-6 py-4 ">
         {menuData &&
           menuData.getSearchedMenu(query, selfilterList) &&
           Array.from(
@@ -309,11 +303,13 @@ export default function SearchComponent({
                       <div className=" ">{value[0]}</div>
                     </div>
                   </div>
-                  <div className="px-4">
+                  <div className="px-4 py-1">
                     {value[1].map((item, key) => {
                       return (
-                        <div className="pb-2" key={key} >
-                          <MenuItemCard index={index} ele={item} setSelectedData={setSelectedData} bgColor={bgColor} />
+                        <div className="pb-4" key={key} >
+                          {plan === "basic" ? <BasicMenuItemCard
+                            index={index}
+                            ele={item} /> : <MenuItemCard index={index} ele={item} setSelectedData={setSelectedData} bgColor={bgColor} />}
                         </div>
                       );
                     })}

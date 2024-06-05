@@ -11,10 +11,15 @@ import Link from "next/link";
 import { FcmService } from "@/service/fcm_service";
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
+import Collapse from '@mui/material/Collapse';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+
 const DescriptionSheet = dynamic(() => import("./description_sheet"), {
   ssr: false,
 });
 import toast, { Toaster } from 'react-hot-toast';
+import BasicMenuItemCard from "./basic_menu_item_card";
 
 const notify = () => toast('Notified successfully');
 const soldOutNotify = () => toast('Temporarily out of stock');
@@ -25,12 +30,14 @@ export default function ProductDisplay({
   topic,
   bgColor,
   notification,
+  plan
 }: {
   restId: string;
   table: string;
   topic: string;
   bgColor: string;
   notification: boolean;
+  plan: string;
 }) {
   const [selectedMenuData, setSelectedMenuData] = useState<Item | null>(null);
   const [wait, setWait] = useState<boolean>(false);
@@ -39,8 +46,9 @@ export default function ProductDisplay({
   const [isCircle, setIsCircle] = useState<boolean>(true);
   const [preOrderData, setPreOrderData] = useState<boolean>(true);
   const categoryRef = useRef<HTMLDivElement>(null);
-
   const { menuData, category, cartMenuData, deviceId } = useContext(MenuDataContext);
+  const [selectedCategoryName, setSelectedCategoryName] = useState<string | null>(null);
+
 
   const setSelectedData = (ele: Item) => {
     if (!ele.isActive) {
@@ -50,21 +58,25 @@ export default function ProductDisplay({
     }
   };
 
+  const setCatName = (categoryName: string) => {
+    setSelectedCategoryName(categoryName);
+  };
+
   const sendFcm = async () => {
-    if(table !=null&& table != undefined){
-    var data = {
-      'data': {
-        'title': `Table ${table} `,
-        'body': `Requesting for Captain`
-      },
-      topic: `${restId}table${table}`,
-    };
-    setWait(true);
-    await FcmService.shared.fcmTopic(data);
-    notify()
-    setTimeout(() => {
-      setWait(false);
-    }, 1000 * 60);
+    if (table != null && table != undefined) {
+      var data = {
+        'data': {
+          'title': `Table ${table} `,
+          'body': `Requesting for Captain`
+        },
+        topic: `${restId}table${table}`,
+      };
+      setWait(true);
+      await FcmService.shared.fcmTopic(data);
+      notify()
+      setTimeout(() => {
+        setWait(false);
+      }, 1000 * 60);
     }
   };
 
@@ -211,6 +223,71 @@ export default function ProductDisplay({
     );
   }
 
+  // pro card design
+  function proCard(ele: string, catIndex: number) {
+    return <>
+      <div
+        className="sticky top-[102px] bg-[#fafafa] z-10"
+
+      >
+        <div className="px-4 py-2 font-bold text-sm bg-secondary text-black capitalize flex justify-between items-center">
+          <div className=" ">
+            {ele}
+          </div>
+          <div className="pr-2">
+            {menuData?.getMenuList(ele, selfilterList)!.length}
+          </div>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 py-4 px-4">
+        {menuData?.getMenuList(ele, selfilterList) &&
+          menuData
+            .getMenuList(ele, selfilterList)!
+            .map((ele: Item, index: any) => {
+              return (
+                <div key={index} className="">
+                  <MenuItemCard
+                    index={index}
+                    setSelectedData={setSelectedData}
+                    ele={ele}
+                    catIndex={catIndex} bgColor={bgColor} />
+                </div>
+              );
+            })}
+      </div>
+    </>
+  }
+
+  function basicCard(ele: string) {
+    return <>
+      <div onClick={() => { setCatName(ele) }} className="px-4 py-2 font-bold text-sm bg-secondary text-black capitalize flex justify-between items-center">
+        <div className=" ">
+          {`${ele} (${menuData?.getMenuList(ele, selfilterList)!.length})`}
+        </div>
+        <div className="pr-2">
+          {ele === selectedCategoryName ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+        </div>
+      </div>
+      <div className="h-1"></div>
+      <Collapse in={ele === selectedCategoryName}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 py-4 px-4">
+          {menuData?.getMenuList(ele, selfilterList) &&
+            menuData
+              .getMenuList(ele, selfilterList)!
+              .map((ele: Item, index: any) => {
+                return (
+                  <div key={index} className="">
+                    <BasicMenuItemCard
+                      index={index}
+                      ele={ele} />
+                  </div>
+                );
+              })}
+        </div>
+      </Collapse>
+    </>
+  }
+
   return (
     <div className="md:container mx-auto  ">
       {menuData ? (
@@ -227,7 +304,7 @@ export default function ProductDisplay({
                 </div>
               </div>
             </Link>
-            {notification && (
+            {notification && plan !== "basic" && (
               <div
                 className={`bg-white border border-primary w-[45%]  rounded p-[4px]`}
                 onClick={() => {
@@ -269,37 +346,7 @@ export default function ProductDisplay({
                       menuData.getMenuList(ele, selfilterList) &&
                       menuData.getMenuList(ele, selfilterList)!.length >
                       0 && (
-                        <>
-                          <div
-                            className="sticky top-[102px] bg-[#fafafa] z-10"
-
-                          >
-                            <div className="px-4 py-2 font-bold text-sm bg-secondary text-black capitalize flex justify-between items-center">
-                              <div className=" ">
-                                {ele}
-                              </div>
-                              <div className="pr-2">
-                                {menuData.getMenuList(ele, selfilterList)!.length}
-                              </div>
-                            </div>
-                          </div>
-                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 py-4 px-4">
-                            {menuData.getMenuList(ele, selfilterList) &&
-                              menuData
-                                .getMenuList(ele, selfilterList)!
-                                .map((ele: Item, index: any) => {
-                                  return (
-                                    <div key={index} className="">
-                                      <MenuItemCard
-                                        index={index}
-                                        setSelectedData={setSelectedData}
-                                        ele={ele}
-                                        catIndex={catIndex} bgColor={bgColor}                                      />
-                                    </div>
-                                  );
-                                })}
-                          </div>
-                        </>
+                        plan === 'basic' ? basicCard(ele) : proCard(ele, catIndex)
                       )}
                   </div>
                 );
@@ -320,7 +367,7 @@ export default function ProductDisplay({
           setSelectedMenuData={setSelectedMenuData}
           selectedMenuData={selectedMenuData} bgColor={bgColor} restId={restId} deviceId={deviceId ?? ""} />
       )}
-      <div className="">
+      {plan !== "basic" && <div className="">
         <div
           className={`category_shape fixed z-10 ${cartMenuData && cartMenuData?.getMenuList() && cartMenuData?.getMenuList()?.length != 0 ? "bottom-16" : "bottom-6"}  right-6 ${isCircle ? "circle" : "rectangle"}`}
           onClick={() => setIsCircle(!isCircle)}
@@ -345,7 +392,7 @@ export default function ProductDisplay({
             </div>
           )}
         </div>
-      </div>
+      </div>}
       {cartMenuData && cartMenuData?.getMenuList() && cartMenuData?.getMenuList()?.length != 0 && <Link
         href={`/rest/${restId}/cart?table=${table}`}
         className="w-full"

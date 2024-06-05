@@ -14,6 +14,8 @@ export default async function OrgProductsPage({
     }/api/rest/${params.restId}/detail`,{next:{revalidate:60*60*1}}
   );
   const json = await response.json();
+  console.log("jsonsssss",json);
+  
   function lightenColor(hex:string, percent:any) {
     // Parse the hex color to get RGB components
     let r = parseInt(hex.substring(1, 3), 16);
@@ -48,7 +50,7 @@ export default async function OrgProductsPage({
       }
     >
       <Topbar data={json.data} />
-      <ProductDisplay restId={params.restId} table={searchParams.table} topic={json?.data?.fcmTopic} notification={json?.data?.isNoticifation} bgColor={"#" + json.data.hcolor?.slice(2,10)} />
+      <ProductDisplay restId={params.restId} table={searchParams.table} topic={json?.data?.fcmTopic} notification={json?.data?.isNoticifation} bgColor={"#" + json.data.hcolor?.slice(2, 10)} plan={json.data.plan} />
     </div>
   );
 }
