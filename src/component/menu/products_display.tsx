@@ -59,7 +59,11 @@ export default function ProductDisplay({
   };
 
   const setCatName = (categoryName: string) => {
-    setSelectedCategoryName(categoryName);
+    if (categoryName === selectedCategoryName) {
+      setSelectedCategoryName('');
+    } else {
+      setSelectedCategoryName(categoryName);
+    }
   };
 
   const sendFcm = async () => {
@@ -270,16 +274,19 @@ export default function ProductDisplay({
       </div>
       <div className="h-1"></div>
       <Collapse in={ele === selectedCategoryName}>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 py-4 px-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 md:gap-6 py-4">
           {menuData?.getMenuList(ele, selfilterList) &&
             menuData
               .getMenuList(ele, selfilterList)!
-              .map((ele: Item, index: any) => {
+              .map((each: Item, index: any) => {
+                console.log(index,"index");
+                
                 return (
                   <div key={index} className="">
                     <BasicMenuItemCard
                       index={index}
-                      ele={ele} />
+                      ele={each}
+                      isLast={menuData?.getMenuList(ele, selfilterList)?.length !== (index+1)} />
                   </div>
                 );
               })}
