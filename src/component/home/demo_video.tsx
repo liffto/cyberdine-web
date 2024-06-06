@@ -24,8 +24,8 @@ export default function DemoVideoComponent() {
           className="lg:hidden"
           src={"/images/svg/demo_video.svg"}
           alt={"sample video"}
-          height={335}
-          width={200}
+          height={435}
+          width={300}
         />
       </div>
     </div>

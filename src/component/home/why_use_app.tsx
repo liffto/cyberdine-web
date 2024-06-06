@@ -71,7 +71,7 @@ function TextAndButtons() {
           </div>
         </Link>
         <Link href={productTourLink}>
-          <div className="flex gap-2 items-center justify-center font-semibold text-primary border-2 border-primary rounded-md w-[200px] xl:w-[220px] py-3 text-sm lg:text-xl gap-4">
+          <div className="flex items-center justify-center font-semibold text-primary border-2 border-primary rounded-md w-[200px] xl:w-[220px] py-3 text-sm lg:text-xl gap-4">
             <Image
               src={apple}
               width={24}

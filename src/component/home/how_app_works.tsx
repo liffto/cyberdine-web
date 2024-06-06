@@ -11,22 +11,22 @@ export default function HowOurPageWorks() {
       <div className="font-bold container md:text-[45px] text-center text-lg uppercase pt-8 md:pt-12 lg:pt-16">
         Watch the video to get started
       </div>
-    <div className=" container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 justify-between pt-6 md:pt-10 lg:pt-14">
-      {cards.map((card, index) => {
-        return (
-          <div data-aos-anchor-placement="center-bottom" data-aos={index==0?"fade-left":index==2?"fade-right":"fade-in"} key={card.title} >
-            <HowWorksCard card={card} index={index+1} />
-          </div>
-        );
-      })}
-    </div>
+      <div className=" container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 justify-between pt-6 md:pt-10 lg:pt-14">
+        {cards.map((card, index) => {
+          return (
+            <div data-aos-anchor-placement="center-bottom" data-aos={index == 0 ? "fade-left" : index == 2 ? "fade-right" : "fade-in"} key={card.title} >
+              <HowWorksCard card={card} index={index + 1} />
+            </div>
+          );
+        })}
+      </div>
     </>
   );
 }
 function HowWorksCard({ card, index }: { card: any; index: number }) {
   return (
     <div className="max-w-[300px] md:max-w-auto mx-auto">
-        <Image
+      <Image
         className="lg:hidden bg-secondary rounded-t-md"
         src={card.image}
         alt={"banner image"}

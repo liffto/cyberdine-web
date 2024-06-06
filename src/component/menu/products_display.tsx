@@ -279,8 +279,6 @@ export default function ProductDisplay({
             menuData
               .getMenuList(ele, selfilterList)!
               .map((each: Item, index: any) => {
-                console.log(index,"index");
-                
                 return (
                   <div key={index} className="">
                     <BasicMenuItemCard
