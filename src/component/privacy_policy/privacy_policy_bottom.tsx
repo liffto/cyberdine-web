@@ -7,7 +7,7 @@ export default function PrivacyPolicyBottom() {
 
                 <section className="mb-8">
                     <h2 className="text-xl font-semibold mb-4">1. Introduction</h2>
-                    <p>Welcome to Cyberdine. This Privacy Policy explains how Liffto Technologies LLP ("we", "us", or "our") collects, uses, and protects your information when you use our app.</p>
+                    <p>Welcome to Cyberdine. This Privacy Policy explains how Liffto Technologies LLP collects, uses, and protects your information when you use our app.</p>
                 </section>
 
                 <section className="mb-8">
