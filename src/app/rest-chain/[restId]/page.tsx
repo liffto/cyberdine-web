@@ -1,6 +1,10 @@
+import KoraPage from "@/component/kora/kora";
+
 export default async function RestChainProductsPage() {
   
   return (
-    <div className="">Kora food street</div>
+    <div className="">
+        <KoraPage/>
+    </div>
   );
 }
