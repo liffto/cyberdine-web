@@ -24,8 +24,8 @@ export default function KoraPage() {
                 <Link href='https://www.zomato.com/chennai/restaurants/in/kora-food-street-anna-nagar-west' className="w-[300px] md:min-w-full rounded md:rounded-lg mx-auto">
                     <Image
                         className="lg:block rounded-t-xl"
-                        src={'/images/svg/kora_swiggy.svg'}
-                        alt={"Kora swiggy"}
+                        src={'/images/svg/kora_zomoto.svg'}
+                        alt={"Kora zomoto"}
                         width={409}
                         height={383}
                         priority
@@ -34,8 +34,8 @@ export default function KoraPage() {
                 <Link href='https://www.zomato.com/chennai/restaurants/in/kora-food-street-anna-nagar-west' className="w-[300px] md:min-w-full rounded md:rounded-lg mx-auto">
                     <Image
                         className="lg:block rounded-t-xl"
-                        src={'/images/svg/kora_zomoto.svg'}
-                        alt={"Kora zomoto"}
+                        src={'/images/svg/kora_swiggy.svg'}
+                        alt={"Kora swiggy"}
                         width={409}
                         height={383}
                         priority
