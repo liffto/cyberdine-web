@@ -49,6 +49,11 @@ export default function BasicMenuItemCard({
                                     Special
                                 </div>
                             )}
+                            {!ele.isActive && (
+                                <div className="px-1 h-4 text-white bg-[#d71d25] text-xs">
+                                    Sold Out
+                                </div>
+                            )}
                         </div>
 
                         <div

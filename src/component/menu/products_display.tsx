@@ -47,7 +47,7 @@ export default function ProductDisplay({
   const [preOrderData, setPreOrderData] = useState<boolean>(true);
   const categoryRef = useRef<HTMLDivElement>(null);
   const { menuData, category, cartMenuData, deviceId } = useContext(MenuDataContext);
-  const [selectedCategoryName, setSelectedCategoryName] = useState<string | null>(null);
+  const [selectedCategoryName, setSelectedCategoryName] = useState<string | null>(category[0]);
 
 
   const setSelectedData = (ele: Item) => {
@@ -151,10 +151,15 @@ export default function ProductDisplay({
     }
   };
 
-
+  useEffect(() => {
+    // Ensure category is not null and has at least one item before setting selectedCategoryName
+    if (category && category.length > 0) {
+      setSelectedCategoryName(category[0]);
+    }
+  }, [category]);
 
   useEffect(() => {
-    getQuantityFromOrder()
+    getQuantityFromOrder();
   }, [cartMenuData, preOrderData])
 
   useEffect(() => {
@@ -274,7 +279,7 @@ export default function ProductDisplay({
       </div>
       <div className="h-1"></div>
       <Collapse in={ele === selectedCategoryName}>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 md:gap-6 py-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 md:gap-6 py-4">
           {menuData?.getMenuList(ele, selfilterList) &&
             menuData
               .getMenuList(ele, selfilterList)!
@@ -284,7 +289,7 @@ export default function ProductDisplay({
                     <BasicMenuItemCard
                       index={index}
                       ele={each}
-                      isLast={menuData?.getMenuList(ele, selfilterList)?.length !== (index+1)} />
+                      isLast={menuData?.getMenuList(ele, selfilterList)?.length !== (index + 1)} />
                   </div>
                 );
               })}
