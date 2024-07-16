@@ -17,7 +17,6 @@ export class FirebaseServices {
     }
 
     getCartMenu(restId: string,deviceId:string, callBack: Function): Unsubscribe {
-        console.log("deviceId",deviceId);
         
         const completedTasksRef: Query = ref(database, `order/${restId}/${deviceId}`);
         return getFirebaseData(completedTasksRef, (snapshot) => {

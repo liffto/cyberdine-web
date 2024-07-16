@@ -2,21 +2,20 @@ import ProductDisplay from "@/component/menu/products_display";
 import Topbar from "@/component/menu/topbar";
 
 export default async function OrgProductsPage({
-  params,searchParams
+  params, searchParams
 }: {
-  params: { restId: string };searchParams:{table:string}
+  params: { restId: string }; searchParams: { table: string }
 }) {
   const response = await fetch(
-    `${
-      process.env.NODE_ENV == "development"
-        ? "http://localhost:3000"
-        : "https://www.cyberdine.in"
-    }/api/rest/${params.restId}/detail`,{next:{revalidate:60*60*1}}
+    `${process.env.NODE_ENV == "development"
+      ? "http://localhost:3000"
+      : "https://www.cyberdine.in"
+    }/api/rest/${params.restId}/detail`, { next: { revalidate: 60 * 60 * 1 } }
   );
   const json = await response.json();
-  console.log("jsonsssss",json);
-  
-  function lightenColor(hex:string, percent:any) {
+  console.log("jsonsssss", json);
+
+  function lightenColor(hex: string, percent: any) {
     // Parse the hex color to get RGB components
     let r = parseInt(hex.substring(1, 3), 16);
     let g = parseInt(hex.substring(3, 5), 16);
@@ -38,19 +37,19 @@ export default async function OrgProductsPage({
     let hexB = b.toString(16).padStart(2, '0');
 
     return '#' + hexR + hexG + hexB;
-}
+  }
   return (
     <div
       className="restaraunt-backround"
       style={
         {
-          "--primary-bg": "#" + json.data.hcolor?.slice(2,10),
-          "--secondary-bg": lightenColor('#'+json.data.hcolor?.slice(2,10), 40)+"4a",
+          "--primary-bg": "#" + json.data.hcolor?.slice(2, 10),
+          "--secondary-bg": lightenColor('#' + json.data.hcolor?.slice(2, 10), 40) + "4a",
         } as React.CSSProperties
       }
     >
       <Topbar data={json.data} />
-      <ProductDisplay restId={params.restId} table={searchParams.table} topic={json?.data?.fcmTopic} notification={json?.data?.isNoticifation} bgColor={"#" + json.data.hcolor?.slice(2, 10)} plan={json.data.plan} />
+      <ProductDisplay restId={params.restId} table={searchParams.table} topic={json?.data?.fcmTopic} notification={json?.data?.isNoticifation} bgColor={"#" + json.data.hcolor?.slice(2, 10)} plan={json?.data?.plan} isPayCompleted={json?.data?.isPayCompleted} />
     </div>
   );
 }

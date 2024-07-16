@@ -30,7 +30,8 @@ export default function ProductDisplay({
   topic,
   bgColor,
   notification,
-  plan
+  plan,
+  isPayCompleted
 }: {
   restId: string;
   table: string;
@@ -38,6 +39,7 @@ export default function ProductDisplay({
   bgColor: string;
   notification: boolean;
   plan: string;
+  isPayCompleted: boolean;
 }) {
   const [selectedMenuData, setSelectedMenuData] = useState<Item | null>(null);
   const [wait, setWait] = useState<boolean>(false);
@@ -299,124 +301,132 @@ export default function ProductDisplay({
   }
 
   return (
-    <div className="md:container mx-auto  ">
-      {menuData ? (
+    <div className="">
+      {isPayCompleted ? <div className="h-screen flex flex-col justify-center items-center">
+        <Image src="/images/svg/no_dishes.svg" alt="no dishes" width="280" height="123" priority={true} />
+        <div className="mt-4 font-semibold text-black">No dishes found</div>
+      </div> :
         <div className="">
-          <div className="sticky top-0 z-20 bg-[#fafafa] w-full flex justify-between items-center px-4 pt-2">
-            <Link
-              href={`/rest/${restId}/search?query=&category=All`}
+          <div className="md:container mx-auto  ">
+            {menuData ? (
+              <div className="">
+                <div className="sticky top-0 z-20 bg-[#fafafa] w-full flex justify-between items-center px-4 pt-2">
+                  <Link
+                    href={`/rest/${restId}/search?query=&category=All`}
+                    className="w-full"
+                  >
+                    <div className="my-2 flex justify-start items-center w-full bg-white">
+                      <div className={`border border-gray-300 text-gray-300 rounded w-full py-[6px] ${notification ? "mr-2" : ""}  text-sm`}>
+                        <SearchIcon sx={{ marginRight: "10px", marginLeft: "10px" }} />
+                        Search for dish
+                      </div>
+                    </div>
+                  </Link>
+                  {notification && plan !== "basic" && (
+                    <div
+                      className={`bg-white border border-primary w-[45%]  rounded p-[4px]`}
+                      onClick={() => {
+                        wait ? null : sendFcm();
+                      }}
+                    >
+                      <div className="flex justify-center items-center pl-3 ">
+                        <div className="">
+                          <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M11.5781 6.10578V5.86245C11.5745 5.68408 11.502 5.51403 11.3759 5.38791C11.2497 5.2618 11.0796 5.18941 10.9012 5.18591H8.5988C8.42043 5.18941 8.25033 5.2618 8.12414 5.38791C7.99796 5.51403 7.92547 5.68408 7.92188 5.86245V6.10578C9.13096 5.88872 10.369 5.88872 11.5781 6.10578ZM9.14062 3.61719V4.52966H10.3594V3.61719C9.96197 3.73706 9.53803 3.73706 9.14062 3.61719Z" fill={wait ? "#c2beb4" : bgColor} />
+                            <path d="M9.7515 3.04988C10.5937 3.04988 11.2764 2.36714 11.2764 1.52494C11.2764 0.682738 10.5937 0 9.7515 0C8.9093 0 8.22656 0.682738 8.22656 1.52494C8.22656 2.36714 8.9093 3.04988 9.7515 3.04988Z" fill={wait ? "#c2beb4" : bgColor} />
+                            <path d="M15.8546 8.93428C14.7272 7.8947 13.3461 7.17017 11.85 6.83348C11.8296 6.83098 11.8095 6.82655 11.7899 6.82027C10.4479 6.52361 9.05738 6.52345 7.71534 6.8198C7.69576 6.82589 7.67564 6.8301 7.65525 6.83236C6.15907 7.16949 4.77796 7.89442 3.65067 8.93433C2.11612 10.3583 1.23581 12.2159 1.14844 14.2315H18.3568C18.2694 12.2159 17.3891 10.3583 15.8546 8.93428Z" fill={wait ? "#c2beb4" : bgColor} />
+                            <path d="M16.6875 16.7168H2.8125V18.3105H16.6875V16.7168Z" fill={wait ? "#c2beb4" : bgColor} />
+                            <path d="M19.5 14.8887H0V16.0605H19.5V14.8887Z" fill={wait ? "#c2beb4" : bgColor} />
+                            <path d="M19.5 18.9668H0V20.1387H19.5V18.9668Z" fill={wait ? "#c2beb4" : bgColor} />
+                          </svg>
+                        </div>
+                        <div className="ml-3 leading-3 mt-[2px]">
+                          <div className={`${wait ? "text-[#c2beb4]" : "text-primary"} font-bold text-sm p-0 leading-3`} >
+                            {"Request"} <span className="font-medium text-xs">{"Waiter"}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                {CategoryList()}
+                {selfilterList.length == 0 &&
+                  <div onClick={() => { handleCatClick("Our Special", true) }} className="bg-primary mt-2 mb-4 mx-4 rounded-md" >
+                    <Image src="/images/svg/our_special_banner.svg" alt="restarunt logo" width="443" height="123" priority={true} />
+                  </div>}
+                <Toaster position="top-center" />
+                <div className="mb-20">
+                  {category && category!.map(
+                    (ele, catIndex) => {
+                      return (
+                        <div key={catIndex} id={ele}>
+                          {menuData &&
+                            menuData.getMenuList(ele, selfilterList) &&
+                            menuData.getMenuList(ele, selfilterList)!.length >
+                            0 && (
+                              plan === 'basic' ? basicCard(ele) : proCard(ele, catIndex)
+                            )}
+                        </div>
+                      );
+                    }
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div
+                className="flex justify-center items-center "
+                style={{ height: "calc(100vh - 92px)" }}
+              >
+                <CircularProgress sx={{ color: "var(--primary-bg)" }} />
+              </div>
+            )}
+            {selectedMenuData && (
+              <DescriptionSheet
+                setSelectedMenuData={setSelectedMenuData}
+                selectedMenuData={selectedMenuData} bgColor={bgColor} restId={restId} deviceId={deviceId ?? ""} />
+            )}
+            {plan !== "basic" && <div className="">
+              <div
+                className={`category_shape fixed z-10 ${cartMenuData && cartMenuData?.getMenuList() && cartMenuData?.getMenuList()?.length != 0 ? "bottom-16" : "bottom-6"}  right-6 ${isCircle ? "circle" : "rectangle"}`}
+                onClick={() => setIsCircle(!isCircle)}
+              >
+                {isCircle ? (
+                  <div className="category_text text-center flex justify-center items-center flex-col">
+                    <div className="">
+                      <Image src="/images/svg/menu_icon.svg" alt="menu icon" width="16" height="16" priority={true} />
+                    </div>
+                    <div className="p-1 text-xs font-semibold">Menu</div>
+                  </div>
+                ) : (
+                  <div ref={categoryRef} className="category_text">
+                    <ul className="">
+                      {category.map((item, index) => (
+                        menuData &&
+                        menuData.getMenuList(item, selfilterList) &&
+                        menuData.getMenuList(item, selfilterList)!.length >
+                        0 && <li onClick={() => handleItemClick(item)} className="pb-2 cursor-pointer capitalize text-lg font-medium" key={index}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </div>}
+            {cartMenuData && cartMenuData?.getMenuList() && cartMenuData?.getMenuList()?.length != 0 && <Link
+              href={`/rest/${restId}/cart?table=${table}`}
               className="w-full"
             >
-              <div className="my-2 flex justify-start items-center w-full bg-white">
-                <div className={`border border-gray-300 text-gray-300 rounded w-full py-[6px] ${notification ? "mr-2" : ""}  text-sm`}>
-                  <SearchIcon sx={{ marginRight: "10px", marginLeft: "10px" }} />
-                  Search for dish
-                </div>
-              </div>
-            </Link>
-            {notification && plan !== "basic" && (
-              <div
-                className={`bg-white border border-primary w-[45%]  rounded p-[4px]`}
-                onClick={() => {
-                  wait ? null : sendFcm();
-                }}
-              >
-                <div className="flex justify-center items-center pl-3 ">
+              <div className="fixed bottom-0 z-20 bg-primary w-full px-4 py-3">
+                <div className="text-[#fafafa] flex justify-between items-center">
                   <div className="">
-                    <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M11.5781 6.10578V5.86245C11.5745 5.68408 11.502 5.51403 11.3759 5.38791C11.2497 5.2618 11.0796 5.18941 10.9012 5.18591H8.5988C8.42043 5.18941 8.25033 5.2618 8.12414 5.38791C7.99796 5.51403 7.92547 5.68408 7.92188 5.86245V6.10578C9.13096 5.88872 10.369 5.88872 11.5781 6.10578ZM9.14062 3.61719V4.52966H10.3594V3.61719C9.96197 3.73706 9.53803 3.73706 9.14062 3.61719Z" fill={wait ? "#c2beb4" : bgColor} />
-                      <path d="M9.7515 3.04988C10.5937 3.04988 11.2764 2.36714 11.2764 1.52494C11.2764 0.682738 10.5937 0 9.7515 0C8.9093 0 8.22656 0.682738 8.22656 1.52494C8.22656 2.36714 8.9093 3.04988 9.7515 3.04988Z" fill={wait ? "#c2beb4" : bgColor} />
-                      <path d="M15.8546 8.93428C14.7272 7.8947 13.3461 7.17017 11.85 6.83348C11.8296 6.83098 11.8095 6.82655 11.7899 6.82027C10.4479 6.52361 9.05738 6.52345 7.71534 6.8198C7.69576 6.82589 7.67564 6.8301 7.65525 6.83236C6.15907 7.16949 4.77796 7.89442 3.65067 8.93433C2.11612 10.3583 1.23581 12.2159 1.14844 14.2315H18.3568C18.2694 12.2159 17.3891 10.3583 15.8546 8.93428Z" fill={wait ? "#c2beb4" : bgColor} />
-                      <path d="M16.6875 16.7168H2.8125V18.3105H16.6875V16.7168Z" fill={wait ? "#c2beb4" : bgColor} />
-                      <path d="M19.5 14.8887H0V16.0605H19.5V14.8887Z" fill={wait ? "#c2beb4" : bgColor} />
-                      <path d="M19.5 18.9668H0V20.1387H19.5V18.9668Z" fill={wait ? "#c2beb4" : bgColor} />
-                    </svg>
+                    <div className="text-sm font-semibold">{cartMenuData?.getMenuList()?.length} Items in wishlist</div>
+                    <div className="text-xs">View Now</div>
                   </div>
-                  <div className="ml-3 leading-3 mt-[2px]">
-                    <div className={`${wait ? "text-[#c2beb4]" : "text-primary"} font-bold text-sm p-0 leading-3`} >
-                      {"Request"} <span className="font-medium text-xs">{"Waiter"}</span>
-                    </div>
-                  </div>
+                  <ArrowRightIcon fontSize="large" />
                 </div>
               </div>
-            )}
+            </Link>}
           </div>
-          {CategoryList()}
-          {selfilterList.length == 0 &&
-            <div onClick={() => { handleCatClick("Our Special", true) }} className="bg-primary mt-2 mb-4 mx-4 rounded-md" >
-              <Image src="/images/svg/our_special_banner.svg" alt="restarunt logo" width="443" height="123" priority={true} />
-            </div>}
-          <Toaster position="top-center" />
-          <div className="mb-20">
-            {category && category!.map(
-              (ele, catIndex) => {
-                return (
-                  <div key={catIndex} id={ele}>
-                    {menuData &&
-                      menuData.getMenuList(ele, selfilterList) &&
-                      menuData.getMenuList(ele, selfilterList)!.length >
-                      0 && (
-                        plan === 'basic' ? basicCard(ele) : proCard(ele, catIndex)
-                      )}
-                  </div>
-                );
-              }
-            )}
-          </div>
-        </div>
-      ) : (
-        <div
-          className="flex justify-center items-center "
-          style={{ height: "calc(100vh - 92px)" }}
-        >
-          <CircularProgress sx={{ color: "var(--primary-bg)" }} />
-        </div>
-      )}
-      {selectedMenuData && (
-        <DescriptionSheet
-          setSelectedMenuData={setSelectedMenuData}
-          selectedMenuData={selectedMenuData} bgColor={bgColor} restId={restId} deviceId={deviceId ?? ""} />
-      )}
-      {plan !== "basic" && <div className="">
-        <div
-          className={`category_shape fixed z-10 ${cartMenuData && cartMenuData?.getMenuList() && cartMenuData?.getMenuList()?.length != 0 ? "bottom-16" : "bottom-6"}  right-6 ${isCircle ? "circle" : "rectangle"}`}
-          onClick={() => setIsCircle(!isCircle)}
-        >
-          {isCircle ? (
-            <div className="category_text text-center flex justify-center items-center flex-col">
-              <div className="">
-                <Image src="/images/svg/menu_icon.svg" alt="menu icon" width="16" height="16" priority={true} />
-              </div>
-              <div className="p-1 text-xs font-semibold">Menu</div>
-            </div>
-          ) : (
-            <div ref={categoryRef} className="category_text">
-              <ul className="">
-                {category.map((item, index) => (
-                  menuData &&
-                  menuData.getMenuList(item, selfilterList) &&
-                  menuData.getMenuList(item, selfilterList)!.length >
-                  0 && <li onClick={() => handleItemClick(item)} className="pb-2 cursor-pointer capitalize text-lg font-medium" key={index}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-      </div>}
-      {cartMenuData && cartMenuData?.getMenuList() && cartMenuData?.getMenuList()?.length != 0 && <Link
-        href={`/rest/${restId}/cart?table=${table}`}
-        className="w-full"
-      >
-        <div className="fixed bottom-0 z-20 bg-primary w-full px-4 py-3">
-          <div className="text-[#fafafa] flex justify-between items-center">
-            <div className="">
-              <div className="text-sm font-semibold">{cartMenuData?.getMenuList()?.length} Items in wishlist</div>
-              <div className="text-xs">View Now</div>
-            </div>
-            <ArrowRightIcon fontSize="large" />
-          </div>
-        </div>
-      </Link>}
+        </div>}
     </div>
   );
 }
