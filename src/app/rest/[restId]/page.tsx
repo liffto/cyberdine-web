@@ -10,7 +10,7 @@ export default async function OrgProductsPage({
     `${process.env.NODE_ENV == "development"
       ? "http://localhost:3000"
       : "https://www.cyberdine.in"
-    }/api/rest/${params.restId}/detail`, { next: { revalidate: 60 * 60 * 1 } }
+    }/api/rest/${params.restId}/detail`, { next: { revalidate: 1 * 1 * 1 } }
   );
   const json = await response.json();
   console.log("jsonsssss", json);
@@ -49,7 +49,7 @@ export default async function OrgProductsPage({
       }
     >
       <Topbar data={json.data} />
-      <ProductDisplay restId={params.restId} table={searchParams.table} topic={json?.data?.fcmTopic} notification={json?.data?.isNoticifation} bgColor={"#" + json.data.hcolor?.slice(2, 10)} plan={json?.data?.plan} isPayCompleted={json?.data?.isPayCompleted} />
+      <ProductDisplay restId={params.restId} table={searchParams.table} topic={json?.data?.fcmTopic} notification={json?.data?.isNoticifation} bgColor={"#" + json.data.hcolor?.slice(2, 10)} plan={json?.data?.plan} isPayCompleted={json?.data?.isPayCompleted} customerDetails={json?.data?.customerDetails} />
     </div>
   );
 }

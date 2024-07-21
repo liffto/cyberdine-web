@@ -20,6 +20,10 @@ const DescriptionSheet = dynamic(() => import("./description_sheet"), {
 });
 import toast, { Toaster } from 'react-hot-toast';
 import BasicMenuItemCard from "./basic_menu_item_card";
+import Dialog from "@mui/material/Dialog";
+import TextField from "@mui/material/TextField";
+import { FirebaseServices } from "@/service/firebase.service";
+import { CustomerDetails } from "@/model/customer_detail/customer_details";
 
 const notify = () => toast('Notified successfully');
 const soldOutNotify = () => toast('Temporarily out of stock');
@@ -31,7 +35,8 @@ export default function ProductDisplay({
   bgColor,
   notification,
   plan,
-  isPayCompleted
+  isPayCompleted,
+  customerDetails
 }: {
   restId: string;
   table: string;
@@ -40,9 +45,12 @@ export default function ProductDisplay({
   notification: boolean;
   plan: string;
   isPayCompleted: boolean;
+  customerDetails: boolean;
 }) {
   const [selectedMenuData, setSelectedMenuData] = useState<Item | null>(null);
   const [wait, setWait] = useState<boolean>(false);
+  const [showDialog, setShowDialog] = useState<boolean>(false);
+  const [phoneNumber, setPhoneNumber] = useState<Number>();
   const [selfilterList, setSelFilterList] = useState<Array<string>>([]);
   const [filterList, setFilterList] = useState<Array<string>>([]);
   const [isCircle, setIsCircle] = useState<boolean>(true);
@@ -132,6 +140,44 @@ export default function ProductDisplay({
     }
   };
 
+  const handleNumberChange = (event: any) => {
+    const { value } = event.target;
+    setPhoneNumber(value);
+  };
+
+  const validatePhoneNumber = () => {
+    // Check if the phone number contains only digits and has a length of 10
+    if (phoneNumber) {
+      return /^\d{10}$/.test(phoneNumber!.toString());
+    }
+  };
+
+  const addPhoneNumber = () => {
+    if(validatePhoneNumber()){
+      addFirebase();
+    }
+  }
+
+  const addFirebase = () => {
+    const customerDetails = new CustomerDetails({
+      phoneNumber: phoneNumber!, 
+      date: getCurrentDate(),
+      deviceId: deviceId,
+    });
+    FirebaseServices.shared.addCustomerDetails(customerDetails, restId, deviceId!, (val: any) => {
+      setShowDialog(false);
+    });
+
+  }
+
+  const getCurrentDate = () => {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${day}/${month}/${year}`;
+  };
+
   const getQuantityFromOrder = () => {
     if (cartMenuData) {
       cartMenuData?.getMenuList()?.forEach((each) => {
@@ -158,6 +204,13 @@ export default function ProductDisplay({
     if (category && category.length > 0) {
       setSelectedCategoryName(category[0]);
     }
+    if (deviceId && customerDetails) {
+      const response = FirebaseServices.shared.getCustomerDetails(restId, deviceId!, setShowDialog);
+      return () => {
+        response();
+      };
+    }
+
   }, [category]);
 
   useEffect(() => {
@@ -300,6 +353,27 @@ export default function ProductDisplay({
     </>
   }
 
+  const inputStyles = {
+    '& .MuiInputBase-input': {
+      color: '#000', // Change text color
+    },
+    "& .MuiInputLabel-outlined": {
+      color: "#2e2e2e",
+    },
+    '& .MuiOutlinedInput-root': {
+      '&:hover .MuiOutlinedInput-notchedOutline': {
+        border: '1px solid #000', // Change border color on hover
+      },
+      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+        border: '1px solid #000', // Change border color when focused
+      },
+    },
+    '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
+      border: '1px solid #000', // Default border color
+    },
+
+  };
+
   return (
     <div className="">
       {isPayCompleted ? <div className="h-screen flex flex-col justify-center items-center">
@@ -427,6 +501,19 @@ export default function ProductDisplay({
             </Link>}
           </div>
         </div>}
+
+      <Dialog open={showDialog} fullWidth >
+        <div className="h-56 p-6">
+          <div className="text-3xl text-black font-bold text-center pb-4">Welcome</div>
+          <TextField
+            label="Enter Mobile Number"
+            fullWidth
+            onChange={handleNumberChange}
+            sx={inputStyles}
+          />
+          <div onClick={()=>{addPhoneNumber()}} className={`text-white font-semibold text-base  mt-4 p-3 rounded text-center ${validatePhoneNumber() ? 'bg-primary' : 'bg-gray-400'} `}>View Menu</div>
+        </div>
+      </Dialog>
     </div>
   );
 }
