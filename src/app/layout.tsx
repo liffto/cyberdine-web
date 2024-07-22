@@ -3,7 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import "./font.css";
 import AOSProvider from "@/providers/aos";
-import { GoogleAnalytics } from '@next/third-parties/google'
+import { GoogleTagManager } from '@next/third-parties/google'
+import Script from "next/script";
 const inter = Inter({ subsets: ["latin"] });
 
 
@@ -61,9 +62,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <AOSProvider>
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>{children}
+
+      <GoogleTagManager gtmId={process.env.GAID!} />
+      </body>
       </AOSProvider>
-      <GoogleAnalytics gaId={process.env.GAID!} />
     </html>
   );
 }
