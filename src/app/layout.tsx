@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import "./font.css";
 import AOSProvider from "@/providers/aos";
-
+import { GoogleAnalytics } from '@next/third-parties/google'
 const inter = Inter({ subsets: ["latin"] });
 
 
@@ -63,6 +63,7 @@ export default function RootLayout({
       <AOSProvider>
       <body className={inter.className}>{children}</body>
       </AOSProvider>
+      <GoogleAnalytics gaId={process.env.GAID!} />
     </html>
   );
 }
