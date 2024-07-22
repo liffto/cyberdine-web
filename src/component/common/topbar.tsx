@@ -5,7 +5,7 @@ export default function TopBar() {
   return (
     <div className="h-[50px] md:h-[80px] sticky top-0 bg-appbg" style={{ boxShadow: "0px 0px 6px 0px #00000040",zIndex:100 }}>
       <div className="h-full flex items-center container py-2 md:py-4  mx-auto">
-        <div className="flex-1 lg:flex-none ">
+        <Link href="/" className="flex-1 lg:flex-none ">
           <Image
             className="md:hidden"
             src={"/images/svg/cyberdine_logo.svg"}
@@ -20,7 +20,7 @@ export default function TopBar() {
             width={80}
             height={35}
           ></Image>
-        </div>
+        </Link>
         <div className="flex-1 hidden lg:flex gap-4 xl:gap-6 justify-center nexa-bold">
             <Link href="/">Products</Link>
             <Link href="/">Features</Link>

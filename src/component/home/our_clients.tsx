@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function OurClients() {
   return (
     <div
@@ -9,18 +11,98 @@ export default function OurClients() {
       </div>
       <div className="relative flex overflow-x-hidden gap-4 md:gap-8 lg:gap-8">
         <div className="py-4 md:py-6 lg:py-10 flex animate-marquee whitespace-nowrap gap-4 md:gap-8 lg:gap-12">
-          <div className="h-[45px] w-[94px] md:h-[127px] md:w-[260px] rounded-md boxshadow-2"></div>
-          <div className="h-[45px] w-[94px] md:h-[127px] md:w-[260px] rounded-md boxshadow-2"></div>
-          <div className="h-[45px] w-[94px] md:h-[127px] md:w-[260px] rounded-md boxshadow-2"></div>
-          <div className="h-[45px] w-[94px] md:h-[127px] md:w-[260px] rounded-md boxshadow-2"></div>
-          <div className="h-[45px] w-[94px] md:h-[127px] md:w-[260px] rounded-md boxshadow-2"></div>
+          <div className="h-[40px] w-[100px] md:h-[120px] md:w-[300px]">
+            <Image
+              className=""
+              src={"/images/svg/client/vayal.svg"}
+              alt={"sample video"}
+              height={400}
+              width={400}
+            />
+          </div>
+          <div className="h-[40px] w-[100px] md:h-[120px] md:w-[300px]">
+            <Image
+              className=""
+              src={"/images/svg/client/corridor.svg"}
+              alt={"sample video"}
+              height={400}
+              width={400}
+            />
+          </div>
+          <div className="h-[40px] w-[100px] md:h-[120px] md:w-[300px]">
+            <Image
+              className=""
+              src={"/images/svg/client/hotel_surya.svg"}
+              alt={"sample video"}
+              height={400}
+              width={400}
+            />
+          </div>
+          <div className="h-[40px] w-[100px] md:h-[120px] md:w-[300px]">
+            <Image
+              className=""
+              src={"/images/svg/client/mum_mum.svg"}
+              alt={"sample video"}
+              height={400}
+              width={400}
+            />
+          </div>
+          <div className="h-[40px] w-[100px] md:h-[120px] md:w-[300px]">
+            <Image
+              className=""
+              src={"/images/svg/client/polo.svg"}
+              alt={"sample video"}
+              height={400}
+              width={400}
+            />
+          </div>
         </div>
         <div className="absolute flex left-4 md:left-8 lg:left-12 top-0 py-4 md:py-6 lg:py-10 animate-marquee2 whitespace-nowrap gap-4 md:gap-8 lg:gap-12">
-          <div className="h-[45px] w-[94px] md:h-[127px] md:w-[260px] rounded-md boxshadow-2"></div>
-          <div className="h-[45px] w-[94px] md:h-[127px] md:w-[260px] rounded-md boxshadow-2"></div>
-          <div className="h-[45px] w-[94px] md:h-[127px] md:w-[260px] rounded-md boxshadow-2"></div>
-          <div className="h-[45px] w-[94px] md:h-[127px] md:w-[260px] rounded-md boxshadow-2"></div>
-          <div className="h-[45px] w-[94px] md:h-[127px] md:w-[260px] rounded-md boxshadow-2"></div>
+          <div className="h-[40px] w-[100px] md:h-[120px] md:w-[300px]">
+            <Image
+              className=""
+              src={"/images/svg/client/vayal.svg"}
+              alt={"sample video"}
+              height={400}
+              width={400}
+            />
+          </div>
+          <div className="h-[40px] w-[100px] md:h-[120px] md:w-[300px]">
+            <Image
+              className=""
+              src={"/images/svg/client/corridor.svg"}
+              alt={"sample video"}
+              height={400}
+              width={400}
+            />
+          </div>
+          <div className="h-[40px] w-[100px] md:h-[120px] md:w-[300px]">
+            <Image
+              className=""
+              src={"/images/svg/client/hotel_surya.svg"}
+              alt={"sample video"}
+              height={400}
+              width={400}
+            />
+          </div>
+          <div className="h-[40px] w-[100px] md:h-[120px] md:w-[300px]">
+            <Image
+              className=""
+              src={"/images/svg/client/mum_mum.svg"}
+              alt={"sample video"}
+              height={400}
+              width={400}
+            />
+          </div>
+          <div className="h-[40px] w-[100px] md:h-[120px] md:w-[300px]">
+            <Image
+              className=""
+              src={"/images/svg/client/polo.svg"}
+              alt={"sample video"}
+              height={400}
+              width={400}
+            />
+          </div>
         </div>
       </div>
     </div>

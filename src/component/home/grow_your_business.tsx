@@ -2,7 +2,7 @@ import Link from "next/link";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import Image from "next/image";
 
-const demoLink = "/";
+const demoLink = "tel:9843137477";
 const productTourLink = "/";
 const bannerLg = "/images/png/home_banner_lg.png";
 const bannerSm = "/images/png/home_banner_sm.png";
@@ -33,10 +33,15 @@ function HighLightText() {
 
 function DemoTourButtons() {
   return (
-    <div className="w-full flex flex-col md:flex-row items-center justify-center w-[200px] md:w-auto gap-3 md:gap-5 pt-6 md:pt-12">
-      <Link href={demoLink}>
+    <div className="w-full flex flex-col md:flex-row items-center justify-center md:w-auto gap-3 md:gap-5 pt-6 md:pt-12">
+      {/* <Link href={demoLink}>
         <div className="flex items-center justify-center bg-primary text-white rounded-md w-[200px] md:w-[250px] py-3 text-sm md:text-xl">
           Book a Demo
+        </div>
+      </Link> */}
+      <Link href={demoLink}>
+        <div className="flex items-center justify-center bg-primary text-white rounded-md w-[200px] md:w-[250px] py-3 text-sm md:text-xl">
+          Contact Us
         </div>
       </Link>
       <Link href={productTourLink}>

@@ -44,7 +44,7 @@ export default async function MenuSearch({
         "--secondary-bg": lightenColor('#'+json.data.hcolor?.slice(2,10), 40)+"4a",
       } as React.CSSProperties
     }>
-        <SearchComponent restId={params.restId} bgColor={"#" + json.data.hcolor?.slice(2,10)} />
+        <SearchComponent restId={params.restId} bgColor={"#" + json.data.hcolor?.slice(2, 10)} plan={json.data.plan} />
     </div>
   );
 }
