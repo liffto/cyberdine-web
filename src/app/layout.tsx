@@ -4,7 +4,6 @@ import "./globals.css";
 import "./font.css";
 import AOSProvider from "@/providers/aos";
 import { GoogleTagManager } from '@next/third-parties/google'
-import Script from "next/script";
 const inter = Inter({ subsets: ["latin"] });
 
 
