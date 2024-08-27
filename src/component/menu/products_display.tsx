@@ -405,9 +405,9 @@ export default function ProductDisplay({
                   handleCatClick={handleCatClick}
                   filterList={filterList}
                 />
-                <HorizontalScrollSnap
-                  items={[selfilterList.length == 0 && OurSpecial,review&&GoogleReview]}
-                />
+              {selfilterList.length == 0 &&  <HorizontalScrollSnap
+                  items={[ OurSpecial,review&&GoogleReview]}
+                />}
 
                 <Toaster position="top-center" />
                 <div className="mb-20">
