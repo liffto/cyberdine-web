@@ -32,7 +32,7 @@ const HorizontalScrollSnap: React.FC<HorizontalScrollSnapProps> = ({
       }}
     >
       {items.map((item, index) => (
-        <Box key={index} sx={{ width: "95%" }}>
+        item &&<Box key={index} sx={{ width: "95%" }}>
           {item}
         </Box>
       ))}
