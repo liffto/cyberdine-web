@@ -296,7 +296,7 @@ export default function ProductDisplay({
     </div>
   );
   const GoogleReview = (
-    <Link href={review} aria-label="Link to google review">
+    <Link href={review} target="_blank" aria-label="Link to google review">
       <Image
         src="/images/svg/g_review_banner.svg"
         alt="restarunt logo"
