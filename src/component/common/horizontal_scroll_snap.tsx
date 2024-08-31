@@ -8,12 +8,14 @@ interface HorizontalScrollSnapProps {
 const HorizontalScrollSnap: React.FC<HorizontalScrollSnapProps> = ({
   items,
 }) => {
+  console.log(items,"items");
+  
   return (
     <Box
       sx={{
         display: "flex",
         overflowX: "auto",
-        gap: "16px",
+        gap: "8px",
         scrollSnapType: "x mandatory",
         scrollPadding: "0px 16px",
         paddingX: "16px",
@@ -22,6 +24,10 @@ const HorizontalScrollSnap: React.FC<HorizontalScrollSnapProps> = ({
         "& > *": {
           scrollSnapAlign: "start",
           flex: "0 0 auto",
+          // Set width to less than 100% to ensure part of the next item is visible
+          width: items.length > 1 ? "95%" : "100%",
+          // Add a margin to create space between the items
+          marginRight: items.length > 1 ? "10px" : "0",
         },
         "&::-webkit-scrollbar": {
           display: "none",
@@ -32,7 +38,7 @@ const HorizontalScrollSnap: React.FC<HorizontalScrollSnapProps> = ({
       }}
     >
       {items.map((item, index) => (
-        item &&<Box key={index} sx={{ width:items?.length>1?"100%":"95%" }}>
+        item && <Box key={index}>
           {item}
         </Box>
       ))}

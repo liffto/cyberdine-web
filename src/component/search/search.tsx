@@ -138,7 +138,7 @@ export default function SearchComponent({
       const menuInstance = new Menu(menuData[menuType]);
       setMenu(menuInstance)
     }
-    const cat = ["Veg", "Egg", "Non Veg", "Our Special"];
+    const cat = menuType == "foodMenu" ? ["Veg", "Egg", "Non Veg", "Our Special"] : [];
     setFilterList(cat);
   }, []);
 

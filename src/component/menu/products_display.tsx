@@ -90,6 +90,8 @@ export default function ProductDisplay({
         },
         topic: `${restId}table${table}`,
       };
+      console.log("dataaaa", data);
+
       setWait(true);
       await FcmService.shared.fcmTopic(data);
       notify();
@@ -275,7 +277,7 @@ export default function ProductDisplay({
   }, [cartMenuData, preOrderData]);
 
   useEffect(() => {
-    const cat = ["Veg", "Egg", "Non Veg", "Our Special"];
+    const cat = menuTypes == "foodMenu" ? ["Veg", "Egg", "Non Veg", "Our Special"] : [];
     setFilterList(cat);
     // Function to handle clicks outside the div
     const handleClickOutside = (event: any) => {
@@ -293,6 +295,7 @@ export default function ProductDisplay({
     };
   }, []);
 
+  console.log(review, "review");
 
   const OurSpecial = (
     <div
@@ -418,9 +421,11 @@ export default function ProductDisplay({
                   handleCatClick={handleCatClick}
                   filterList={filterList}
                 />
-                {selfilterList.length == 0 && <HorizontalScrollSnap
-                  items={[OurSpecial, review && GoogleReview]}
-                />}
+                {selfilterList.length == 0 &&
+                  <HorizontalScrollSnap
+                    items={review && GoogleReview ?[OurSpecial, review && GoogleReview] : [OurSpecial]}
+                  />
+                }
 
                 <Toaster position="top-center" />
                 <div className="mb-20">
