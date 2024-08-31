@@ -6,17 +6,17 @@ import { useParams } from "next/navigation";
 import React, { createContext, useState, useEffect, useCallback } from "react";
 
 const MenuDataContext = createContext<{
-  menuData: Menu | null;
-  setMenuData: React.Dispatch<React.SetStateAction<Menu | null>>;
-  category: string[];
-  setCategory: React.Dispatch<React.SetStateAction<string[]>>;
+  menuData: any;
+  setMenuData: React.Dispatch<React.SetStateAction<any>>;
+  category: any;
+  setCategory: React.Dispatch<any>;
   cartMenuData: CartMenu | null;
   setCartMenuData: React.Dispatch<React.SetStateAction<CartMenu | null>>;
   deviceId: string | null;
 }>({
   menuData: null,
   setMenuData: () => { },
-  category: [],
+  category: {},
   setCategory: () => { },
   cartMenuData: null,
   setCartMenuData: () => { },
@@ -24,9 +24,9 @@ const MenuDataContext = createContext<{
 });
 
 function MenuDataProvider({ children }: { children: React.ReactNode }) {
-  const [menuData, setMenuData] = useState<Menu | null>(null);
+  const [menuData, setMenuData] = useState<Map<string, Menu> | null>(null);
   const [cartMenuData, setCartMenuData] = useState<CartMenu | null>(null);
-  const [category, setCategory] = useState<Array<string>>([]);
+  const [category, setCategory] = useState<any>();
   const { restId } = useParams<{ restId: string }>();
   const [deviceId, setDeviceId] = useState<string>('');
   useEffect(() => {
@@ -34,21 +34,18 @@ function MenuDataProvider({ children }: { children: React.ReactNode }) {
     setDeviceId(getDeviceId);
     if (restId && restId != "") {
       const catUnsub = FirebaseServices.shared.getRestCategory(
-        restId,
-        (cat: Array<string>) => {
-          setCategory(cat);
-        }
+        restId, setCategory
       );
-      const menuUnSub = FirebaseServices.shared.getOrgMenu(restId, setMenuData);      
-      
-      const cartMenuUnSub = FirebaseServices.shared.getCartMenu(restId,getDeviceId, setCartMenuData);
+      const menuUnSub = FirebaseServices.shared.getOrgMenu(restId, setMenuData);
+
+      const cartMenuUnSub = FirebaseServices.shared.getCartMenu(restId, getDeviceId, setCartMenuData);
       return () => {
         catUnsub();
         menuUnSub();
         cartMenuUnSub();
       };
     }
-  }, [restId,deviceId]);
+  }, [restId, deviceId]);
 
   const generateDeviceId = useCallback(() => {
     const navigatorInfo = window.navigator;

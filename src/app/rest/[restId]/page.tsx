@@ -1,5 +1,4 @@
-import ProductDisplay from "@/component/menu/products_display";
-import Topbar from "@/component/menu/topbar";
+import HomePage from "@/component/menu/home_page";
 
 export default async function OrgProductsPage({
   params, searchParams
@@ -48,8 +47,7 @@ export default async function OrgProductsPage({
         } as React.CSSProperties
       }
     >
-      <Topbar data={json.data} />
-      <ProductDisplay restId={params.restId} table={searchParams.table} topic={json?.data?.fcmTopic} notification={json?.data?.isNoticifation} bgColor={"#" + json.data.hcolor?.slice(2, 10)} plan={json?.data?.plan} isPayCompleted={json?.data?.isPayCompleted} customerDetails={json?.data?.customerDetails} review={json?.data?.review} />
+      <HomePage data={json.data} restId={params.restId} table={searchParams.table} topic={json?.data?.fcmTopic} notification={json?.data?.isNoticifation} bgColor={"#" + json.data.hcolor?.slice(2, 10)} plan={json?.data?.plan} isPayCompleted={json?.data?.isPayCompleted} customerDetails={json?.data?.customerDetails} review={json?.data?.review} />
     </div>
   );
 }

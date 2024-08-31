@@ -12,7 +12,7 @@ export class FirebaseServices {
         const completedTasksRef: Query = ref(database, `menu/${restId}`);
         return getFirebaseData(completedTasksRef, (snapshot) => {
             if (snapshot.exists()) {
-                callBack(new Menu(snapshot.val()))
+                callBack(snapshot.val())
             }
         })
     }
