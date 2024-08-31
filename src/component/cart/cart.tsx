@@ -25,9 +25,9 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
     const [wait, setWait] = useState<boolean>(false);
 
     const setSelectedData = (ele: Item) => {
-        if(cartMenuData && cartMenuData?.getMenuList()?.length != 0){
+        if (cartMenuData && cartMenuData?.getMenuList()?.length != 0) {
             setSelectedMenuData(ele);
-        }else{
+        } else {
             back();
         }
     };
@@ -62,7 +62,7 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
                                     <MenuItemCard
                                         index={index}
                                         setSelectedData={setSelectedData}
-                                        ele={ele} bgColor={bgColor}                                    />
+                                        ele={ele} bgColor={bgColor} />
                                 </div>
                             );
                         })}
@@ -75,12 +75,12 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
                 }} >Select More</div>
                 {notification && <div onClick={() => {
                     wait ? null : sendFcm();
-                }} className={`${wait ? "text-gray-300" : " text-primary" } bg-white px-8 py-2 rounded-sm font-bold text-xl `} >Request Waiter</div>}
+                }} className={`${wait ? "text-gray-300" : " text-primary"} bg-white px-8 py-2 rounded-sm font-bold text-xl `} >Request Waiter</div>}
             </div>
             {selectedMenuData && (
                 <DescriptionSheet
                     setSelectedMenuData={setSelectedData}
-                    selectedMenuData={selectedMenuData} bgColor={bgColor} restId={restId} deviceId={deviceId ?? ""} />
+                    selectedMenuData={selectedMenuData} bgColor={bgColor} restId={restId} deviceId={deviceId ?? ""} menuType={localStorage.getItem('menuType')!} />
             )}
         </div>
     );
