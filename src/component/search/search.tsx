@@ -327,6 +327,7 @@ export default function SearchComponent({
       </div>
       {selectedMenuData && (
         <DescriptionSheet
+          menuType={menuType}
           setSelectedMenuData={setSelectedData}
           selectedMenuData={selectedMenuData} bgColor={bgColor} restId={restId} deviceId={deviceId ?? ""} />
       )}

@@ -1,24 +1,28 @@
+"use client";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Image from "next/image";
 import CloseIcon from '@mui/icons-material/Close';
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { MenuDataContext } from "@/context/menu.context";
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import toast, { Toaster } from "react-hot-toast";
+import { Menu } from "@/model/products/menu";
 
 const itemAdd = () => toast('Item successfully added to wishlist');
 const itemRemove = () => toast('Item successfully removed from wishlist');
 
 export default function DescriptionSheet({
+  menuType,
   setSelectedMenuData,
   selectedMenuData,
   bgColor,
   restId,
   deviceId,
 }: {
+  menuType: string;
   setSelectedMenuData: any;
   selectedMenuData: any;
   bgColor: string;
@@ -26,6 +30,7 @@ export default function DescriptionSheet({
   deviceId: string;
 }) {
   const [itemCount, setItemCount] = useState<number | null>(selectedMenuData.quantity && selectedMenuData.quantity != undefined ? selectedMenuData.quantity : null);
+  const [menu, setMenu] = useState<Menu | null>(null);
   const { menuData, cartMenuData } = useContext(MenuDataContext);
 
   const addToWishList = () => {
@@ -42,6 +47,13 @@ export default function DescriptionSheet({
     checkOrderList(temp);
   };
 
+  useEffect(() => {
+    if (menuData) {
+      const menuInstance = new Menu(menuData[menuType]);
+      setMenu(menuInstance);
+    }
+  }, [menuData]);
+
   // const itemCountFunc = () => {
   //   let temp = itemCount;
   //   if (temp == 0) {
@@ -52,8 +64,8 @@ export default function DescriptionSheet({
   //   setItemCount(temp);
   // };
 
-  const checkOrderList = (count:number|null) => {
-    menuData?.addQantity(selectedMenuData, count, restId, deviceId, (val: any) => {
+  const checkOrderList = (count: number | null) => {
+    menu?.addQantity(selectedMenuData, count, restId, deviceId, (val: any) => {
       if (val == "remove" && cartMenuData && cartMenuData?.getMenuList()!.length < 2 && (itemCount == 1)) {
         cartMenuData.makeCartMenuEmpty()
       }

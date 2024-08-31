@@ -27,7 +27,7 @@ const notify = () => toast("Notified successfully");
 const soldOutNotify = () => toast("Temporarily out of stock");
 
 export default function ProductDisplay({
-  menuType,
+  menuTypes,
   restId,
   table,
   topic,
@@ -38,7 +38,7 @@ export default function ProductDisplay({
   customerDetails,
   review,
 }: {
-  menuType: string;
+  menuTypes: string;
   restId: string;
   table: string;
   topic: string;
@@ -59,7 +59,7 @@ export default function ProductDisplay({
   const [preOrderData, setPreOrderData] = useState<boolean>(true);
   const categoryRef = useRef<HTMLDivElement>(null);
   const [menu, setMenu] = useState<Menu | null>(null)
-  const { menuData, category, cartMenuData, deviceId, setMenuType } =
+  const { menuData, category, cartMenuData, deviceId, menuType, setMenuType } =
     useContext(MenuDataContext);
   const [selectedCategoryName, setSelectedCategoryName] = useState<
     string | null
@@ -245,13 +245,18 @@ export default function ProductDisplay({
 
   useEffect(() => {
     // Ensure category is not null and has at least one item before setting selectedCategoryName
-    if (category && category[menuType]!.length > 0) {
-      setSelectedCategoryName(category[menuType]![0]);
+    if (!menuTypes) {
+      const value = localStorage.getItem('menuType');
+      setMenuType(value!);
+      menuTypes = value!;
+    }
+    if (category && category[menuTypes]!.length > 0) {
+      setSelectedCategoryName(category[menuTypes]![0]);
     }
     if (menuData) {
-      const menuInstance = new Menu(menuData[menuType]);
+      const menuInstance = new Menu(menuData[menuTypes]);
       setMenu(menuInstance);
-      setMenuType(menuType);
+      setMenuType(menuTypes);
     }
     if (deviceId && customerDetails) {
       const response = FirebaseServices.shared.getCustomerDetails(
@@ -263,7 +268,7 @@ export default function ProductDisplay({
         response();
       };
     }
-  }, [category]);
+  }, [category, menuData]);
 
   useEffect(() => {
     getQuantityFromOrder();
@@ -287,8 +292,6 @@ export default function ProductDisplay({
       document.body.removeEventListener("click", handleClickOutside);
     };
   }, []);
-
-  console.log("menuuuuuu", menu);
 
 
   const OurSpecial = (
@@ -422,9 +425,7 @@ export default function ProductDisplay({
                 <Toaster position="top-center" />
                 <div className="mb-20">
                   {category &&
-                    category[menuType].map((ele: any, catIndex: any) => {
-                      console.log("asdasd", menu, selfilterList);
-
+                    category[menuType]?.map((ele: any, catIndex: any) => {
                       return (
                         <div key={catIndex} id={ele}>
                           {menu &&
@@ -464,6 +465,7 @@ export default function ProductDisplay({
             )}
             {selectedMenuData && (
               <DescriptionSheet
+                menuType={menuType}
                 setSelectedMenuData={setSelectedMenuData}
                 selectedMenuData={selectedMenuData}
                 bgColor={bgColor}
