@@ -13,6 +13,8 @@ const MenuDataContext = createContext<{
   cartMenuData: CartMenu | null;
   setCartMenuData: React.Dispatch<React.SetStateAction<CartMenu | null>>;
   deviceId: string | null;
+  menuType: string;
+  setMenuType: React.Dispatch<React.SetStateAction<string>>;
 }>({
   menuData: null,
   setMenuData: () => { },
@@ -21,6 +23,8 @@ const MenuDataContext = createContext<{
   cartMenuData: null,
   setCartMenuData: () => { },
   deviceId: null,
+  menuType: '',
+  setMenuType: () => { }
 });
 
 function MenuDataProvider({ children }: { children: React.ReactNode }) {
@@ -29,6 +33,7 @@ function MenuDataProvider({ children }: { children: React.ReactNode }) {
   const [category, setCategory] = useState<any>();
   const { restId } = useParams<{ restId: string }>();
   const [deviceId, setDeviceId] = useState<string>('');
+  const [menuType, setMenuType] = useState<string>('');
   useEffect(() => {
     const getDeviceId = generateDeviceId();
     setDeviceId(getDeviceId);
@@ -74,7 +79,7 @@ function MenuDataProvider({ children }: { children: React.ReactNode }) {
     return hash;
   };
 
-  const value = { menuData, setMenuData, category, setCategory, cartMenuData, setCartMenuData, deviceId };
+  const value = { menuData, setMenuData, category, setCategory, cartMenuData, setCartMenuData, deviceId, menuType, setMenuType };
 
   return (
     <MenuDataContext.Provider value={value}>

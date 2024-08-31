@@ -59,13 +59,11 @@ export default function ProductDisplay({
   const [preOrderData, setPreOrderData] = useState<boolean>(true);
   const categoryRef = useRef<HTMLDivElement>(null);
   const [menu, setMenu] = useState<Menu | null>(null)
-  const { menuData, category, cartMenuData, deviceId } =
+  const { menuData, category, cartMenuData, deviceId, setMenuType } =
     useContext(MenuDataContext);
   const [selectedCategoryName, setSelectedCategoryName] = useState<
     string | null
   >('');
-console.log(menuData,"menuData");
-
 
   const setSelectedData = (ele: Item) => {
     if (!ele.isActive) {
@@ -250,10 +248,10 @@ console.log(menuData,"menuData");
     if (category && category[menuType]!.length > 0) {
       setSelectedCategoryName(category[menuType]![0]);
     }
-    if(menuData){
-      console.log("menuData[menuType]",menuData[menuType]);
+    if (menuData) {
       const menuInstance = new Menu(menuData[menuType]);
-      setMenu(menuInstance)
+      setMenu(menuInstance);
+      setMenuType(menuType);
     }
     if (deviceId && customerDetails) {
       const response = FirebaseServices.shared.getCustomerDetails(
@@ -290,8 +288,8 @@ console.log(menuData,"menuData");
     };
   }, []);
 
-  console.log("menuuuuuu",menu);
-  
+  console.log("menuuuuuu", menu);
+
 
   const OurSpecial = (
     <div
@@ -425,8 +423,8 @@ console.log(menuData,"menuData");
                 <div className="mb-20">
                   {category &&
                     category[menuType].map((ele: any, catIndex: any) => {
-                      console.log("asdasd",menu, selfilterList);
-                      
+                      console.log("asdasd", menu, selfilterList);
+
                       return (
                         <div key={catIndex} id={ele}>
                           {menu &&
