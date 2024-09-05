@@ -23,6 +23,8 @@ export function ProCard({
     bgColor: string;
     menuTypes: string;
   }) {
+    console.log("menutype",menuTypes);
+    
     return (
       <>
         <div className={`sticky ${menuTypes == "foodMenu" ? "top-[102px]" : "top-[70px]" }  bg-[#fafafa] z-10`}>

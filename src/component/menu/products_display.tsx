@@ -451,7 +451,7 @@ export default function ProductDisplay({
                                 selfilterList={selfilterList}
                                 setSelectedData={setSelectedData}
                                 catIndex={catIndex}
-                                bgColor={bgColor} menuTypes={menuTypes}                              />
+                                bgColor={bgColor} menuTypes={menuType} />
                             ))}
                         </div>
                       );
