@@ -13,6 +13,7 @@ export function ProCard({
     menuData,
     selfilterList,
     setSelectedData,
+    menuTypes
   }: {
     ele: string;
     menuData: Menu | null;
@@ -20,10 +21,11 @@ export function ProCard({
     setSelectedData: (ele: Item) => void;
     catIndex: number;
     bgColor: string;
+    menuTypes: string;
   }) {
     return (
       <>
-        <div className="sticky top-[102px] bg-[#fafafa] z-10">
+        <div className={`sticky ${menuTypes == "foodMenu" ? "top-[102px]" : "top-[70px]" }  bg-[#fafafa] z-10`}>
           <div className="px-4 py-2 font-bold text-sm bg-secondary text-black capitalize flex justify-between items-center">
             <div className=" ">{ele}</div>
             <div className="pr-2">

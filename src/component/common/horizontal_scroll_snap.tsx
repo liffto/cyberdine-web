@@ -8,7 +8,6 @@ interface HorizontalScrollSnapProps {
 const HorizontalScrollSnap: React.FC<HorizontalScrollSnapProps> = ({
   items,
 }) => {
-  console.log(items,"items");
   
   return (
     <Box

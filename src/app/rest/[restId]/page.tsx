@@ -47,7 +47,7 @@ export default async function OrgProductsPage({
         } as React.CSSProperties
       }
     >
-      <HomePage data={json.data} restId={params.restId} table={searchParams.table} />
+      <HomePage data={json.data} restId={params.restId} table={searchParams.table} bgColor={"#" + json.data.hcolor?.slice(2, 10)} />
     </div>
   );
 }

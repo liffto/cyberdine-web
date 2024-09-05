@@ -274,7 +274,7 @@ export default function ProductDisplay({
 
   useEffect(() => {
     getQuantityFromOrder();
-  }, [cartMenuData, preOrderData]);
+  }, [cartMenuData, preOrderData, menu]);
 
   useEffect(() => {
     const cat = menuTypes == "foodMenu" ? ["Veg", "Egg", "Non Veg", "Our Special"] : [];
@@ -295,7 +295,6 @@ export default function ProductDisplay({
     };
   }, []);
 
-  console.log(review, "review");
 
   const OurSpecial = (
     <div
@@ -423,7 +422,7 @@ export default function ProductDisplay({
                 />
                 {selfilterList.length == 0 &&
                   <HorizontalScrollSnap
-                    items={review && GoogleReview ?[OurSpecial, review && GoogleReview] : [OurSpecial]}
+                    items={review && GoogleReview ? [OurSpecial, review && GoogleReview] : [OurSpecial]}
                   />
                 }
 
@@ -452,8 +451,7 @@ export default function ProductDisplay({
                                 selfilterList={selfilterList}
                                 setSelectedData={setSelectedData}
                                 catIndex={catIndex}
-                                bgColor={bgColor}
-                              />
+                                bgColor={bgColor} menuTypes={menuTypes}                              />
                             ))}
                         </div>
                       );
@@ -475,8 +473,7 @@ export default function ProductDisplay({
                 selectedMenuData={selectedMenuData}
                 bgColor={bgColor}
                 restId={restId}
-                deviceId={deviceId ?? ""}
-              />
+                deviceId={deviceId ?? ""} menu={menu ?? new Menu()} />
             )}
             {plan !== "basic" && (
               <div className="">

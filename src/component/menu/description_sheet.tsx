@@ -21,6 +21,7 @@ export default function DescriptionSheet({
   bgColor,
   restId,
   deviceId,
+  menu
 }: {
   menuType: string;
   setSelectedMenuData: any;
@@ -28,10 +29,10 @@ export default function DescriptionSheet({
   bgColor: string;
   restId: string;
   deviceId: string;
+  menu: Menu;
 }) {
   const [itemCount, setItemCount] = useState<number | null>(selectedMenuData.quantity && selectedMenuData.quantity != undefined ? selectedMenuData.quantity : null);
-  const [menu, setMenu] = useState<Menu | null>(null);
-  const { menuData, cartMenuData } = useContext(MenuDataContext);
+  const { cartMenuData } = useContext(MenuDataContext);
 
   const addToWishList = () => {
     let temp: number | null;
@@ -46,13 +47,6 @@ export default function DescriptionSheet({
     setItemCount(temp);
     checkOrderList(temp);
   };
-
-  useEffect(() => {
-    if (menuData) {
-      const menuInstance = new Menu(menuData[menuType]);
-      setMenu(menuInstance);
-    }
-  }, [menuData]);
 
   // const itemCountFunc = () => {
   //   let temp = itemCount;
@@ -70,7 +64,6 @@ export default function DescriptionSheet({
         cartMenuData.makeCartMenuEmpty()
       }
       setSelectedMenuData(null);
-
     })
 
   }
