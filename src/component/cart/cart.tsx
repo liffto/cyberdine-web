@@ -3,11 +3,12 @@
 import { MenuDataContext } from "@/context/menu.context";
 import { Item } from "@/model/products/items";
 import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import MenuItemCard from "../menu/menu_item_card";
 import DescriptionSheet from "../menu/description_sheet";
 import { FcmService } from "@/service/fcm_service";
 import toast, { Toaster } from 'react-hot-toast';
+import { Menu } from "@/model/products/menu";
 
 const notify = () => toast('Notified successfully');
 interface CartComponentProps {
@@ -21,8 +22,16 @@ interface CartComponentProps {
 const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, topic, notification }) => {
     const { back } = useRouter();
     const [selectedMenuData, setSelectedMenuData] = useState<Item | null>(null);
-    const { menuData, category, cartMenuData, deviceId } = useContext(MenuDataContext);
+    const { menuData, category, cartMenuData, deviceId, menuType } = useContext(MenuDataContext);
+    const [menu, setMenu] = useState<Menu | null>(null)
     const [wait, setWait] = useState<boolean>(false);
+
+    useEffect(()=>{
+        if (menuData) {
+            const menuInstance = new Menu(menuData[menuType]);
+            setMenu(menuInstance)
+          }
+    },[])
 
     const setSelectedData = (ele: Item) => {
         if (cartMenuData && cartMenuData?.getMenuList()?.length != 0) {
@@ -80,7 +89,7 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
             {selectedMenuData && (
                 <DescriptionSheet
                     setSelectedMenuData={setSelectedData}
-                    selectedMenuData={selectedMenuData} bgColor={bgColor} restId={restId} deviceId={deviceId ?? ""} menuType={localStorage.getItem('menuType')!} />
+                    selectedMenuData={selectedMenuData} bgColor={bgColor} restId={restId} deviceId={deviceId ?? ""} menuType={localStorage.getItem('menuType')!} menu={menu ?? new Menu()} />
             )}
         </div>
     );

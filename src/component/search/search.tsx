@@ -329,7 +329,7 @@ export default function SearchComponent({
         <DescriptionSheet
           menuType={menuType}
           setSelectedMenuData={setSelectedData}
-          selectedMenuData={selectedMenuData} bgColor={bgColor} restId={restId} deviceId={deviceId ?? ""} />
+          selectedMenuData={selectedMenuData} bgColor={bgColor} restId={restId} deviceId={deviceId ?? ""} menu={menu ?? new Menu()} />
       )}
     </div>
   );
