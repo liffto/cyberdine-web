@@ -13,6 +13,7 @@ import Image from "next/image";
 import CloseIcon from "@mui/icons-material/Close";
 import DescriptionSheet from "../menu/description_sheet";
 import BasicMenuItemCard from "../menu/basic_menu_item_card";
+import { Menu } from "@/model/products/menu";
 
 export default function SearchComponent({
   restId,
@@ -23,7 +24,7 @@ export default function SearchComponent({
   bgColor: string;
   plan: string;
 }) {
-  const { menuData, category, deviceId } = useContext(MenuDataContext);
+  const { menuData, category, cartMenuData, deviceId, menuType } = useContext(MenuDataContext);
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace, back } = useRouter();
@@ -32,6 +33,7 @@ export default function SearchComponent({
   const [selfilterList, setSelFilterList] = useState<Array<string>>([]);
   const [filterList, setFilterList] = useState<Array<string>>([]);
   const [selectedMenuData, setSelectedMenuData] = useState<Item | null>(null);
+  const [menu, setMenu] = useState<Menu | null>(null)
   const inputRef = useRef<HTMLInputElement>(null);
 
   const setSelectedData = (ele: Item) => {
@@ -132,7 +134,11 @@ export default function SearchComponent({
     if (inputRef.current) {
       inputRef.current.focus();
     }
-    const cat = ["Veg", "Egg", "Non Veg", "Our Special"];
+    if (menuData) {
+      const menuInstance = new Menu(menuData[menuType]);
+      setMenu(menuInstance)
+    }
+    const cat = menuType == "foodMenu" ? ["Veg", "Egg", "Non Veg", "Our Special"] : [];
     setFilterList(cat);
   }, []);
 
@@ -285,15 +291,23 @@ export default function SearchComponent({
     },
   };
 
+  const checkOrderList = (data: Item, type: string) => {
+    menu?.addQantity(data, data.quantity, restId, deviceId ?? '', type, (val: any) => {
+      if (val == "remove" && cartMenuData && cartMenuData?.getMenuList()!.length == 1 && data.quantity == null) {
+        cartMenuData.makeCartMenuEmpty();
+      }
+    })
+  }
+
   return (
     <div className="">
       {TopBar()}
       {CategoryList()}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 md:gap-6 py-4 ">
-        {menuData &&
-          menuData.getSearchedMenu(query, selfilterList) &&
+        {menu &&
+          menu.getSearchedMenu(query, selfilterList) &&
           Array.from(
-            menuData.getSearchedMenu(query, selfilterList)!.entries()
+            menu.getSearchedMenu(query, selfilterList)!.entries()
           ).map((value, index) => {
             return (
               <div className="" key={index}>
@@ -309,7 +323,7 @@ export default function SearchComponent({
                         <div className="pb-4" key={key} >
                           {plan === "basic" ? <BasicMenuItemCard
                             index={index}
-                            ele={item} /> : <MenuItemCard index={index} ele={item} setSelectedData={setSelectedData} bgColor={bgColor} />}
+                            ele={item} /> : <MenuItemCard index={index} ele={item} setSelectedData={setSelectedData} bgColor={bgColor} addOrderItems={checkOrderList} />}
                         </div>
                       );
                     })}
@@ -321,8 +335,9 @@ export default function SearchComponent({
       </div>
       {selectedMenuData && (
         <DescriptionSheet
+          menuType={menuType}
           setSelectedMenuData={setSelectedData}
-          selectedMenuData={selectedMenuData} bgColor={bgColor} restId={restId} deviceId={deviceId ?? ""} />
+          selectedMenuData={selectedMenuData} bgColor={bgColor} restId={restId} deviceId={deviceId ?? ""} menu={menu ?? new Menu()} />
       )}
     </div>
   );

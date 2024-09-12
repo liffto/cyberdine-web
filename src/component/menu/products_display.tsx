@@ -21,11 +21,13 @@ import CategoryList from "./category_list";
 import PhoneNoDialog from "./phoneNoDialog";
 import { BasicCard, ProCard } from "./cards";
 import HorizontalScrollSnap from "../common/horizontal_scroll_snap";
+import { Menu } from "@/model/products/menu";
 
 const notify = () => toast("Notified successfully");
 const soldOutNotify = () => toast("Temporarily out of stock");
 
 export default function ProductDisplay({
+  menuTypes,
   restId,
   table,
   topic,
@@ -36,6 +38,7 @@ export default function ProductDisplay({
   customerDetails,
   review,
 }: {
+  menuTypes: string;
   restId: string;
   table: string;
   topic: string;
@@ -55,11 +58,12 @@ export default function ProductDisplay({
   const [isCircle, setIsCircle] = useState<boolean>(true);
   const [preOrderData, setPreOrderData] = useState<boolean>(true);
   const categoryRef = useRef<HTMLDivElement>(null);
-  const { menuData, category, cartMenuData, deviceId } =
+  const [menu, setMenu] = useState<Menu | null>(null)
+  const { menuData, category, cartMenuData, deviceId, menuType, setMenuType } =
     useContext(MenuDataContext);
   const [selectedCategoryName, setSelectedCategoryName] = useState<
     string | null
-  >(category[0]);
+  >('');
 
   const setSelectedData = (ele: Item) => {
     if (!ele.isActive) {
@@ -86,6 +90,7 @@ export default function ProductDisplay({
         },
         topic: `${restId}table${table}`,
       };
+
       setWait(true);
       await FcmService.shared.fcmTopic(data);
       notify();
@@ -220,7 +225,7 @@ export default function ProductDisplay({
   const getQuantityFromOrder = () => {
     if (cartMenuData) {
       cartMenuData?.getMenuList()?.forEach((each) => {
-        let response = menuData
+        let response = menu
           ?.getMenuList(each.category!, [])
           ?.find((val) => val.id == each.id);
         if (response != undefined) {
@@ -241,8 +246,18 @@ export default function ProductDisplay({
 
   useEffect(() => {
     // Ensure category is not null and has at least one item before setting selectedCategoryName
-    if (category && category.length > 0) {
-      setSelectedCategoryName(category[0]);
+    if (!menuTypes) {
+      const value = localStorage.getItem('menuType');
+      setMenuType(value!);
+      menuTypes = value!;
+    }
+    if (category && category[menuTypes]!.length > 0) {
+      setSelectedCategoryName(category[menuTypes]![0]);
+    }
+    if (menuData) {
+      const menuInstance = new Menu(menuData[menuTypes]);
+      setMenu(menuInstance);
+      setMenuType(menuTypes);
     }
     if (deviceId && customerDetails) {
       const response = FirebaseServices.shared.getCustomerDetails(
@@ -254,14 +269,16 @@ export default function ProductDisplay({
         response();
       };
     }
-  }, [category]);
+  }, [category, menuData]);
 
   useEffect(() => {
-    getQuantityFromOrder();
-  }, [cartMenuData, preOrderData]);
+    if (preOrderData) {
+      getQuantityFromOrder();
+    }
+  }, [cartMenuData, menu, preOrderData]);
 
   useEffect(() => {
-    const cat = ["Veg", "Egg", "Non Veg", "Our Special"];
+    const cat = menuTypes == "foodMenu" ? ["Veg", "Egg", "Non Veg", "Our Special"] : [];
     setFilterList(cat);
     // Function to handle clicks outside the div
     const handleClickOutside = (event: any) => {
@@ -322,7 +339,7 @@ export default function ProductDisplay({
       ) : (
         <div className="">
           <div className="md:container mx-auto  ">
-            {menuData ? (
+            {menu ? (
               <div className="">
                 <div className="sticky top-0 z-20 bg-[#fafafa] w-full flex justify-between items-center px-4 pt-2">
                   <Link
@@ -331,9 +348,8 @@ export default function ProductDisplay({
                   >
                     <div className="my-2 flex justify-start items-center w-full bg-white">
                       <div
-                        className={`border border-gray-300 text-gray-300 rounded w-full py-[6px] ${
-                          notification ? "mr-2" : ""
-                        }  text-sm`}
+                        className={`border border-gray-300 text-gray-300 rounded w-full py-[6px] ${notification ? "mr-2" : ""
+                          }  text-sm`}
                       >
                         <SearchIcon
                           sx={{ marginRight: "10px", marginLeft: "10px" }}
@@ -386,9 +402,8 @@ export default function ProductDisplay({
                         </div>
                         <div className="ml-3 leading-3 mt-[2px]">
                           <div
-                            className={`${
-                              wait ? "text-[#c2beb4]" : "text-primary"
-                            } font-bold text-sm p-0 leading-3`}
+                            className={`${wait ? "text-[#c2beb4]" : "text-primary"
+                              } font-bold text-sm p-0 leading-3`}
                           >
                             {"Request"}{" "}
                             <span className="font-medium text-xs">
@@ -405,37 +420,41 @@ export default function ProductDisplay({
                   handleCatClick={handleCatClick}
                   filterList={filterList}
                 />
-                <HorizontalScrollSnap
-                  items={[selfilterList.length == 0 && OurSpecial,review&&GoogleReview]}
-                />
+                {selfilterList.length == 0 &&
+                  <HorizontalScrollSnap
+                    items={review && GoogleReview ? [OurSpecial, review && GoogleReview] : [OurSpecial]}
+                  />
+                }
 
                 <Toaster position="top-center" />
                 <div className="mb-20">
                   {category &&
-                    category!.map((ele, catIndex) => {
+                    category[menuType]?.map((ele: any, catIndex: any) => {
                       return (
                         <div key={catIndex} id={ele}>
-                          {menuData &&
-                            menuData.getMenuList(ele, selfilterList) &&
-                            menuData.getMenuList(ele, selfilterList)!.length >
-                              0 &&
+                          {menu &&
+                            menu.getMenuList(ele, selfilterList) &&
+                            menu.getMenuList(ele, selfilterList)!.length >
+                            0 &&
                             (plan === "basic" ? (
                               <BasicCard
                                 setCatName={setCatName}
                                 ele={ele}
-                                menuData={menuData}
+                                menuData={menu}
                                 selfilterList={selfilterList}
                                 selectedCategoryName={selectedCategoryName}
                               />
                             ) : (
                               <ProCard
                                 ele={ele}
-                                menuData={menuData}
+                                menuData={menu}
                                 selfilterList={selfilterList}
                                 setSelectedData={setSelectedData}
                                 catIndex={catIndex}
                                 bgColor={bgColor}
-                              />
+                                restId={restId}
+                                deviceId={deviceId ?? ""}
+                                menuTypes={menuType} onRemoveOrders={()=>{setPreOrderData(true)}} />
                             ))}
                         </div>
                       );
@@ -452,23 +471,22 @@ export default function ProductDisplay({
             )}
             {selectedMenuData && (
               <DescriptionSheet
+                menuType={menuType}
                 setSelectedMenuData={setSelectedMenuData}
                 selectedMenuData={selectedMenuData}
                 bgColor={bgColor}
                 restId={restId}
-                deviceId={deviceId ?? ""}
-              />
+                deviceId={deviceId ?? ""} menu={menu ?? new Menu()} />
             )}
             {plan !== "basic" && (
               <div className="">
                 <div
-                  className={`category_shape fixed z-10 ${
-                    cartMenuData &&
+                  className={`category_shape fixed z-10 ${cartMenuData &&
                     cartMenuData?.getMenuList() &&
                     cartMenuData?.getMenuList()?.length != 0
-                      ? "bottom-16"
-                      : "bottom-6"
-                  }  right-6 ${isCircle ? "circle" : "rectangle"}`}
+                    ? "bottom-16"
+                    : "bottom-6"
+                    }  right-6 ${isCircle ? "circle" : "rectangle"}`}
                   onClick={() => setIsCircle(!isCircle)}
                 >
                   {isCircle ? (
@@ -487,12 +505,12 @@ export default function ProductDisplay({
                   ) : (
                     <div ref={categoryRef} className="category_text">
                       <ul className="">
-                        {category.map(
-                          (item, index) =>
-                            menuData &&
-                            menuData.getMenuList(item, selfilterList) &&
-                            menuData.getMenuList(item, selfilterList)!.length >
-                              0 && (
+                        {category[menuType]!.map(
+                          (item: any, index: any) =>
+                            menu &&
+                            menu.getMenuList(item, selfilterList) &&
+                            menu.getMenuList(item, selfilterList)!.length >
+                            0 && (
                               <li
                                 onClick={() => handleItemClick(item)}
                                 className="pb-2 cursor-pointer capitalize text-lg font-medium"
