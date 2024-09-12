@@ -45,12 +45,12 @@ export default function MenuItemCard({
   return (
     <div
       key={index}
-      onClick={() => {
-        // setSelectedData && setSelectedData(ele);
-      }}
+
       className={`rounded-md boxshadow-3 md:rounded-md overflow-hidden max-h-[100px] flex bg-white`}
     >
-      <div className="relative z-0">
+      <div className="relative z-0" onClick={() => {
+        setSelectedData && setSelectedData(ele);
+      }}>
         <div className={`h-full bg-slate-200  flex items-center`}>
           {imageError ? (
             <Image
@@ -88,7 +88,9 @@ export default function MenuItemCard({
         )}
       </div>
       <div className={`relative z-0 flex items-center rounded-e-md p-2 flex-1`}>
-        <div className="flex flex-col  flex-1 pl-1">
+        <div className="flex flex-col  flex-1 pl-1" onClick={() => {
+          setSelectedData && setSelectedData(ele);
+        }}>
           <h1 className={`text-base capitalize md:text-lg font-bold ${!ele.isActive ? "text-gray-400" : "text-black"}`}>
             {ele.capitalizeNameFirstLetter()}
           </h1>
@@ -120,9 +122,9 @@ export default function MenuItemCard({
               <div className="text-xs pr-1">Add</div>
               <AddIcon sx={{ fontSize: '13px' }} />
             </div> : <div className={`flex justify-center items-center pl-4 pr-3 py-1 rounded border-2 border-gray text-gray-400`}>
-              <div className="text-xs pr-1">Add</div>
-              <AddIcon sx={{ fontSize: '13px' }} />
-            </div>
+            <div className="text-xs pr-1">Add</div>
+            <AddIcon sx={{ fontSize: '13px' }} />
+          </div>
         }
         {/* {ele.quantity != undefined && ele.quantity > 0 && <div className="absolute -top-[5px] right-2">
           <BookmarkSharpIcon sx={{ color: bgColor }} />

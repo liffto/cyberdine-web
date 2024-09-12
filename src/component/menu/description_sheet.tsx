@@ -59,7 +59,7 @@ export default function DescriptionSheet({
   // };
 
   const checkOrderList = (count: number | null) => {
-    menu?.addQantity(selectedMenuData, count, restId, deviceId, (val: any) => {
+    menu?.addQantity(selectedMenuData, count, restId, deviceId, menuType, (val: any) => {
       if (val == "remove" && cartMenuData && cartMenuData?.getMenuList()!.length < 2 && (itemCount == 1)) {
         cartMenuData.makeCartMenuEmpty()
       }
