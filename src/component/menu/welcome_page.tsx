@@ -25,7 +25,7 @@ const WelcomePage = ({ data, restId, table, bgColor }: { data: any, restId: stri
         { svg: '/images/svg/welcome_page/instagram_icon.svg', text: 'Instagram', type: 'insta', showCard: data.instagramLink, link: data.instagramLink },
         { svg: '/images/svg/welcome_page/facebook_icon.svg', text: 'Facebook', type: 'fb', showCard: data.facebookLink, link: data.facebookLink },
         { svg: '/images/svg/welcome_page/youtube_icon.svg', text: 'Youtube', type: 'utube', showCard: data.youtubeLink, link: data.youtubeLink },
-        { svg: '/images/svg/welcome_page/payment_icon.svg', text: 'Pay Now', type: 'pay', showCard: true, link: data.paymentLink },
+        { svg: '/images/svg/welcome_page/payment_icon.svg', text: 'Pay Now', type: 'pay', showCard: data.paymentLink, link: data.paymentLink },
     ];
 
     const onClickMenu = (type: string) => {
