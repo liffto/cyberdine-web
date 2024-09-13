@@ -25,7 +25,7 @@ const WelcomePage = ({ data, restId, table, bgColor }: { data: any, restId: stri
         { svg: '/images/svg/welcome_page/instagram_icon.svg', text: 'Instagram', type: 'insta', showCard: data.instagramLink, link: data.instagramLink },
         { svg: '/images/svg/welcome_page/facebook_icon.svg', text: 'Facebook', type: 'fb', showCard: data.facebookLink, link: data.facebookLink },
         { svg: '/images/svg/welcome_page/youtube_icon.svg', text: 'Youtube', type: 'utube', showCard: data.youtubeLink, link: data.youtubeLink },
-        { svg: '/images/svg/welcome_page/payment_icon.svg', text: 'Pay Now', type: 'pay', showCard: data.paymentLink, link: data.paymentLink },
+        { svg: '/images/svg/welcome_page/payment_icon.svg', text: 'Pay Now', type: 'pay', showCard: true, link: data.paymentLink },
     ];
 
     const onClickMenu = (type: string) => {
@@ -55,7 +55,7 @@ const WelcomePage = ({ data, restId, table, bgColor }: { data: any, restId: stri
                         className="w-26 h-26 my-4 object-contain m-auto" // Adjust size and ensure the image fits
                     />}
             </div>
-            <div className="w-full flex flex-col mb-4 max-w-4xl">
+            <div className={`w-full flex flex-col mb-14 max-w-4xl overflow-y-hidden	`}>
                 {items.map((item, index) => (
                     <a key={index} className="" href={item.link} >
                         {item.showCard && <div className="mb-4" onClick={() => { onClickMenu(item.type) }}><Card svg={item.svg} text={item.text} /></div>}
