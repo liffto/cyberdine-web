@@ -14,7 +14,7 @@ export class CartMenu {
         if (!this.cartMenuMap) {
             return null;
         }
-        
+
         const cart = this.cartMenuMap?.values();
         let itemList: Item[] = [];
         Array.from(cart).forEach((each) => {
@@ -26,7 +26,7 @@ export class CartMenu {
         return itemList;
     }
 
-    makeCartMenuEmpty(){
+    makeCartMenuEmpty() {
         this.cartMenuMap = new Map()
     }
 }

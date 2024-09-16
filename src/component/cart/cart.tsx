@@ -59,7 +59,7 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
     };
 
     const checkOrderList = (data: Item, type: string) => {
-        menu?.addQantity(data, data.quantity, restId, deviceId ?? '', type, (val: any) => {
+        menu?.addQantity(data, data.quantity, restId, deviceId ?? '', type, table, (val: any) => {
             if (val == "remove" && cartMenuData && cartMenuData?.getMenuList()!.length == 1 && data.quantity == null) {
                 cartMenuData.makeCartMenuEmpty();
                 back();
@@ -99,7 +99,7 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
             {selectedMenuData && (
                 <DescriptionSheet
                     setSelectedMenuData={setSelectedData}
-                    selectedMenuData={selectedMenuData} bgColor={bgColor} restId={restId} deviceId={deviceId ?? ""} menuType={localStorage.getItem('menuType')!} menu={menu ?? new Menu()} />
+                    selectedMenuData={selectedMenuData} bgColor={bgColor} restId={restId} deviceId={deviceId ?? ""} menuType={localStorage.getItem('menuType')!} menu={menu ?? new Menu()} table={table} />
             )}
         </div>
     );

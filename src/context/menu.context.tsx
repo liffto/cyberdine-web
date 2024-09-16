@@ -34,6 +34,8 @@ function MenuDataProvider({ children }: { children: React.ReactNode }) {
   const { restId } = useParams<{ restId: string }>();
   const [deviceId, setDeviceId] = useState<string>('');
   const [menuType, setMenuType] = useState<string>('');
+  const queryParams = new URLSearchParams(window.location.search);
+  const table = queryParams.get('table');
   useEffect(() => {
     const getDeviceId = generateDeviceId();
     setDeviceId(getDeviceId);
@@ -43,7 +45,7 @@ function MenuDataProvider({ children }: { children: React.ReactNode }) {
       );
       const menuUnSub = FirebaseServices.shared.getOrgMenu(restId, setMenuData);
 
-      const cartMenuUnSub = FirebaseServices.shared.getCartMenu(restId, getDeviceId, setCartMenuData);
+      const cartMenuUnSub = FirebaseServices.shared.getCartMenu(restId, table ?? '', getDeviceId, setCartMenuData);
       return () => {
         catUnsub();
         menuUnSub();

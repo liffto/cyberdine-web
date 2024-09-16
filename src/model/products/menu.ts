@@ -85,18 +85,18 @@ export class Menu {
     return tempMap;
   }
 
-  async addQantity(menu: Item, count: number | null, restId: string, deviceId: string, type: string, callback?: (ele: string) => void) {
+  async addQantity(menu: Item, count: number | null, restId: string, deviceId: string, type: string, table: string, callback?: (ele: string) => void) {
     let res = this.menuMap!.get(menu.category!)?.get(menu.id!);
     if (res != undefined) {
       res.quantity = 0;
-      res.quantity = count;      
+      res.quantity = count;
       if (type == "add") {
-        await FirebaseServices.shared.addToCart(res, restId, deviceId, (val: any) => {
+        await FirebaseServices.shared.addToCart(res, restId, deviceId, table, (val: any) => {
           callback && callback("add")
         });
 
       } else {
-        await FirebaseServices.shared.removeToCart(res, restId, deviceId, (val: any) => {
+        await FirebaseServices.shared.removeToCart(res, restId, deviceId, table, (val: any) => {
           callback && callback("remove")
         });
 

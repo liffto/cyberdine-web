@@ -18,6 +18,7 @@ export function ProCard({
   restId,
   deviceId,
   menuTypes,
+  table,
   onRemoveOrders
 }: {
   ele: string;
@@ -29,12 +30,13 @@ export function ProCard({
   restId: string;
   deviceId: string;
   menuTypes: string;
-  onRemoveOrders: (menuData: Menu)=> void;
+  table: string;
+  onRemoveOrders: (menuData: Menu) => void;
 }) {
   const { cartMenuData } = useContext(MenuDataContext);
 
   const checkOrderList = (data: Item, type: string) => {
-    menuData?.addQantity(data, data.quantity, restId, deviceId, type, (val: any) => {
+    menuData?.addQantity(data, data.quantity, restId, deviceId, type, table, (val: any) => {
       if (val == "remove" && cartMenuData && cartMenuData?.getMenuList()!.length == 1 && data.quantity == null) {
         cartMenuData.makeCartMenuEmpty();
         onRemoveOrders(menuData);
@@ -44,7 +46,7 @@ export function ProCard({
 
   return (
     <>
-      <div className={`sticky ${menuTypes == "foodMenu" ? "top-[102px]" : "top-[70px]" }  bg-[#fafafa] z-10`}>
+      <div className={`sticky ${menuTypes == "foodMenu" ? "top-[102px]" : "top-[70px]"}  bg-[#fafafa] z-10`}>
         <div className="px-4 py-2 font-bold text-sm bg-secondary text-black capitalize flex justify-between items-center">
           <div className=" ">{ele}</div>
           <div className="pr-2">

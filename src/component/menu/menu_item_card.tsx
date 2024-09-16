@@ -91,9 +91,9 @@ export default function MenuItemCard({
         <div className="flex flex-col  flex-1 pl-1" onClick={() => {
           setSelectedData && setSelectedData(ele);
         }}>
-          <h1 className={`text-base capitalize md:text-lg font-bold ${!ele.isActive ? "text-gray-400" : "text-black"}`}>
+          {/* <h1 className={`text-base capitalize md:text-lg font-bold ${!ele.isActive ? "text-gray-400" : "text-black"}`}>
             {ele.capitalizeNameFirstLetter()}
-          </h1>
+          </h1> */}
           <div
             className={`text-xs md:text-sm  ${!ele.isActive ? "text-gray-300" : "text-gray-800"} font-medium`}
           >

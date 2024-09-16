@@ -21,7 +21,8 @@ export default function DescriptionSheet({
   bgColor,
   restId,
   deviceId,
-  menu
+  menu,
+  table
 }: {
   menuType: string;
   setSelectedMenuData: any;
@@ -30,6 +31,7 @@ export default function DescriptionSheet({
   restId: string;
   deviceId: string;
   menu: Menu;
+  table: string;
 }) {
   const [itemCount, setItemCount] = useState<number | null>(selectedMenuData.quantity && selectedMenuData.quantity != undefined ? selectedMenuData.quantity : null);
   const { cartMenuData } = useContext(MenuDataContext);
@@ -59,7 +61,7 @@ export default function DescriptionSheet({
   // };
 
   const checkOrderList = (count: number | null) => {
-    menu?.addQantity(selectedMenuData, count, restId, deviceId, menuType, (val: any) => {
+    menu?.addQantity(selectedMenuData, count, restId, deviceId, menuType, table, (val: any) => {
       if (val == "remove" && cartMenuData && cartMenuData?.getMenuList()!.length < 2 && (itemCount == 1)) {
         cartMenuData.makeCartMenuEmpty()
       }

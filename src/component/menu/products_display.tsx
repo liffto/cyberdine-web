@@ -454,7 +454,7 @@ export default function ProductDisplay({
                                 bgColor={bgColor}
                                 restId={restId}
                                 deviceId={deviceId ?? ""}
-                                menuTypes={menuType} onRemoveOrders={()=>{setPreOrderData(true)}} />
+                                menuTypes={menuType} onRemoveOrders={() => { setPreOrderData(true); }} table={table} />
                             ))}
                         </div>
                       );
@@ -476,7 +476,7 @@ export default function ProductDisplay({
                 selectedMenuData={selectedMenuData}
                 bgColor={bgColor}
                 restId={restId}
-                deviceId={deviceId ?? ""} menu={menu ?? new Menu()} />
+                deviceId={deviceId ?? ""} menu={menu ?? new Menu()} table={table} />
             )}
             {plan !== "basic" && (
               <div className="">

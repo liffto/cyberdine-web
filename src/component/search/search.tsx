@@ -18,11 +18,13 @@ import { Menu } from "@/model/products/menu";
 export default function SearchComponent({
   restId,
   bgColor,
-  plan
+  plan,
+  table
 }: {
   restId: string;
   bgColor: string;
   plan: string;
+  table: string;
 }) {
   const { menuData, category, cartMenuData, deviceId, menuType } = useContext(MenuDataContext);
   const searchParams = useSearchParams();
@@ -292,7 +294,7 @@ export default function SearchComponent({
   };
 
   const checkOrderList = (data: Item, type: string) => {
-    menu?.addQantity(data, data.quantity, restId, deviceId ?? '', type, (val: any) => {
+    menu?.addQantity(data, data.quantity, restId, deviceId ?? '', type, table, (val: any) => {
       if (val == "remove" && cartMenuData && cartMenuData?.getMenuList()!.length == 1 && data.quantity == null) {
         cartMenuData.makeCartMenuEmpty();
       }
@@ -337,7 +339,7 @@ export default function SearchComponent({
         <DescriptionSheet
           menuType={menuType}
           setSelectedMenuData={setSelectedData}
-          selectedMenuData={selectedMenuData} bgColor={bgColor} restId={restId} deviceId={deviceId ?? ""} menu={menu ?? new Menu()} />
+          selectedMenuData={selectedMenuData} bgColor={bgColor} restId={restId} deviceId={deviceId ?? ""} menu={menu ?? new Menu()} table={table} />
       )}
     </div>
   );
