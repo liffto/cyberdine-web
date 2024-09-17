@@ -9,6 +9,7 @@ import DescriptionSheet from "../menu/description_sheet";
 import { FcmService } from "@/service/fcm_service";
 import toast, { Toaster } from 'react-hot-toast';
 import { Menu } from "@/model/products/menu";
+import Link from "next/link";
 
 const notify = () => toast('Notified successfully');
 interface CartComponentProps {
@@ -21,6 +22,7 @@ interface CartComponentProps {
 
 const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, topic, notification }) => {
     const { back } = useRouter();
+    const router = useRouter();
     const [selectedMenuData, setSelectedMenuData] = useState<Item | null>(null);
     const { menuData, category, cartMenuData, deviceId } = useContext(MenuDataContext);
     const [menu, setMenu] = useState<Menu | null>(null)
@@ -67,6 +69,11 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
         })
     }
 
+
+    const handleClick = () => {
+        router.replace(`/rest/${restId}/orders?table=${table}`);
+    };
+
     return (
         <div className="md:container mx-auto">
             <Toaster position="top-center" />
@@ -87,14 +94,12 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
                         })}
             </div>
             <div
-                className={` fixed bottom-0 bg-primary text-white text-lg text-center flex justify-evenly items-center w-full py-3 font-semibold`}
+                className={` fixed bottom-0 bg-primary text-white text-base text-center flex justify-evenly items-center w-full py-3 font-semibold`}
             >
                 <div className="" onClick={() => {
                     back();
                 }} >Select More</div>
-                {notification && <div onClick={() => {
-                    wait ? null : sendFcm();
-                }} className={`${wait ? "text-gray-300" : " text-primary"} bg-white px-8 py-2 rounded-sm font-bold text-xl `} >Request Waiter</div>}
+                <div onClick={handleClick} className={`${wait ? "text-gray-300" : " text-primary"} no-underline bg-white px-8 py-2 rounded-sm font-bold text-lg `} >Order Now</div>
             </div>
             {selectedMenuData && (
                 <DescriptionSheet

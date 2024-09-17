@@ -1,10 +1,11 @@
 import CartComponent from "@/component/cart/cart";
 import Topbar from "@/component/menu/topbar";
+import OrdersComponent from "@/component/orders/orders";
 
-export default async function MenuCart({
-    params,searchParams
+export default async function MenuOrders({
+    params, searchParams
 }: {
-    params: { restId: string };searchParams:{table:string}
+    params: { restId: string }; searchParams: { table: string }
 }) {
     const response = await fetch(
         `${process.env.NODE_ENV == "development"
@@ -45,7 +46,7 @@ export default async function MenuCart({
                 } as React.CSSProperties
             }>
             <Topbar data={json.data} />
-            <CartComponent restId={params.restId} bgColor={"#" + json.data.hcolor?.slice(2, 10)} table={searchParams.table} topic={json?.data?.fcmTopic} notification={json?.data?.isNoticifation}  />
+            <OrdersComponent bgColor={"#" + json.data.hcolor?.slice(2, 10)} restId={params.restId} table={searchParams.table} />
         </div>
     );
 }

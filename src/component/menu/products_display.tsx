@@ -538,7 +538,7 @@ export default function ProductDisplay({
                       <div className="">
                         <div className="text-sm font-semibold">
                           {cartMenuData?.getMenuList()?.length} Items in
-                          wishlist
+                          Cart
                         </div>
                         <div className="text-xs">View Now</div>
                       </div>

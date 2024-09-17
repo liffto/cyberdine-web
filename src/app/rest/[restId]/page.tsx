@@ -9,7 +9,7 @@ export default async function OrgProductsPage({
     `${process.env.NODE_ENV == "development"
       ? "http://localhost:3000"
       : "https://www.cyberdine.in"
-    }/api/rest/${params.restId}/detail`, { next: { revalidate: 1 * 1 * 1 } }
+    }/api/rest/${params.restId}/detail`, { next: { revalidate: 60 * 60 * 2 } }
   );
   const json = await response.json();
 
