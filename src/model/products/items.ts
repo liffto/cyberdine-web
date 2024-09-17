@@ -9,6 +9,7 @@ export class Item {
     description: string | null = null;
     price: number | null = null;
     quantity: number | null = null;
+    isApproved: boolean | null = null;
 
     constructor(data?: Item) {
         if (data) {
@@ -22,6 +23,7 @@ export class Item {
             this.description = data.description;
             this.price = data.price;
             this.quantity = data.quantity;
+            this.isApproved = data.isApproved;
         }
     }
 

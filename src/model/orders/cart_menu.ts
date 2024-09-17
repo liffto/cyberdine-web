@@ -2,11 +2,11 @@ import { JsonUtiles } from "@/utils/jsonUtiles";
 import { Item } from "../products/items";
 
 export class CartMenu {
-    cartMenuMap: Map<string, Map<string, Item>> | null = new Map();
-    constructor(data?: CartMenu) {
-        this.cartMenuMap = new Map<string, Map<string, Item>>();
+    cartMenuMap: Map<string, Map<string, Map<string, Item>>> | null = new Map();
+    constructor(data?: { [outerKey: string]: { [middleKey: string]: { [innerKey: string]: any } } }) {
+        this.cartMenuMap = new Map<string, Map<string, Map<string, Item>>>();
         if (data) {
-            this.cartMenuMap = JsonUtiles.populateNestedMap(data, Item);
+            this.cartMenuMap = JsonUtiles.populateThreeLevelNestedMap(data, Item);
         }
     }
 
@@ -14,15 +14,18 @@ export class CartMenu {
         if (!this.cartMenuMap) {
             return null;
         }
-
-        const cart = this.cartMenuMap?.values();
+    
         let itemList: Item[] = [];
-        Array.from(cart).forEach((each) => {
-            Array.from(each.values()).map(element => {
-                itemList.push(element)
+    
+        // Convert outer map values iterator to an array
+        Array.from(this.cartMenuMap.values()).forEach(middleMap => {
+            // Convert middle map values iterator to an array
+            Array.from(middleMap.values()).forEach(innerMap => {
+                // Convert inner map values iterator to an array and push to itemList
+                itemList.push(...Array.from(innerMap.values()));
             });
-        })
-
+        });
+    
         return itemList;
     }
 

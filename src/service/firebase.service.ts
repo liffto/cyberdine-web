@@ -37,7 +37,7 @@ export class FirebaseServices {
     }
 
     async addToCart(menu: Item, restId: string, deviceId: string, table: string, callback?: (ele: string) => void) {
-        const updateMenu = await ref(database, `/order/${restId}/${table}/${deviceId}/${menu.category}/${menu.id}`);
+        const updateMenu = await ref(database, `/order/${restId}/${table}/${deviceId}/pending/${menu.category}/${menu.id}`);
         await set(updateMenu, JSON.parse(JSON.stringify(menu))).then(() => {
             callback && callback("done")
         }).catch((error) => {
@@ -47,7 +47,7 @@ export class FirebaseServices {
     }
 
     async removeToCart(menu: Item, restId: string, deviceId: string, table: string, callback?: (ele: string) => void) {
-        const updateMenu = await ref(database, `/order/${restId}/${table}/${deviceId}/${menu.category}/${menu.id}`);
+        const updateMenu = await ref(database, `/order/${restId}/${table}/${deviceId}/pending/${menu.category}/${menu.id}`);
         await set(updateMenu, menu.quantity == null ? null : JSON.parse(JSON.stringify(menu))).then(() => {
             callback && callback("done")
         }).catch((error) => {
