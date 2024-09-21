@@ -10,6 +10,7 @@ export class Item {
     price: number | null = null;
     quantity: number | null = null;
     isApproved: boolean | null = null;
+    dateAndTime: string | null = null;
 
     constructor(data?: Item) {
         if (data) {
@@ -24,6 +25,7 @@ export class Item {
             this.price = data.price;
             this.quantity = data.quantity;
             this.isApproved = data.isApproved;
+            this.dateAndTime = data.dateAndTime;
         }
     }
 
@@ -34,6 +36,6 @@ export class Item {
     }
 
     capitalizeDescriptionFirstLetter = () => {
-        return this.description &&  this.description!.charAt(0).toUpperCase() + this.description!.slice(1).toLowerCase();
+        return this.description && this.description!.charAt(0).toUpperCase() + this.description!.slice(1).toLowerCase();
     }
 }

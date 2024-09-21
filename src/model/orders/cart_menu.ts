@@ -14,9 +14,9 @@ export class CartMenu {
         if (!this.cartMenuMap) {
             return null;
         }
-    
+
         let itemList: Item[] = [];
-    
+
         // Convert outer map values iterator to an array
         Array.from(this.cartMenuMap.values()).forEach(middleMap => {
             // Convert middle map values iterator to an array
@@ -25,8 +25,52 @@ export class CartMenu {
                 itemList.push(...Array.from(innerMap.values()));
             });
         });
-    
+
         return itemList;
+    }
+
+    getFirstDateAndTime(): { date: string; time: string; timestamp: string } | null {
+        const items = this.getMenuList();
+
+        if (!items) return null;
+
+        const firstItemWithDate = items.find(item => item.dateAndTime);
+
+        if (firstItemWithDate && firstItemWithDate.dateAndTime) {
+            const dateTimeString = firstItemWithDate.dateAndTime;
+            const dateObj = new Date(dateTimeString);
+
+            // Format date as "DD MMM YYYY"
+            const day = dateObj.getDate().toString().padStart(2, '0');
+            const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            const month = monthNames[dateObj.getMonth()];
+            const year = dateObj.getFullYear();
+            const formattedDate = `${day} ${month} ${year}`; // "12 Jan 2024"
+
+            // Format time as "hh:mm AM/PM"
+            const optionsTime: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit', hour12: true };
+            const formattedTime = dateObj.toLocaleTimeString('en-US', optionsTime); // e.g., "04:04 PM"
+
+            // Calculate sixDigitId
+            const lastTwoDigitsOfYear: number = year % 100; // Last two digits of the year
+            const monthValue: number = dateObj.getMonth() + 1; // Month (1-12)
+            const dayValue: number = dateObj.getDate(); // Day (1-31)
+
+            // Break down the calculation into steps
+            const yearContribution: number = lastTwoDigitsOfYear * 10000;
+            const monthContribution: number = monthValue * 100;
+            const total: number = yearContribution + monthContribution + dayValue;
+            const timestamp: string = (total % 1000000).toString().padStart(6, '0'); // Ensure it is 6 digits
+
+
+            return {
+                date: formattedDate,
+                time: formattedTime,
+                timestamp, // Return the Unix timestamp
+            };
+        }
+
+        return null; // No dateAndTime found
     }
 
     makeCartMenuEmpty() {

@@ -2,7 +2,8 @@
 import { MenuDataContext } from "@/context/menu.context";
 import { Item } from "@/model/products/items";
 import { useRouter } from "next/navigation";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
+import BottomButton from "../common/bottom_button";
 
 interface BillingComponentsProps {
     restId: string;
@@ -15,7 +16,23 @@ const BillingComponents: React.FC<BillingComponentsProps> = ({ restId, bgColor, 
     const { cartMenuData } = useContext(MenuDataContext);
     const { back } = useRouter();
     const router = useRouter();
+    const [date, setDate] = useState<string>('');
+    const [time, setTime] = useState<string>('');
+    const [billId, setBillId] = useState<string>('');
 
+    useEffect(() => {
+        console.log(cartMenuData, "cartMenuData");
+
+        if (cartMenuData) {
+            const response = cartMenuData.getFirstDateAndTime();
+            console.log(response, "response");
+            if (response) {
+                setDate(response?.date);
+                setTime(response?.time);
+                setBillId(response?.timestamp);
+            }
+        }
+    }, [cartMenuData]);
 
     // Calculate Total Amount
     const calculateTotalAmount = (): number => {
@@ -48,12 +65,12 @@ const BillingComponents: React.FC<BillingComponentsProps> = ({ restId, bgColor, 
         <div className="md:container mx-auto">
             <div className="border border-primary mx-4 mt-2"></div>
             <div className="mx-4 mt-2 font-semibold flex justify-between items-center">
-                <div>Bill no: 00001</div>
-                <div>12 Jan 2024</div>
+                <div>Bill no: {billId ?? ''}</div>
+                <div>{date ?? ''}</div>
             </div>
             <div className="mx-4 mb-2 text-sm flex justify-between items-center">
                 <div>Table {table}</div>
-                <div>07:30 PM</div>
+                <div>{time ?? ''}</div>
             </div>
             {cartMenuData && cartMenuData?.getMenuList() && cartMenuData?.getMenuList()!.length > 0 && (
                 <div className="mt-4">
@@ -117,6 +134,8 @@ const BillingComponents: React.FC<BillingComponentsProps> = ({ restId, bgColor, 
                 <div onClick={() => { back() }} className="" >Back</div>
                 <div onClick={() => { handleClick() }} className={`text-primary no-underline bg-white px-8 py-2 rounded-sm font-bold text-lg `} >Download Bill</div>
             </div>
+            <BottomButton onBackClick={back} onNextClick={handleClick} backButton={"Back"} nextButton={"Download Bill"} />
+
         </div>
     );
 };

@@ -10,6 +10,7 @@ import { FcmService } from "@/service/fcm_service";
 import toast, { Toaster } from 'react-hot-toast';
 import { Menu } from "@/model/products/menu";
 import Link from "next/link";
+import BottomButton from "../common/bottom_button";
 
 const notify = () => toast('Notified successfully');
 interface CartComponentProps {
@@ -93,14 +94,7 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
                             );
                         })}
             </div>
-            <div
-                className={` fixed bottom-0 bg-primary text-white text-base text-center flex justify-evenly items-center w-full py-3 font-semibold`}
-            >
-                <div className="" onClick={() => {
-                    back();
-                }} >Select More</div>
-                <div onClick={handleClick} className={`${wait ? "text-gray-300" : " text-primary"} no-underline bg-white px-8 py-2 rounded-sm font-bold text-lg `} >Order Now</div>
-            </div>
+            <BottomButton onBackClick={back} onNextClick={handleClick} wait={wait} backButton={"Select More"} nextButton={"Order Now"} />
             {selectedMenuData && (
                 <DescriptionSheet
                     setSelectedMenuData={setSelectedData}
