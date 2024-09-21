@@ -91,12 +91,12 @@ export class Menu {
       res.quantity = 0;
       res.quantity = count;
       if (type == "add") {
-        await FirebaseServices.shared.addToCart(res, restId, deviceId, table, (val: any) => {
+        await FirebaseServices.shared.addToCart(res, restId, deviceId, `table${table}`, (val: any) => {
           callback && callback("add")
         });
 
       } else {
-        await FirebaseServices.shared.removeToCart(res, restId, deviceId, table, (val: any) => {
+        await FirebaseServices.shared.removeToCart(res, restId, deviceId, `table${table}`, (val: any) => {
           callback && callback("remove")
         });
 

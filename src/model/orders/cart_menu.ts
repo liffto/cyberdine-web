@@ -29,6 +29,25 @@ export class CartMenu {
         return itemList;
     }
 
+    getPendingLength(): number {
+        const pending = this.cartMenuMap?.get('pending');
+        return pending ? Array.from(pending.values()).reduce((count, category) => count + category.size, 0) : 0;
+    }
+
+    getApprovedLength(): number {
+        const approved = this.cartMenuMap?.get('approved');
+        return approved ? Array.from(approved.values()).reduce((count, category) => count + category.size, 0) : 0;
+    }
+
+    getCartLength(): number {
+        const approved = this.cartMenuMap?.get('pending');
+        if (!approved) return 0;
+
+        return Array.from(approved.values()).reduce((count, category) => {
+            return count + Array.from(category.values()).filter(item => !item.isOrdered).length;
+        }, 0);
+    }
+
     getFirstDateAndTime(): { date: string; time: string; timestamp: string } | null {
         const items = this.getMenuList();
 

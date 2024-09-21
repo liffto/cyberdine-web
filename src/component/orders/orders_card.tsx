@@ -3,8 +3,8 @@ import Image from "next/image";
 import { Item } from "@/model/products/items";
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-export default function OrderCard({ ele, index, bgColor, addOrderItems }: {
-    ele: Item; index: number; bgColor: string; addOrderItems: (ele: Item, type: string) => void;
+export default function OrderCard({ ele, index, bgColor, addOrderItems, canAddItems }: {
+    ele: Item; index: number; bgColor: string; addOrderItems: (ele: Item, type: string) => void; canAddItems: boolean
 }) {
     const [imageError, setImageError] = useState(false);
 
@@ -13,19 +13,21 @@ export default function OrderCard({ ele, index, bgColor, addOrderItems }: {
     };
 
     const addToItems = (type: string) => {
-        if (type == "add" && ele.quantity == 0 || ele.quantity == null) {
-            ele.quantity = 1;
-            addOrderItems(ele, type);
-        } else if (type == "add") {
-            ele.quantity = ele.quantity + 1;
-            addOrderItems(ele, type);
-        } else if (type == "remove" && ele.quantity > 0) {
-            if (ele.quantity > 1) {
-                ele.quantity = ele.quantity - 1;
-            } else {
-                ele.quantity = null;
+        if (canAddItems) {
+            if (type == "add" && ele.quantity == 0 || ele.quantity == null) {
+                ele.quantity = 1;
+                addOrderItems(ele, type);
+            } else if (type == "add") {
+                ele.quantity = ele.quantity + 1;
+                addOrderItems(ele, type);
+            } else if (type == "remove" && ele.quantity > 0) {
+                if (ele.quantity > 1) {
+                    ele.quantity = ele.quantity - 1;
+                } else {
+                    ele.quantity = null;
+                }
+                addOrderItems(ele, type);
             }
-            addOrderItems(ele, type);
         }
     };
 
@@ -82,10 +84,10 @@ export default function OrderCard({ ele, index, bgColor, addOrderItems }: {
                 </div>
                 {ele.isActive ?
                     ele.quantity != null && ele.quantity > 0 ?
-                        <div className="flex justify-center items-center rounded border-2 border-primary mb-1">
-                            <div onClick={() => { addToItems("remove") }} className="bg-primary px-1"><RemoveIcon sx={{ fontSize: '13px', color: 'white' }} /></div>
-                            <div className="px-2">{ele.quantity ?? 0}</div>
-                            <div onClick={() => { addToItems("add") }} className="bg-primary px-1"><AddIcon sx={{ fontSize: '13px', color: 'white' }} /></div>
+                        <div className={`flex justify-center items-center rounded border-2 ${!canAddItems ? "border-gray-400" : "border-primary"} mb-1`}>
+                            <div onClick={() => { addToItems("remove") }} className={`${!canAddItems ? "bg-gray-400" : "bg-primary"} px-1`}><RemoveIcon sx={{ fontSize: '13px', color: 'white' }} /></div>
+                            <div className={`${!canAddItems ? "text-gray-400" : "text-black"} px-2`}>{ele.quantity ?? 0}</div>
+                            <div onClick={() => { addToItems("add") }} className={`${!canAddItems ? "bg-gray-400" : "bg-primary"} px-1`}><AddIcon sx={{ fontSize: '13px', color: 'white' }} /></div>
                         </div>
                         :
                         <div onClick={() => { addToItems("add") }} className={`flex justify-center items-center pl-4 pr-3 py-1 rounded border-2 border-primary text-primary`}>

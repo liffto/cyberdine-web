@@ -39,6 +39,9 @@ export function ProCard({
     if (data.dateAndTime == null) {
       data.dateAndTime = new Date().toISOString();
     }
+    if (data.isOrdered != false) {
+      data.isOrdered = false;
+    }
     menuData?.addQantity(data, data.quantity, restId, deviceId, type, table, (val: any) => {
       if (val == "remove" && cartMenuData && cartMenuData?.getMenuList()!.length == 1 && data.quantity == null) {
         cartMenuData.makeCartMenuEmpty();

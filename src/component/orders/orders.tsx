@@ -6,6 +6,7 @@ import { Menu } from "@/model/products/menu";
 import { Item } from "@/model/products/items";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import BottomButton from "../common/bottom_button";
 
 interface OrdersComponentProps {
     bgColor: string;
@@ -15,6 +16,7 @@ interface OrdersComponentProps {
 
 const OrdersComponent: React.FC<OrdersComponentProps> = ({ bgColor, restId, table }) => {
     const { back } = useRouter();
+    const router = useRouter();
     const [menu, setMenu] = useState<Menu | null>(null)
     const { menuData, cartMenuData, deviceId } = useContext(MenuDataContext);
     useEffect(() => {
@@ -31,10 +33,15 @@ const OrdersComponent: React.FC<OrdersComponentProps> = ({ bgColor, restId, tabl
             }
         })
     }
+
+    const handleClick = () => {
+        router.replace(`/rest/${restId}/billing?table=${table}`);
+    };
     return <div className="mt-6">
-        {cartMenuData && cartMenuData.getMenuList() && cartMenuData.getMenuList()?.some((ele) => ele.isApproved == null || ele.isApproved == false) && <div className="bg-[#FF7D20] px-4 text-white py-2 font-semibold text-xs">Your order is waiting for approval</div>}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 py-4 px-4">
-            {cartMenuData && cartMenuData.getMenuList() && cartMenuData.getMenuList()?.length != 0 &&
+        {cartMenuData && cartMenuData.getMenuList() && cartMenuData.getMenuList()?.some((ele) => ele.isApproved == null || ele.isApproved == false) ?
+            <div className="bg-[#FF7D20] px-4 text-white py-2 font-semibold text-xs">Your order is waiting for approval</div> : <></>}
+        {cartMenuData && cartMenuData.getPendingLength() != 0 ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 py-4 px-4">
+            {cartMenuData && cartMenuData.getMenuList() && cartMenuData.getMenuList()?.length != 0 ?
                 cartMenuData
                     .getMenuList()!
                     .map((ele: Item, index: any) => {
@@ -42,11 +49,11 @@ const OrdersComponent: React.FC<OrdersComponentProps> = ({ bgColor, restId, tabl
                             <div key={index} className="">
                                 <OrderCard
                                     index={index}
-                                    ele={ele} bgColor={bgColor} addOrderItems={checkOrderList} />
+                                    ele={ele} bgColor={bgColor} addOrderItems={checkOrderList} canAddItems={true} />
                             </div>
                         );
-                    })}
-        </div>
+                    }) : <></>}
+        </div> : <></>}
 
         {cartMenuData && cartMenuData.getMenuList() && cartMenuData.getMenuList()?.some((ele) => ele.isApproved == true) && <div className="bg-primary px-4 text-white py-2 font-semibold text-xs">Approved</div>}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 py-4 px-4">
@@ -58,23 +65,14 @@ const OrdersComponent: React.FC<OrdersComponentProps> = ({ bgColor, restId, tabl
                             <div key={index} className="">
                                 <OrderCard
                                     index={index}
-                                    ele={ele} bgColor={bgColor} addOrderItems={() => { }} />
+                                    ele={ele} bgColor={bgColor} addOrderItems={() => { }} canAddItems={false} />
                             </div>
                         );
                     })}
         </div>
+        <div className="h-20"></div>
+        <BottomButton onBackClick={back} onNextClick={handleClick} backButton={"Order More"} nextButton={cartMenuData && cartMenuData.getPendingLength() != 0 ? "" : "View Bill"} />
 
-        <div
-            className={` fixed bottom-0 bg-primary text-white text-base text-center flex justify-evenly items-center w-full py-3 font-semibold`}
-        >
-
-            <div onClick={() => { back() }} className="" >Order More</div>
-            <Link
-                href={`/rest/${restId}/billing?table=${table}`}
-            >
-                <div className={`text-primary no-underline bg-white px-8 py-2 rounded-sm font-bold text-lg `} >View Bill</div>
-            </Link>
-        </div>
     </div>
 }
 

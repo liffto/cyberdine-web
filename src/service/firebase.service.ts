@@ -1,6 +1,5 @@
-import { Menu } from "@/model/products/menu";
 import { database } from "../../firebase-config";
-import { ref, onValue as getFirebaseData, Query, Unsubscribe, set } from "firebase/database";
+import { ref, onValue as getFirebaseData, Query, Unsubscribe, set, update } from "firebase/database";
 import { Item } from "@/model/products/items";
 import { CartMenu } from "@/model/orders/cart_menu";
 import { CustomerDetails } from "@/model/customer_detail/customer_details";
@@ -19,7 +18,7 @@ export class FirebaseServices {
 
     getCartMenu(restId: string, table: string, deviceId: string, callBack: Function): Unsubscribe {
 
-        const completedTasksRef: Query = ref(database, `order/${restId}/${table}/${deviceId}`);
+        const completedTasksRef: Query = ref(database, `order/${restId}/table${table}/${deviceId}`);
         return getFirebaseData(completedTasksRef, (snapshot) => {
             if (snapshot.exists()) {
                 callBack(new CartMenu(snapshot.val()))
@@ -74,4 +73,31 @@ export class FirebaseServices {
             callback && callback("error")
         });
     }
+
+    async placeOrder(data: Map<string, Map<string, Item>>, restId: string, deviceId: string, table: string, callback?: (ele: string) => void) {
+        try {
+            const updates: Record<string, any> = {};
+
+            // Loop through the Map structure
+            data.forEach((items, category) => {
+                items.forEach((item, itemId) => {
+                    updates[`/order/${restId}/table${table}/${deviceId}/pending/${category}/${itemId}/isOrdered`] = true;
+                });
+            });
+
+            // Perform the bulk update
+            await update(ref(database), updates).then(() => {
+                callback && callback("done")
+            }).catch((error) => {
+                console.error(error);
+                callback && callback("error")
+            });;
+            callback && callback("done");
+        } catch (error) {
+            console.error("Error updating isOrdered:", error);
+            callback && callback("error");
+        }
+    }
+
+
 }

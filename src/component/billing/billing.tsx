@@ -21,11 +21,8 @@ const BillingComponents: React.FC<BillingComponentsProps> = ({ restId, bgColor, 
     const [billId, setBillId] = useState<string>('');
 
     useEffect(() => {
-        console.log(cartMenuData, "cartMenuData");
-
         if (cartMenuData) {
             const response = cartMenuData.getFirstDateAndTime();
-            console.log(response, "response");
             if (response) {
                 setDate(response?.date);
                 setTime(response?.time);
@@ -89,53 +86,46 @@ const BillingComponents: React.FC<BillingComponentsProps> = ({ restId, bgColor, 
                                     <td className="py-2 px-4">{item.name}</td>
                                     <td className="py-2 px-4 text-center">{item.price!.toFixed(2)}</td>
                                     <td className="py-2 px-4 text-center">{item.quantity}</td>
-                                    <td className="py-2 px-4 text-center">{(item.price! * item.quantity!).toFixed(2)}</td>
+                                    <td className="py-2 px-4 text-start">{(item.price! * item.quantity!).toFixed(2)}</td>
                                 </tr>
                             ))}
                             <tr className="text-sm">
                                 <td className="py-2 px-4">Sub Total <span className="text-xs">{"(Inclusive Of Tax)"}</span></td>
                                 <td className="py-2 px-4 text-center"></td>
                                 <td className="py-2 px-4 text-center"></td>
-                                <td className="py-2 px-4 text-center">&#x20B9;{totalAmount.toFixed(2)}</td>
+                                <td className="py-2 px-4 text-start">&#x20B9;{totalAmount.toFixed(2)}</td>
                             </tr>
                             <tr className="text-sm">
                                 <td className="py-2 px-4">CGST (2.5%)</td>
                                 <td className="py-2 px-4 text-center"></td>
                                 <td className="py-2 px-4 text-center"></td>
-                                <td className="py-2 px-4 text-center">&#x20B9;{cgstAmount.toFixed(2)}</td>
+                                <td className="py-2 px-4 text-start">&#x20B9;{cgstAmount.toFixed(2)}</td>
                             </tr>
                             <tr className="text-sm">
                                 <td className="py-2 px-4">SGST (2.5%)</td>
                                 <td className="py-2 px-4 text-center"></td>
                                 <td className="py-2 px-4 text-center"></td>
-                                <td className="py-2 px-4 text-center">&#x20B9;{sgstAmount.toFixed(2)}</td>
+                                <td className="py-2 px-4 text-start">&#x20B9;{sgstAmount.toFixed(2)}</td>
                             </tr>
                             <tr className="text-sm">
                                 <td className="py-2 px-4">Total Tax</td>
                                 <td className="py-2 px-4 text-center"></td>
                                 <td className="py-2 px-4 text-center"></td>
-                                <td className="py-2 px-4 text-center">&#x20B9;{totalTax.toFixed(2)}</td>
+                                <td className="py-2 px-4 text-start">&#x20B9;{totalTax.toFixed(2)}</td>
                             </tr>
-                            <tr className="font-semibold">
-                                <td className="py-2 px-4">Total Amount</td>
+                            <tr className="font-semibold text-sm">
+                                <td className="py-2 px-4">Amount To Pay</td>
                                 <td className="py-2 px-4 text-center"></td>
                                 <td className="py-2 px-4 text-center"></td>
-                                <td className="py-2 px-4 text-center">&#x20B9;{grandTotal.toFixed(2)}</td>
+                                <td className="py-2 px-4 text-start">&#x20B9;{grandTotal.toFixed(2)}</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             )}
             <div className="text-center text-base my-2 text-gray-400">Thank you, visit again</div>
-            <div
-                className={` fixed bottom-0 bg-primary text-white text-base text-center flex justify-evenly items-center w-full py-3 font-semibold`}
-            >
-
-                <div onClick={() => { back() }} className="" >Back</div>
-                <div onClick={() => { handleClick() }} className={`text-primary no-underline bg-white px-8 py-2 rounded-sm font-bold text-lg `} >Download Bill</div>
-            </div>
+            <div className="h-20"></div>
             <BottomButton onBackClick={back} onNextClick={handleClick} backButton={"Back"} nextButton={"Download Bill"} />
-
         </div>
     );
 };

@@ -22,6 +22,7 @@ import PhoneNoDialog from "./phoneNoDialog";
 import { BasicCard, ProCard } from "./cards";
 import HorizontalScrollSnap from "../common/horizontal_scroll_snap";
 import { Menu } from "@/model/products/menu";
+import ProductBottommButton from "./product_bottom_button";
 
 const notify = () => toast("Notified successfully");
 const soldOutNotify = () => toast("Temporarily out of stock");
@@ -227,7 +228,7 @@ export default function ProductDisplay({
       cartMenuData?.getMenuList()?.forEach((each) => {
         let response = menu
           ?.getMenuList(each.category!, [])
-          ?.find((val) => val.id == each.id);
+          ?.find((val) => val.id == each.id && !(each.isApproved == true));
         if (response != undefined) {
           response.quantity = each.quantity;
           setPreOrderData(false);
@@ -484,7 +485,7 @@ export default function ProductDisplay({
                   className={`category_shape fixed z-10 ${cartMenuData &&
                     cartMenuData?.getMenuList() &&
                     cartMenuData?.getMenuList()?.length != 0
-                    ? "bottom-16"
+                    ? "bottom-20"
                     : "bottom-6"
                     }  right-6 ${isCircle ? "circle" : "rectangle"}`}
                   onClick={() => setIsCircle(!isCircle)}
@@ -529,23 +530,7 @@ export default function ProductDisplay({
             {cartMenuData &&
               cartMenuData?.getMenuList() &&
               cartMenuData?.getMenuList()?.length != 0 && (
-                <Link
-                  href={`/rest/${restId}/cart?table=${table}`}
-                  className="w-full"
-                >
-                  <div className="fixed bottom-0 z-20 bg-primary w-full px-4 py-3">
-                    <div className="text-[#fafafa] flex justify-between items-center">
-                      <div className="">
-                        <div className="text-sm font-semibold">
-                          {cartMenuData?.getMenuList()?.length} Items in
-                          Cart
-                        </div>
-                        <div className="text-xs">View Now</div>
-                      </div>
-                      <ArrowRightIcon fontSize="large" />
-                    </div>
-                  </div>
-                </Link>
+                <ProductBottommButton cartCount={cartMenuData.getCartLength()} pendingCount={cartMenuData.getPendingLength()} approvedCount={cartMenuData.getApprovedLength()} restId={restId} table={table} />
               )}
           </div>
         </div>

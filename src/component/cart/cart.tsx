@@ -9,8 +9,9 @@ import DescriptionSheet from "../menu/description_sheet";
 import { FcmService } from "@/service/fcm_service";
 import toast, { Toaster } from 'react-hot-toast';
 import { Menu } from "@/model/products/menu";
-import Link from "next/link";
 import BottomButton from "../common/bottom_button";
+import Image from "next/image";
+import { FirebaseServices } from "@/service/firebase.service";
 
 const notify = () => toast('Notified successfully');
 interface CartComponentProps {
@@ -35,7 +36,7 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
             const menuInstance = new Menu(menuData[value!]);
             setMenu(menuInstance)
         }
-    }, [])
+    }, [menuData])
 
     const setSelectedData = (ele: Item) => {
         if (cartMenuData && cartMenuData?.getMenuList()?.length != 0) {
@@ -63,7 +64,7 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
 
     const checkOrderList = (data: Item, type: string) => {
         menu?.addQantity(data, data.quantity, restId, deviceId ?? '', type, table, (val: any) => {
-            if (val == "remove" && cartMenuData && cartMenuData?.getMenuList()!.length == 1 && data.quantity == null) {
+            if (val == "remove" && cartMenuData && cartMenuData?.getPendingLength() == 1 && data.quantity == null) {
                 cartMenuData.makeCartMenuEmpty();
                 back();
             }
@@ -72,19 +73,31 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
 
 
     const handleClick = () => {
-        router.replace(`/rest/${restId}/orders?table=${table}`);
+        FirebaseServices.shared.placeOrder(cartMenuData?.cartMenuMap?.get('pending') ?? new Map(), restId, deviceId ?? '', table, () => {
+            router.replace(`/rest/${restId}/orders?table=${table}`);
+        });
+    };
+
+    const handleViewOrderClick = () => {
+        router.push(`/rest/${restId}/orders?table=${table}`);
     };
 
     return (
         <div className="md:container mx-auto">
             <Toaster position="top-center" />
             <div className="border border-primary mx-4 mt-2"></div>
+            {cartMenuData && cartMenuData?.getApprovedLength() != 0 && <div className="w-full" onClick={handleViewOrderClick} >
+                <Image src={'/images/png/view_selected_order.png'} alt="placed order" height={10} width={430} />
+            </div>}
+            <div className={`${cartMenuData && cartMenuData?.getApprovedLength() != 0 ? "" : "mt-4" } px-4 py-1 font-bold text-sm bg-secondary text-black capitalize flex`}>
+                <div className=" ">Items in cart</div>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 py-4 px-4">
                 {cartMenuData && cartMenuData.getMenuList() && cartMenuData.getMenuList()?.length != 0 &&
                     cartMenuData
                         .getMenuList()!
                         .map((ele: Item, index: any) => {
-                            return (
+                            return (!(ele.isApproved == true) && !(ele.isOrdered == true) &&
                                 <div key={index} className="">
                                     <MenuItemCard
                                         index={index}
@@ -94,6 +107,7 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
                             );
                         })}
             </div>
+            <div className="h-20"></div>
             <BottomButton onBackClick={back} onNextClick={handleClick} wait={wait} backButton={"Select More"} nextButton={"Order Now"} />
             {selectedMenuData && (
                 <DescriptionSheet
