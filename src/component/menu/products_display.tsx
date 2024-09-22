@@ -228,7 +228,7 @@ export default function ProductDisplay({
       cartMenuData?.getMenuList()?.forEach((each) => {
         let response = menu
           ?.getMenuList(each.category!, [])
-          ?.find((val) => val.id == each.id && !(each.isApproved == true));
+          ?.find((val) => val.id == each.id && !(each.isApproved == true) && !each.isOrdered);
         if (response != undefined) {
           response.quantity = each.quantity;
           setPreOrderData(false);

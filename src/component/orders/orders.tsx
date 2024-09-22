@@ -37,6 +37,8 @@ const OrdersComponent: React.FC<OrdersComponentProps> = ({ bgColor, restId, tabl
     const handleClick = () => {
         router.replace(`/rest/${restId}/billing?table=${table}`);
     };
+    console.log(cartMenuData, "cartMenuData", cartMenuData && cartMenuData.getPendingLength());
+
     return <div className="mt-6">
         {cartMenuData && cartMenuData.getMenuList() && cartMenuData.getMenuList()?.some((ele) => ele.isApproved == null || ele.isApproved == false) ?
             <div className="bg-[#FF7D20] px-4 text-white py-2 font-semibold text-xs">Your order is waiting for approval</div> : <></>}

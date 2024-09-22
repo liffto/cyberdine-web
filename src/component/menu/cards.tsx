@@ -42,6 +42,9 @@ export function ProCard({
     if (data.isOrdered != false) {
       data.isOrdered = false;
     }
+    if (data.isApproved != false) {
+      data.isApproved = false;
+    }
     menuData?.addQantity(data, data.quantity, restId, deviceId, type, table, (val: any) => {
       if (val == "remove" && cartMenuData && cartMenuData?.getMenuList()!.length == 1 && data.quantity == null) {
         cartMenuData.makeCartMenuEmpty();

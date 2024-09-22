@@ -11,7 +11,9 @@ const MenuDataContext = createContext<{
   category: any;
   setCategory: React.Dispatch<any>;
   cartMenuData: CartMenu | null;
+  orderMenuData: CartMenu | null;
   setCartMenuData: React.Dispatch<React.SetStateAction<CartMenu | null>>;
+  setOrderMenuData: React.Dispatch<React.SetStateAction<CartMenu | null>>;
   deviceId: string | null;
   menuType: string;
   setMenuType: React.Dispatch<React.SetStateAction<string>>;
@@ -19,7 +21,9 @@ const MenuDataContext = createContext<{
   menuData: null,
   setMenuData: () => { },
   category: {},
+  orderMenuData: null,
   setCategory: () => { },
+  setOrderMenuData: () => { },
   cartMenuData: null,
   setCartMenuData: () => { },
   deviceId: null,
@@ -30,6 +34,7 @@ const MenuDataContext = createContext<{
 function MenuDataProvider({ children }: { children: React.ReactNode }) {
   const [menuData, setMenuData] = useState<Map<string, Menu> | null>(null);
   const [cartMenuData, setCartMenuData] = useState<CartMenu | null>(null);
+  const [orderMenuData, setOrderMenuData] = useState<CartMenu | null>(null);
   const [category, setCategory] = useState<any>();
   const { restId } = useParams<{ restId: string }>();
   const [deviceId, setDeviceId] = useState<string>('');
@@ -81,7 +86,7 @@ function MenuDataProvider({ children }: { children: React.ReactNode }) {
     return hash;
   };
 
-  const value = { menuData, setMenuData, category, setCategory, cartMenuData, setCartMenuData, deviceId, menuType, setMenuType };
+  const value = { menuData, setMenuData, category, setCategory, cartMenuData, setCartMenuData, orderMenuData, setOrderMenuData, deviceId, menuType, setMenuType };
 
   return (
     <MenuDataContext.Provider value={value}>

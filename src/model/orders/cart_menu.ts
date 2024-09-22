@@ -40,7 +40,7 @@ export class CartMenu {
     }
 
     getCartLength(): number {
-        const approved = this.cartMenuMap?.get('pending');
+        const approved = this.cartMenuMap?.get('cart');
         if (!approved) return 0;
 
         return Array.from(approved.values()).reduce((count, category) => {

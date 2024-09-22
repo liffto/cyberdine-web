@@ -36,7 +36,7 @@ export class FirebaseServices {
     }
 
     async addToCart(menu: Item, restId: string, deviceId: string, table: string, callback?: (ele: string) => void) {
-        const updateMenu = await ref(database, `/order/${restId}/${table}/${deviceId}/pending/${menu.category}/${menu.id}`);
+        const updateMenu = await ref(database, `/order/${restId}/${table}/${deviceId}/cart/${menu.category}/${menu.id}`);
         await set(updateMenu, JSON.parse(JSON.stringify(menu))).then(() => {
             callback && callback("done")
         }).catch((error) => {
@@ -46,7 +46,7 @@ export class FirebaseServices {
     }
 
     async removeToCart(menu: Item, restId: string, deviceId: string, table: string, callback?: (ele: string) => void) {
-        const updateMenu = await ref(database, `/order/${restId}/${table}/${deviceId}/pending/${menu.category}/${menu.id}`);
+        const updateMenu = await ref(database, `/order/${restId}/${table}/${deviceId}/cart/${menu.category}/${menu.id}`);
         await set(updateMenu, menu.quantity == null ? null : JSON.parse(JSON.stringify(menu))).then(() => {
             callback && callback("done")
         }).catch((error) => {
@@ -76,23 +76,24 @@ export class FirebaseServices {
 
     async placeOrder(data: Map<string, Map<string, Item>>, restId: string, deviceId: string, table: string, callback?: (ele: string) => void) {
         try {
-            const updates: Record<string, any> = {};
-
-            // Loop through the Map structure
-            data.forEach((items, category) => {
-                items.forEach((item, itemId) => {
-                    updates[`/order/${restId}/table${table}/${deviceId}/pending/${category}/${itemId}/isOrdered`] = true;
-                });
-            });
-
-            // Perform the bulk update
-            await update(ref(database), updates).then(() => {
-                callback && callback("done")
-            }).catch((error) => {
-                console.error(error);
-                callback && callback("error")
-            });;
-            callback && callback("done");
+            const plainData = Object.fromEntries(
+                Array.from(data, ([key, value]) => [key, Object.fromEntries(value)])
+            );
+            for (const key in plainData) {
+                if (plainData.hasOwnProperty(key)) {
+                    const items = plainData[key];
+                    for (const itemKey in items) {
+                        if (items.hasOwnProperty(itemKey)) {
+                            items[itemKey].isOrdered = true;
+                        }
+                    }
+                }
+            }
+            const updateMenu = ref(database, `/order/${restId}/table${table}/${deviceId}/pending`);
+            await set(updateMenu, JSON.parse(JSON.stringify(plainData)));
+            const cartRef = ref(database, `/order/${restId}/table${table}/${deviceId}/cart`);
+            await set(cartRef, null);
+            callback?.("done");
         } catch (error) {
             console.error("Error updating isOrdered:", error);
             callback && callback("error");

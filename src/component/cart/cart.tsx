@@ -26,9 +26,10 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
     const { back } = useRouter();
     const router = useRouter();
     const [selectedMenuData, setSelectedMenuData] = useState<Item | null>(null);
-    const { menuData, category, cartMenuData, deviceId } = useContext(MenuDataContext);
+    const { menuData, category, cartMenuData, setOrderMenuData, deviceId } = useContext(MenuDataContext);
     const [menu, setMenu] = useState<Menu | null>(null)
     const [wait, setWait] = useState<boolean>(false);
+    const [loader, setLoader] = useState<boolean>(false);
 
     useEffect(() => {
         if (menuData) {
@@ -73,9 +74,68 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
 
 
     const handleClick = () => {
-        FirebaseServices.shared.placeOrder(cartMenuData?.cartMenuMap?.get('pending') ?? new Map(), restId, deviceId ?? '', table, () => {
+        setLoader(true);
+        var cartData = cartMenuData?.cartMenuMap?.get('cart');
+        var pendingData = cartMenuData?.cartMenuMap?.get('pending');
+        const mergedData = mergeCartAndPendingData(cartData, pendingData);
+        FirebaseServices.shared.placeOrder(mergedData, restId, deviceId ?? '', table, () => {
             router.replace(`/rest/${restId}/orders?table=${table}`);
+            getQuantityFromOrder();
         });
+    };
+
+    const mergeCartAndPendingData = (
+        cartData: Map<string, Map<string, Item>> | undefined,
+        pendingData: Map<string, Map<string, Item>> | undefined
+      ): Map<string, Map<string, Item>> => {
+        const body: Map<string, Map<string, Item>> = new Map();
+      
+        // Iterate through cartData
+        if (cartData) {
+          cartData.forEach((items, category) => {
+            const categoryMap = new Map<string, Item>(items); // Clone the items for the category
+            body.set(category, categoryMap);
+          });
+        }
+      
+        // Merge pending items
+        if (pendingData) {
+          pendingData.forEach((items, category) => {
+            // Ensure the category exists in body
+            if (!body.has(category)) {
+              body.set(category, new Map<string, Item>());
+            }
+            const existingItemMap = body.get(category);
+            if (existingItemMap) {
+              items.forEach((item) => {
+                const existingItem = existingItemMap.get(item.id!);
+                if (existingItem) {
+                  // Update quantity if item already exists
+                  existingItem.quantity! += item.quantity!; // Combine quantities
+                } else {
+                  // Add new item if it doesn't exist
+                  existingItemMap.set(item.id!, { ...item });
+                }
+              });
+            }
+          });
+        }
+      
+        return body;
+      };
+      
+
+    const getQuantityFromOrder = () => {
+        if (cartMenuData) {
+            cartMenuData?.getMenuList()?.forEach((each) => {
+                let response = menu
+                    ?.getMenuList(each.category!, [])
+                    ?.find((val) => val.id == each.id && !(each.isApproved == true));
+                if (response != undefined) {
+                    response.quantity = 0;
+                }
+            });
+        }
     };
 
     const handleViewOrderClick = () => {
@@ -89,7 +149,7 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
             {cartMenuData && cartMenuData?.getApprovedLength() != 0 && <div className="w-full" onClick={handleViewOrderClick} >
                 <Image src={'/images/png/view_selected_order.png'} alt="placed order" height={10} width={430} />
             </div>}
-            <div className={`${cartMenuData && cartMenuData?.getApprovedLength() != 0 ? "" : "mt-4" } px-4 py-1 font-bold text-sm bg-secondary text-black capitalize flex`}>
+            <div className={`${cartMenuData && cartMenuData?.getApprovedLength() != 0 ? "" : "mt-4"} px-4 py-1 font-bold text-sm bg-secondary text-black capitalize flex`}>
                 <div className=" ">Items in cart</div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 py-4 px-4">
