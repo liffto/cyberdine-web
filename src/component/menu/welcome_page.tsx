@@ -24,6 +24,7 @@ const WelcomePage = ({ data, restId, table, bgColor }: { data: any, restId: stri
         { svg: '/images/svg/welcome_page/google_review_icon.svg', text: 'Google review', type: 'gReview', showCard: data.googleReviewLink, link: data.googleReviewLink },
         { svg: '/images/svg/welcome_page/instagram_icon.svg', text: 'Instagram', type: 'insta', showCard: data.instagramLink, link: data.instagramLink },
         { svg: '/images/svg/welcome_page/facebook_icon.svg', text: 'Facebook', type: 'fb', showCard: data.facebookLink, link: data.facebookLink },
+        { svg: '/images/svg/welcome_page/whatsapp_icon.svg', text: 'WhatsApp', type: 'whatsApp', showCard: data.whatsappLink, link: data.whatsappLink },
         { svg: '/images/svg/welcome_page/youtube_icon.svg', text: 'Youtube', type: 'utube', showCard: data.youtubeLink, link: data.youtubeLink },
         { svg: '/images/svg/welcome_page/payment_icon.svg', text: 'Pay Now', type: 'pay', showCard: data.paymentLink, link: data.paymentLink },
     ];
@@ -33,6 +34,7 @@ const WelcomePage = ({ data, restId, table, bgColor }: { data: any, restId: stri
             localStorage.setItem("menuType", type);
         }
     }
+console.log(data,"data123");
 
 
     return (
