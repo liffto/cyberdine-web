@@ -1,3 +1,4 @@
+"use client"
 import Image from "next/image"
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import { useRouter } from "next/navigation";
