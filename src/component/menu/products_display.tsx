@@ -90,7 +90,6 @@ export default function ProductDisplay({
         },
         topic: `${restId}table${table}`,
       };
-      console.log("dataaaa", data);
 
       setWait(true);
       await FcmService.shared.fcmTopic(data);

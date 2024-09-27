@@ -5,7 +5,7 @@ import Image from "next/image"
 // Card component
 const Card = ({ svg, text }: { svg: string, text: string }) => (
     <div className="bg-white border-2 border-black rounded-lg w-full max-w-sm flex items-center">
-        <div className="flex-shrink-0 border-r-2 border-black pr-4 flex items-center justify-center p-2">
+        <div className="flex-shrink-0 border-r-2 border-black flex items-center justify-center p-2">
             <img
                 src={svg}
                 alt={text}
@@ -34,8 +34,6 @@ const WelcomePage = ({ data, restId, table, bgColor }: { data: any, restId: stri
             localStorage.setItem("menuType", type);
         }
     }
-console.log(data,"data123");
-
 
     return (
         <div className={`text-white min-h-screen flex flex-col items-center justify-center p-4`} style={{ backgroundColor: bgColor }} >

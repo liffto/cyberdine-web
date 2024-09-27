@@ -23,7 +23,6 @@ export function ProCard({
     bgColor: string;
     menuTypes: string;
   }) {
-    console.log("menutype",menuTypes);
     
     return (
       <>

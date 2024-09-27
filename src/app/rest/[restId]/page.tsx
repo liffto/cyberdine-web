@@ -12,7 +12,6 @@ export default async function OrgProductsPage({
     }/api/rest/${params.restId}/detail`, { next: { revalidate: 1 * 1 * 1 } }
   );
   const json = await response.json();
-  console.log("jsonsssss", json);
 
   function lightenColor(hex: string, percent: any) {
     // Parse the hex color to get RGB components
