@@ -128,8 +128,9 @@ export default function DescriptionSheet({
           <div
             className={`text-lg text-center flex justify-between px-4 items-center w-full py-3 font-semibold`} style={{ backgroundColor: bgColor }}
           >
-            <div className="flex-1 bg-white px-4 py-2 rounded font-semibold text-xl" onClick={() => { setSelectedMenuData(null); }} style={{ color: bgColor }} >Cancel</div>
-            <div onClick={() => { addToWishList(); }} className="border-2 border-white px-[8px] ml-3 py-[7px] rounded"  >{itemCount != null ? <BookmarkIcon sx={{ color: "white" }} /> : <BookmarkBorderIcon sx={{ color: "white" }} />}</div>
+            {/* <div className="flex-1 bg-white px-4 py-2 rounded font-semibold text-xl" onClick={() => { setSelectedMenuData(null); }} style={{ color: bgColor }} >Cancel</div> */}
+            <div className="flex-1 bg-white px-4 py-2 rounded font-semibold text-xl" onClick={() => { addToWishList(); }} style={{ color: bgColor }} >{itemCount != null ? "Remove to wishlist" : "Add from wishlist"}</div>
+            {/* <div onClick={() => { addToWishList(); }} className="border-2 border-white px-[8px] ml-3 py-[7px] rounded"  >{itemCount != null ? <BookmarkIcon sx={{ color: "white" }} /> : <BookmarkBorderIcon sx={{ color: "white" }} />}</div> */}
           </div>
         </div>
       </div>
