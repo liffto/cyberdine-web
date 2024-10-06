@@ -494,7 +494,7 @@ export default function ProductDisplay({
                 }}
               >
                 <div className="" style={{ display: 'flex', flexDirection: 'column', height: '100%' }} >
-                  <div style={{ flex: '1', overflowY: 'auto' }} className="flex px-6 py-3 bg-primary rounded-lg text-white">
+                  <div style={{ flex: '1', overflowY: 'auto', backgroundColor: bgColor }} className="flex px-6 py-3 rounded-lg text-white">
                     <ul className="w-[100%] ">
                       {category && category[menuType] && category[menuType]!.map(
                         (item: any, index: any) =>
@@ -517,7 +517,7 @@ export default function ProductDisplay({
                     </ul>
                   </div>
                   <div className="flex item-center justify-center mt-6">
-                    <div className="bg-primary text-white flex items-center justify-center rounded-md py-3 w-28" onClick={() => { setOpenMenu(false) }} >
+                    <div style={{ backgroundColor: bgColor }} className=" text-white flex items-center justify-center rounded-md py-3 w-28" onClick={() => { setOpenMenu(false) }} >
                       <div className="">
                         <Image
                           src="/images/svg/close_icon.svg"
@@ -575,7 +575,7 @@ export default function ProductDisplay({
                         </div>
                       </div>
                       <Image
-                        src="/images/png/arrow_right_png.png"
+                        src="/images/svg/arrow_right_svg.svg"
                         alt="menu icon"
                         width="30"
                         height="30"
