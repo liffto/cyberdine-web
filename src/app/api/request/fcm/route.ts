@@ -7,7 +7,7 @@ import { type NextRequest } from "next/server";
 if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert(
-      process.env.NODE_ENV == "development"
+      (process.env.NODE_ENV == "development")
         ? require("../../../../../firebase-admin-config.dev.json")
         : require("../../../../../firebase-admin-config.prod.json")
     ),

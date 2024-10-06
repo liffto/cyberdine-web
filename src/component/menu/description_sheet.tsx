@@ -3,19 +3,11 @@ import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Image from "next/image";
 import CloseIcon from '@mui/icons-material/Close';
 import { useContext, useEffect, useState } from "react";
-import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
 import { MenuDataContext } from "@/context/menu.context";
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
-import BookmarkIcon from '@mui/icons-material/Bookmark';
-import toast, { Toaster } from "react-hot-toast";
 import { Menu } from "@/model/products/menu";
 
-const itemAdd = () => toast('Item successfully added to wishlist');
-const itemRemove = () => toast('Item successfully removed from wishlist');
 
 export default function DescriptionSheet({
-  menuType,
   setSelectedMenuData,
   selectedMenuData,
   bgColor,
@@ -23,7 +15,6 @@ export default function DescriptionSheet({
   deviceId,
   menu
 }: {
-  menuType: string;
   setSelectedMenuData: any;
   selectedMenuData: any;
   bgColor: string;
@@ -31,84 +22,65 @@ export default function DescriptionSheet({
   deviceId: string;
   menu: Menu;
 }) {
-  const [itemCount, setItemCount] = useState<number | null>(selectedMenuData.quantity && selectedMenuData.quantity != undefined ? selectedMenuData.quantity : null);
   const { cartMenuData } = useContext(MenuDataContext);
+  const [imageError, setImageError] = useState<boolean>(false);
 
-  const addToWishList = () => {
+  useEffect(() => {
+    setImageError(false);
+
+  }, [selectedMenuData]);
+
+  const handleImageError = () => {
+    setImageError(true);
+  };
+
+  const addToWishList = (itemCount: number) => {
     let temp: number | null;
     temp = itemCount;
     if (temp == 0 || temp == null) {
       temp = 1;
-      itemAdd();
     } else if (temp > 0) {
       temp = null;
-      itemRemove();
     }
-    setItemCount(temp);
     checkOrderList(temp);
   };
 
-  // const itemCountFunc = () => {
-  //   let temp = itemCount;
-  //   if (temp == 0) {
-  //     temp = temp + 1;
-  //   } else if (temp > 0) {
-  //     temp = temp - 1;
-  //   }
-  //   setItemCount(temp);
-  // };
-
   const checkOrderList = (count: number | null) => {
     menu?.addQantity(selectedMenuData, count, restId, deviceId, (val: any) => {
-      if (val == "remove" && cartMenuData && cartMenuData?.getMenuList()!.length < 2 && (itemCount == 1)) {
+      if (val == "remove" && cartMenuData && cartMenuData?.getMenuList()!.length < 2) {
         cartMenuData.makeCartMenuEmpty()
       }
       setSelectedMenuData(null);
     })
-
   }
 
   const description = () => {
-    console.log(selectedMenuData.itemsImageUrl, "selectedMenuData.itemsImageUrl");
-
     return (
       <div className="h-full flex flex-col justify-between">
-        <Toaster position="top-center" />
         <div onClick={() => { setSelectedMenuData(null); }} className="text-white bg-black text-center rounded-full w-12 py-3 mx-auto mb-4">
           <CloseIcon />
         </div>
-        <div className="bg-white" style={{ borderRadius: '20px 20px 0 0' }} >
-          {selectedMenuData.itemsImageUrl && (
-            <div className="rounded overflow-hidden mb-3 ">
-              {/* <Image
-                src={selectedMenuData.itemsImageUrl!}
-                alt={selectedMenuData.name!}
-                height={163}
-                width={475}
-                priority={true}
-                style={{
-                  objectFit: "cover",
-                  height: "250px",
-                  background: "var(--secondary-bg)",
-                  borderRadius: '20px 20px 0 0'
-                }}
-              /> */}
+        <div className="bg-white " style={{ borderRadius: '16px 16px 0 0' }} >
+          <div className="rounded overflow-hidden pb-3 px-4 pt-4">
+            {imageError ? <div className=""></div> : selectedMenuData && selectedMenuData.itemsImageUrl && (
               <img
                 src={selectedMenuData.itemsImageUrl!}
                 alt={selectedMenuData.name!}
+                onError={handleImageError}
                 style={{
                   objectFit: "cover",
                   height: "250px",
                   width: "100%", // Make sure to set the width to cover the container, if necessary
                   background: "var(--secondary-bg)",
-                  borderRadius: '20px 20px 0 0'
+                  borderRadius: '12px',
+                  boxShadow: "0px 0px 6px 0.5px rgb(0,0,0,0.16)"
                 }}
               />
+            )}
+          </div>
 
-            </div>
-          )}
-          <div className="px-4 py-2 text-black">
-            <div className="mb-2">
+          <div className="px-4 pb-2 text-black">
+            <div className="mb-3">
               <div className=" flex justify-between items-center">
                 <div className="flex-1 font-bold text-xl">{selectedMenuData?.capitalizeNameFirstLetter()}</div>
 
@@ -116,7 +88,7 @@ export default function DescriptionSheet({
                   <div className="">
                     <Image
                       src={selectedMenuData?.foodType == "Veg" ? "/images/svg/veg_icon.svg" : "/images/svg/non_veg_icon.svg"}
-                      alt={selectedMenuData.name!}
+                      alt={selectedMenuData?.name!}
                       height={16}
                       width={16}
                       priority={false}
@@ -133,18 +105,16 @@ export default function DescriptionSheet({
                   </div>
                 </div>
               </div>
-              <div className={`font-medium text-gray-400`}>&#x20B9; {selectedMenuData?.price}</div>
+              <div className={`pt-[1px] font-medium text-[#7A7A7A]`}>&#x20B9; {selectedMenuData?.price}</div>
             </div>
-            {selectedMenuData?.description && <div className="font-medium text-base mb-2">
+            {selectedMenuData && selectedMenuData?.description && <div className="text-[#7A7A7A] text-base mb-2">
               {selectedMenuData?.capitalizeDescriptionFirstLetter()}
             </div>}
           </div>
           <div
-            className={`text-lg text-center flex justify-between px-4 items-center w-full py-3 font-semibold`} style={{ backgroundColor: bgColor }}
+            className={`text-lg text-center flex justify-between px-4 items-center w-full py-3 font-semibold`} style={{ backgroundColor: bgColor, boxShadow: "0px 0px 10px 0.5px #00000040" }}
           >
-            {/* <div className="flex-1 bg-white px-4 py-2 rounded font-semibold text-xl" onClick={() => { setSelectedMenuData(null); }} style={{ color: bgColor }} >Cancel</div> */}
-            <div className="flex-1 bg-white px-4 py-2 rounded font-semibold text-xl" onClick={() => { addToWishList(); }} style={{ color: bgColor }} >{itemCount != null ? "Remove from wishlist" : "Add to wishlist"}</div>
-            {/* <div onClick={() => { addToWishList(); }} className="border-2 border-white px-[8px] ml-3 py-[7px] rounded"  >{itemCount != null ? <BookmarkIcon sx={{ color: "white" }} /> : <BookmarkBorderIcon sx={{ color: "white" }} />}</div> */}
+            <div className="flex-1 bg-white px-4 py-2 rounded font-semibold text-xl" onClick={() => { addToWishList(selectedMenuData.quantity); }} style={{ color: selectedMenuData && selectedMenuData.quantity != null ? '#DD0000' : bgColor }} >{selectedMenuData && selectedMenuData.quantity != null ? "Remove from wishlist" : "+ Add to wishlist"}</div>
           </div>
         </div>
       </div>
@@ -153,7 +123,6 @@ export default function DescriptionSheet({
   return (
     <div className="md:hidden block">
       <SwipeableDrawer
-        disableSwipeToOpen={true}
         open={selectedMenuData != null}
         anchor="bottom"
         PaperProps={{

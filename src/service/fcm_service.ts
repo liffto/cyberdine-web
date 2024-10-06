@@ -11,7 +11,7 @@ export class FcmService {
                 "Access-Control-Allow-Headers": "Content-Type, Authorization"
             };
 
-            let response = await axios.post(`${process.env.NODE_ENV == "development" ? "http://localhost:3000" : "https://www.cyberdine.in"}/api/request/fcm`, body, { headers });
+            let response = await axios.post(`${(process.env.NODE_ENV == "development") ? "http://localhost:3000" : "https://www.cyberdine.in"}/api/request/fcm`, body, { headers });
 
             if (response.status! >= 200 && response.status! <= 299 && response.data) {
                 return response.data["data"] != null ? response.data["data"] : null;

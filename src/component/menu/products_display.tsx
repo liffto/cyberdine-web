@@ -22,9 +22,18 @@ import PhoneNoDialog from "./phoneNoDialog";
 import { BasicCard, ProCard } from "./cards";
 import HorizontalScrollSnap from "../common/horizontal_scroll_snap";
 import { Menu } from "@/model/products/menu";
-
+import { SwipeableDrawer } from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
+import React from "react";
 const notify = () => toast("Notified successfully");
 const soldOutNotify = () => toast("Temporarily out of stock");
+
+const initialCategories = [
+  { name: "Veg", selected: false },
+  { name: "Egg", selected: false },
+  { name: "Our Special", selected: false },
+  { name: "Non Veg", selected: false },
+];
 
 export default function ProductDisplay({
   menuTypes,
@@ -53,17 +62,19 @@ export default function ProductDisplay({
   const [wait, setWait] = useState<boolean>(false);
   const [showDialog, setShowDialog] = useState<boolean>(false);
   const [phoneNumber, setPhoneNumber] = useState<Number>();
-  const [selfilterList, setSelFilterList] = useState<Array<string>>([]);
-  const [filterList, setFilterList] = useState<Array<string>>([]);
-  const [isCircle, setIsCircle] = useState<boolean>(true);
+  const [filterList, setFilterList] = useState<Array<any>>([]);
   const [preOrderData, setPreOrderData] = useState<boolean>(true);
+  const [openMenu, setOpenMenu] = useState<boolean>(false);
   const categoryRef = useRef<HTMLDivElement>(null);
-  const [menu, setMenu] = useState<Menu | null>(null)
+  const [menu, setMenu] = useState<Menu | null>(null);
   const { menuData, category, cartMenuData, deviceId, menuType, setMenuType } =
     useContext(MenuDataContext);
   const [selectedCategoryName, setSelectedCategoryName] = useState<
     string | null
   >('');
+  const [items, setItems] = useState([]);
+  const refs = useRef<(React.RefObject<HTMLDivElement>)[]>([]); // Correctly type the refs
+  const [topItem, setTopItem] = useState(null);
 
   const setSelectedData = (ele: Item) => {
     if (!ele.isActive) {
@@ -71,6 +82,16 @@ export default function ProductDisplay({
     } else {
       setSelectedMenuData(ele);
     }
+  };
+
+  const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+    // // Check if the event is a keyboard event and ensure the key property exists
+    // if (event.type === 'keydown' && (event as React.KeyboardEvent).key) {
+    //   if ((event as React.KeyboardEvent).key === 'Tab' || (event as React.KeyboardEvent).key === 'Shift') {
+    //     return;
+    //   }
+    // }
+    setOpenMenu(open);
   };
 
   const setCatName = (categoryName: string) => {
@@ -100,84 +121,32 @@ export default function ProductDisplay({
     }
   };
 
-  const handleCatClick = (cat: string, isFromSelected: boolean) => {
-    if (isFromSelected) {
-      if (cat === "Our Special") {
-        if (!selfilterList.includes("Our Special")) {
-          setSelFilterList((prevCats) => [...prevCats, cat]);
-          setFilterList((prevSelectedCats) =>
-            prevSelectedCats.filter((selectedCat) => selectedCat !== cat)
-          );
-        } else {
-          setSelFilterList((prevSelectedCats) =>
-            prevSelectedCats.filter((selectedCat) => selectedCat !== cat)
-          );
+  const handleCatClick = (catName: string) => {
+    setFilterList((prevCats) => {
+      return prevCats.map((cat) => {
+        // Check if the current category is the one being clicked
+        if (cat.name === catName) {
+          // Toggle the selected state of the clicked category
+          return { ...cat, selected: !cat.selected };
         }
-      } else {
-        if (
-          selfilterList.includes("Veg") &&
-          (cat === "Non Veg" || cat === "Egg")
-        ) {
-          setSelFilterList((prevCats) => [...prevCats, cat]);
-          setSelFilterList((prevSelectedCats) =>
-            prevSelectedCats.filter((selectedCat) => selectedCat !== "Veg")
-          );
-          setFilterList((prevSelectedCats) =>
-            prevSelectedCats.filter((selectedCat) => selectedCat !== cat)
-          );
-          setFilterList((prevCats) => [...prevCats, "Veg"]);
-        } else if (
-          (selfilterList.includes("Non Veg") ||
-            selfilterList.includes("Egg")) &&
-          cat === "Veg"
-        ) {
-          setSelFilterList((prevCats) => [...prevCats, cat]);
-          setSelFilterList((prevSelectedCats) =>
-            prevSelectedCats.filter(
-              (selectedCat) =>
-                selectedCat !== "Non Veg" && selectedCat !== "Egg"
-            )
-          );
-          setFilterList((prevSelectedCats) =>
-            prevSelectedCats.filter((selectedCat) => selectedCat !== cat)
-          );
-          if (
-            selfilterList.includes("Non Veg") &&
-            selfilterList.includes("Egg")
-          ) {
-            setFilterList((prevCats) => [...prevCats, ...["Non Veg", "Egg"]]);
-          } else if (selfilterList.includes("Egg")) {
-            setFilterList((prevCats) => [...prevCats, "Egg"]);
-          } else {
-            setFilterList((prevCats) => [...prevCats, "Non Veg"]);
+        if (catName === "Veg") {
+          if (cat.name === "Non Veg" || cat.name === "Egg") {
+            return { ...cat, selected: false }; // Deselect Non Veg and Egg
           }
-        } else {
-          setSelFilterList((prevCats) => [...prevCats, cat]);
-          setFilterList((prevSelectedCats) =>
-            prevSelectedCats.filter((selectedCat) => selectedCat !== cat)
-          );
         }
-      }
-    } else {
-      if (cat === "Our Special") {
-        setFilterList((prevSelectedCats) => [...prevSelectedCats, cat]);
-        setSelFilterList((prevSelectedCats) =>
-          prevSelectedCats.filter((selectedCat) => selectedCat !== cat)
-        );
-      } else {
-        if (
-          selfilterList.includes("Veg") &&
-          (cat === "Non Veg" || cat === "Egg")
-        ) {
-          setFilterList([]);
-        } else {
-          setFilterList((prevSelectedCats) => [...prevSelectedCats, cat]);
+
+        // Logic to deselect other categories based on the selected category
+        if ((catName === "Non Veg" || catName === "Egg")) {
+          // Deselect Veg
+          if (cat.name === "Veg") {
+            return { ...cat, selected: false };
+          }
         }
-        setSelFilterList((prevCats) =>
-          prevCats.filter((prevCat) => prevCat !== cat)
-        );
-      }
-    }
+
+
+        return cat; // Return other categories unchanged
+      });
+    });
   };
 
   const handleNumberChange = (event: any) => {
@@ -242,6 +211,7 @@ export default function ProductDisplay({
       const offset = element.getBoundingClientRect().top;
       window.scrollTo({ top: window.scrollY + offset, behavior: "smooth" });
     }
+    setOpenMenu(false);
   };
 
   useEffect(() => {
@@ -276,29 +246,61 @@ export default function ProductDisplay({
   }, [cartMenuData, preOrderData, menu]);
 
   useEffect(() => {
-    const cat = menuTypes == "foodMenu" ? ["Veg", "Egg", "Non Veg", "Our Special"] : [];
+    const cat = menuTypes == "foodMenu" ? initialCategories : [];
     setFilterList(cat);
-    // Function to handle clicks outside the div
-    const handleClickOutside = (event: any) => {
-      if (categoryRef.current && !categoryRef.current.contains(event.target)) {
-        setIsCircle(true); // Clicked outside the div, set isCircle to true
+  }, []);
+
+
+  // First useEffect to set items when menuType changes
+  useEffect(() => {
+    if (category && menuType && menu) {
+      const newItems = (category[menuType] || [])
+        .map((item: any) => {
+          // Only include the item if it is not null and has valid menu items
+          if (item && menu.getMenuList(item, filterList) && menu.getMenuList(item, filterList)!.length > 0) {
+            return item;
+          }
+          return null; // Return null for filtering
+        })
+        .filter((item: any): item is string => item !== null); // Filter out null values
+      setItems(newItems);
+      refs.current = newItems.map(() => React.createRef()); // Reset refs for new items
+    }
+  }, [menuType, category, menu]);
+
+
+  useEffect(() => {
+    const checkTopItem = () => {
+      const offset = 240; // Height of each item
+      for (let i = 0; i < refs.current.length; i++) {
+        const element = refs.current[i]?.current;
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          // Check if the element is at the top of the viewport
+          if (rect.top >= 0 && rect.top < offset) {
+            setTopItem(items[i]);
+            break; // Stop after finding the first top item
+          }
+        }
       }
     };
 
-    // Attach the event listener to the document body
-    document.body.addEventListener("click", handleClickOutside);
+    // Initial check
+    checkTopItem();
 
-    // Cleanup the event listener when the component unmounts
+    // Add scroll event listener
+    window.addEventListener('scroll', checkTopItem);
+
+    // Cleanup listener on unmount
     return () => {
-      document.body.removeEventListener("click", handleClickOutside);
+      window.removeEventListener('scroll', checkTopItem);
     };
-  }, []);
-
+  }, [items]);
 
   const OurSpecial = (
     <div
       onClick={() => {
-        handleCatClick("Our Special", true);
+        handleCatClick("Our Special");
       }}
       className={"bg-primary  rounded-md"}
     >
@@ -414,40 +416,39 @@ export default function ProductDisplay({
                     </div>
                   )}
                 </div>
-                <CategoryList
-                  selfilterList={selfilterList}
+                {filterList && filterList.length > 0 && <CategoryList
                   handleCatClick={handleCatClick}
                   filterList={filterList}
-                />
-                {selfilterList.length == 0 &&
+                />}
+
+                {!(filterList && filterList.some(cat => cat.selected === true)) &&
                   <HorizontalScrollSnap
                     items={review && GoogleReview ? [OurSpecial, review && GoogleReview] : [OurSpecial]}
                   />
                 }
-
                 <Toaster position="top-center" />
                 <div className="mb-20">
                   {category &&
                     category[menuType]?.map((ele: any, catIndex: any) => {
                       return (
-                        <div key={catIndex} id={ele}>
+                        <div key={catIndex} id={ele} ref={refs.current[catIndex]}>
                           {menu &&
-                            menu.getMenuList(ele, selfilterList) &&
-                            menu.getMenuList(ele, selfilterList)!.length >
+                            menu.getMenuList(ele, filterList) &&
+                            menu.getMenuList(ele, filterList)!.length >
                             0 &&
                             (plan === "basic" ? (
                               <BasicCard
                                 setCatName={setCatName}
                                 ele={ele}
                                 menuData={menu}
-                                selfilterList={selfilterList}
+                                selfilterList={filterList}
                                 selectedCategoryName={selectedCategoryName}
                               />
                             ) : (
                               <ProCard
                                 ele={ele}
                                 menuData={menu}
-                                selfilterList={selfilterList}
+                                selfilterList={filterList}
                                 setSelectedData={setSelectedData}
                                 catIndex={catIndex}
                                 bgColor={bgColor} menuTypes={menuType} />
@@ -465,60 +466,87 @@ export default function ProductDisplay({
                 <CircularProgress sx={{ color: "var(--primary-bg)" }} />
               </div>
             )}
-            {selectedMenuData && (
-              <DescriptionSheet
-                menuType={menuType}
-                setSelectedMenuData={setSelectedMenuData}
-                selectedMenuData={selectedMenuData}
-                bgColor={bgColor}
-                restId={restId}
-                deviceId={deviceId ?? ""} menu={menu ?? new Menu()} />
-            )}
-            {plan !== "basic" && (
-              <div className="">
-                <div
-                  className={`category_shape fixed z-10 ${cartMenuData &&
-                    cartMenuData?.getMenuList() &&
-                    cartMenuData?.getMenuList()?.length != 0
-                    ? "bottom-16"
-                    : "bottom-6"
-                    }  right-6 ${isCircle ? "circle" : "rectangle"}`}
-                  onClick={() => setIsCircle(!isCircle)}
-                >
-                  {isCircle ? (
-                    <div className="category_text text-center flex justify-center items-center flex-col">
+
+            <DescriptionSheet
+              setSelectedMenuData={setSelectedMenuData}
+              selectedMenuData={selectedMenuData}
+              bgColor={bgColor}
+              restId={restId}
+              deviceId={deviceId ?? ""} menu={menu ?? new Menu()} />
+            <div className="relative">
+              <SwipeableDrawer
+                anchor='bottom'
+                open={openMenu}
+                onClose={toggleDrawer(false)}
+                onOpen={toggleDrawer(true)}
+                PaperProps={{
+                  style: {
+                    width: '90%', // Set width to 90%
+                    position: 'absolute', // Use absolute positioning
+                    bottom: cartMenuData &&
+                      cartMenuData?.getMenuList() &&
+                      cartMenuData?.getMenuList()?.length != 0 ? '70px' : '20px', // Position it 90px above the bottom
+                    margin: 'auto',
+                    backgroundColor: 'transparent',
+                    boxShadow: 'none',
+                  },
+                }}
+              >
+                <div className="">
+                  <div className="flex px-6 py-3 bg-primary rounded-lg text-white">
+                    <ul className="w-[100%]">
+                      {category && category[menuType] && category[menuType]!.map(
+                        (item: any, index: any) =>
+                          menu &&
+                          menu.getMenuList(item, filterList) &&
+                          menu.getMenuList(item, filterList)!.length >
+                          0 && (
+                            <li
+                              onClick={() => handleItemClick(item)}
+                              className="pb-2 cursor-pointer capitalize font-medium"
+                              key={index}
+                            >
+                              <div className=" w-full flex item-center justify-between">
+                                <div className={`${topItem && topItem == item ? 'font-bold text-lg' : 'font-normal text-base'}`}>{item}</div>
+                                <div className={`${topItem && topItem == item ? 'font-bold text-lg' : 'font-normal text-base'}`}>{menu.getMenuList(item, filterList)!.length}</div>
+                              </div>
+                            </li>
+                          )
+                      )}
+                    </ul>
+                  </div>
+                  <div className="flex item-center justify-center mt-6">
+                    <div className="bg-primary text-white flex items-center justify-center rounded-md py-3 w-28" onClick={() => { setOpenMenu(false) }} >
                       <div className="">
                         <Image
-                          src="/images/svg/menu_icon.svg"
+                          src="/images/svg/close_icon.svg"
                           alt="menu icon"
-                          width="16"
-                          height="16"
+                          width="20"
+                          height="20"
                           priority={true}
                         />
                       </div>
-                      <div className="p-1 text-xs font-semibold">Menu</div>
+                      <div className="text-base pl-2 font-semibold">Close</div>
                     </div>
-                  ) : (
-                    <div ref={categoryRef} className="category_text">
-                      <ul className="">
-                        {category[menuType]!.map(
-                          (item: any, index: any) =>
-                            menu &&
-                            menu.getMenuList(item, selfilterList) &&
-                            menu.getMenuList(item, selfilterList)!.length >
-                            0 && (
-                              <li
-                                onClick={() => handleItemClick(item)}
-                                className="pb-2 cursor-pointer capitalize text-lg font-medium"
-                                key={index}
-                              >
-                                {item}
-                              </li>
-                            )
-                        )}
-                      </ul>
-                    </div>
-                  )}
+                  </div>
+                </div>
+              </SwipeableDrawer>
+            </div>
+            {plan !== "basic" && !openMenu && (
+              <div className={`flex item-center justify-center sticky ${cartMenuData &&
+                cartMenuData?.getMenuList() &&
+                cartMenuData?.getMenuList()?.length != 0 ? 'bottom-[70px]' : 'bottom-5'} z-10`}>
+                <div className="bg-primary text-white flex item-center justify-center rounded-md py-3 w-28" onClick={() => { setOpenMenu(true) }} >
+                  <div className="">
+                    <Image
+                      src="/images/svg/menu_icon.svg"
+                      alt="menu icon"
+                      width="16"
+                      height="16"
+                      priority={true}
+                    />
+                  </div>
+                  <div className="text-base pl-2 font-semibold">Menu</div>
                 </div>
               </div>
             )}
@@ -531,14 +559,27 @@ export default function ProductDisplay({
                 >
                   <div className="fixed bottom-0 z-20 bg-primary w-full px-4 py-3">
                     <div className="text-[#fafafa] flex justify-between items-center">
-                      <div className="">
-                        <div className="text-sm font-semibold">
-                          {cartMenuData?.getMenuList()?.length} Items in
-                          wishlist
+
+                      <div className="flex gap-3 items-center justify-center">
+                        <div className="">
+                          <img src="/images/svg/bookmark_icon.svg"
+                            alt="book mark icon" />
                         </div>
-                        <div className="text-xs">View Now</div>
+                        <div className="">
+                          <div className="text-sm font-semibold">
+                            {cartMenuData?.getMenuList()?.length} Items in
+                            wishlist
+                          </div>
+                          <div className="text-xs">View Now</div>
+                        </div>
                       </div>
-                      <ArrowRightIcon fontSize="large" />
+                      <Image
+                        src="/images/png/arrow_right_png.png"
+                        alt="menu icon"
+                        width="30"
+                        height="30"
+                        priority={true}
+                      />
                     </div>
                   </div>
                 </Link>

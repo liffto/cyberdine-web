@@ -11,8 +11,8 @@ export default function Topbar({ data, restId, table }: { data: any, table: any,
         <div className="pt-4 px-4 md:container bg-[#fafafa]">
             <div className="flex items-center">
                 <div className="flex-1">
-                    <div className="flex gap-4 items-center justify-start ">
-                        <div className="rounded-full overflow-hidden w-[50px] h-[50px] flex items-center justify-center boxshadow-3">
+                    <div className="flex gap-3 items-center justify-start ">
+                        <div className="rounded-full overflow-hidden w-[50px] h-[50px] flex items-center justify-center">
                             {data?.logo ? <Image src={data.logo} alt="restarunt logo" height={50} width={50} />
                                 : <StorefrontIcon />
                             }
