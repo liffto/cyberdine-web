@@ -69,6 +69,8 @@ export default function DescriptionSheet({
   }
 
   const description = () => {
+    console.log(selectedMenuData.itemsImageUrl,"selectedMenuData.itemsImageUrl");
+    
     return (
       <div className="h-full flex flex-col justify-between">
         <Toaster position="top-center" />
