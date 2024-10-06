@@ -69,8 +69,8 @@ export default function DescriptionSheet({
   }
 
   const description = () => {
-    console.log(selectedMenuData.itemsImageUrl,"selectedMenuData.itemsImageUrl");
-    
+    console.log(selectedMenuData.itemsImageUrl, "selectedMenuData.itemsImageUrl");
+
     return (
       <div className="h-full flex flex-col justify-between">
         <Toaster position="top-center" />
@@ -80,7 +80,7 @@ export default function DescriptionSheet({
         <div className="bg-white" style={{ borderRadius: '20px 20px 0 0' }} >
           {selectedMenuData.itemsImageUrl && (
             <div className="rounded overflow-hidden mb-3 ">
-              <Image
+              {/* <Image
                 src={selectedMenuData.itemsImageUrl!}
                 alt={selectedMenuData.name!}
                 height={163}
@@ -92,7 +92,19 @@ export default function DescriptionSheet({
                   background: "var(--secondary-bg)",
                   borderRadius: '20px 20px 0 0'
                 }}
+              /> */}
+              <img
+                src={selectedMenuData.itemsImageUrl!}
+                alt={selectedMenuData.name!}
+                style={{
+                  objectFit: "cover",
+                  height: "250px",
+                  width: "100%", // Make sure to set the width to cover the container, if necessary
+                  background: "var(--secondary-bg)",
+                  borderRadius: '20px 20px 0 0'
+                }}
               />
+
             </div>
           )}
           <div className="px-4 py-2 text-black">

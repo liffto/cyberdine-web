@@ -31,7 +31,7 @@ export default function MenuItemCard({
     >
       <div className="relative z-0">
         <div className={`h-full bg-slate-200  flex items-center`}>
-          {imageError ? (
+          {/* {imageError ? (
             <Image
               src="/images/png/empty_menu_item.png"
               alt={ele.name! + "empty"}
@@ -53,7 +53,28 @@ export default function MenuItemCard({
                 opacity: !ele.isActive ? 0.4 : 1
               }}
             />
+          )} */}
+
+          {imageError ? (
+            <img
+              src="/images/png/empty_menu_item.png"
+              alt={`${ele.name} empty`}
+              style={{ objectFit: "cover", height: "80px", width: "80px" }} // Added width for consistency
+            />
+          ) : (
+            <img
+              src={ele.itemsImageUrl && ele.itemsImageUrl !== "" ? ele.itemsImageUrl : '/images/png/empty_menu_item.png'}
+              alt={ele.name ?? ''}
+              onError={handleImageError}
+              style={{
+                objectFit: "cover",
+                height: "80px",
+                width: "80px", // Added width for consistency
+                opacity: !ele.isActive ? 0.4 : 1
+              }}
+            />
           )}
+
         </div>
         {ele.isActive && ele.isSpecial && (
           <div className="absolute bottom-0 right-0 text-white bg-primary text-sm w-full text-center">
@@ -86,7 +107,7 @@ export default function MenuItemCard({
           // :
           <div className={`font-bold pr-1 ${!ele.isActive ? "text-gray-300" : "text-gray-700"}`}>&#x20B9; {ele.price}</div>
         }
-        {ele.quantity != undefined && ele.quantity > 0  &&<div className="absolute -top-[5px] right-2">
+        {ele.quantity != undefined && ele.quantity > 0 && <div className="absolute -top-[5px] right-2">
           <BookmarkSharpIcon sx={{ color: bgColor }} />
         </div>}
       </div>
