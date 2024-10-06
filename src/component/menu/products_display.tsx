@@ -482,6 +482,7 @@ export default function ProductDisplay({
                 PaperProps={{
                   style: {
                     width: '90%', // Set width to 90%
+                    height: '70%',
                     position: 'absolute', // Use absolute positioning
                     bottom: cartMenuData &&
                       cartMenuData?.getMenuList() &&
@@ -492,9 +493,9 @@ export default function ProductDisplay({
                   },
                 }}
               >
-                <div className="">
-                  <div className="flex px-6 py-3 bg-primary rounded-lg text-white">
-                    <ul className="w-[100%]">
+                <div className="" style={{ display: 'flex', flexDirection: 'column', height: '100%' }} >
+                  <div style={{ flex: '1', overflowY: 'auto' }} className="flex px-6 py-3 bg-primary rounded-lg text-white">
+                    <ul className="w-[100%] ">
                       {category && category[menuType] && category[menuType]!.map(
                         (item: any, index: any) =>
                           menu &&
@@ -507,8 +508,8 @@ export default function ProductDisplay({
                               key={index}
                             >
                               <div className=" w-full flex item-center justify-between">
-                                <div className={`${topItem && topItem == item ? 'font-bold text-lg' : 'font-normal text-base'}`}>{item}</div>
-                                <div className={`${topItem && topItem == item ? 'font-bold text-lg' : 'font-normal text-base'}`}>{menu.getMenuList(item, filterList)!.length}</div>
+                                <div className={`${topItem && topItem == item ? 'font-bold text-lg ' : 'font-normal text-base opacity-80'}`}>{item}</div>
+                                <div className={`${topItem && topItem == item ? 'font-bold text-lg ' : 'font-normal text-base opacity-80'}`}>{menu.getMenuList(item, filterList)!.length}</div>
                               </div>
                             </li>
                           )
