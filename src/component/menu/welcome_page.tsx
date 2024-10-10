@@ -29,7 +29,6 @@ const WelcomePage = ({ data, restId, table, bgColor }: { data: any, restId: stri
     };
 
     const handleSubmit = (rating: number) => {
-        console.log('Rating submitted!');
         if (rating > 3) {
             setDrawerOpen(false); // Close the drawer after submission
             router.push(link);
@@ -53,8 +52,13 @@ const WelcomePage = ({ data, restId, table, bgColor }: { data: any, restId: stri
             localStorage.setItem("menuType", type);
             router.push(link);
         } else if (type == "gReview") {
-            setDrawerOpen(true);
-            setLink(link);
+            if (!(data.ratingLimit == true)) {
+                router.push(link);
+            } else {
+                setDrawerOpen(true);
+                setLink(link);
+            }
+
         } else {
             router.push(link);
         }

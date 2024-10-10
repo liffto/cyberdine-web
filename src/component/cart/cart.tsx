@@ -26,12 +26,12 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
     const [menu, setMenu] = useState<Menu | null>(null)
     const [wait, setWait] = useState<boolean>(false);
 
-    useEffect(()=>{
+    useEffect(() => {
         if (menuData) {
             const menuInstance = new Menu(menuData[menuType]);
             setMenu(menuInstance)
-          }
-    },[])
+        }
+    }, [])
 
     const setSelectedData = (ele: Item) => {
         if (cartMenuData && cartMenuData?.getMenuList()?.length != 0) {
@@ -47,7 +47,7 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
                 'title': `Table ${table}`,
                 'body': `Requesting for Captain`
             },
-            topic: topic ? topic.replace(" ", "") : "",
+            topic: `${restId}table${table}`,
         };
         setWait(true);
         await FcmService.shared.fcmTopic(data);
