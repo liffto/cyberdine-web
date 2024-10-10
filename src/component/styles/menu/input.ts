@@ -3,7 +3,7 @@ export const inputStyles = {
       color: '#000', // Change text color
     },
     "& .MuiInputLabel-outlined": {
-      color: "#2e2e2e",
+      color: "#000",
     },
     '& .MuiOutlinedInput-root': {
       '&:hover .MuiOutlinedInput-notchedOutline': {

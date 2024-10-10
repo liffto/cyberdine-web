@@ -1,7 +1,10 @@
 "use client";
-import React from 'react';
+import React, { useState } from 'react';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import Image from "next/image"
+import SwipeableDrawer from '@mui/material/SwipeableDrawer';
+import StarRating from './start_rating';
+import { useRouter } from 'next/navigation';
 // Card component
 const Card = ({ svg, text }: { svg: string, text: string }) => (
     <div className="bg-white border-2 border-black rounded-lg w-full max-w-sm flex items-center">
@@ -18,6 +21,22 @@ const Card = ({ svg, text }: { svg: string, text: string }) => (
 );
 
 const WelcomePage = ({ data, restId, table, bgColor }: { data: any, restId: string; table: string, bgColor: string; }) => {
+    const [drawerOpen, setDrawerOpen] = useState(false);
+    const [link, setLink] = useState('');
+    const router = useRouter();
+    const toggleDrawer = (open: boolean) => () => {
+        setDrawerOpen(open);
+    };
+
+    const handleSubmit = (rating: number) => {
+        console.log('Rating submitted!');
+        if (rating > 3) {
+            setDrawerOpen(false); // Close the drawer after submission
+            router.push(link);
+        } else {
+            setDrawerOpen(false);
+        }
+    };
     const items = [
         { svg: '/images/svg/welcome_page/food_menu_icon.svg', text: 'View Food Menu', type: 'foodMenu', showCard: true, link: `/rest/${restId}/menu?table=${table}` },
         { svg: '/images/svg/welcome_page/drinks_menu_icon.svg', text: 'View Drinks Menu', type: 'drinksMenu', showCard: data.businessType == "restroBar", link: `/rest/${restId}/menu?table=${table}` },
@@ -29,9 +48,15 @@ const WelcomePage = ({ data, restId, table, bgColor }: { data: any, restId: stri
         { svg: '/images/svg/welcome_page/payment_icon.svg', text: 'Pay Now', type: 'pay', showCard: data.paymentLink, link: data.paymentLink },
     ];
 
-    const onClickMenu = (type: string) => {
+    const onClickMenu = (type: string, link: string) => {
         if (type == "foodMenu" || type == "drinksMenu") {
             localStorage.setItem("menuType", type);
+            router.push(link);
+        } else if (type == "gReview") {
+            setDrawerOpen(true);
+            setLink(link);
+        } else {
+            router.push(link);
         }
     }
 
@@ -57,11 +82,25 @@ const WelcomePage = ({ data, restId, table, bgColor }: { data: any, restId: stri
             </div>
             <div className={`w-full flex flex-col mb-14 max-w-4xl overflow-y-hidden	`}>
                 {items.map((item, index) => (
-                    <a key={index} className="" href={item.link} >
-                        {item.showCard && <div className="mb-4" onClick={() => { onClickMenu(item.type) }}><Card svg={item.svg} text={item.text} /></div>}
+                    <a key={index} className=""  >
+                        {item.showCard && <div className="mb-4" onClick={() => { onClickMenu(item.type, item.link) }}><Card svg={item.svg} text={item.text} /></div>}
                     </a>
                 ))}
             </div>
+            <SwipeableDrawer
+                anchor="bottom"
+                open={drawerOpen}
+                onClose={toggleDrawer(false)}
+                onOpen={toggleDrawer(true)}
+                PaperProps={{
+                    style: {
+                        width: '100%',
+                        borderRadius: '20px 20px 0 0'
+                    },
+                }}
+            >
+                <StarRating onSubmit={handleSubmit} bgColor={bgColor} />
+            </SwipeableDrawer>
         </div>
     );
 };
