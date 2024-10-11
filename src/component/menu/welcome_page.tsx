@@ -29,9 +29,12 @@ const WelcomePage = ({ data, restId, table, bgColor }: { data: any, restId: stri
     };
 
     const handleSubmit = (rating: number) => {
+        console.log(rating,"rating");
+        
         if (rating > 3) {
-            setDrawerOpen(false); // Close the drawer after submission
+            console.log(link,"link");
             router.push(link);
+            setDrawerOpen(false);
         } else {
             setDrawerOpen(false);
         }

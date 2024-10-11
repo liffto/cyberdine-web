@@ -15,9 +15,8 @@ const StarRating: React.FC<StarRatingProps> = ({ totalStars = 5, onSubmit, bgCol
     const handleClick = (star: number) => {
         setRating(star);
         if (onSubmit && star > 3) {
-            onSubmit(rating);
+            onSubmit(star);
         }
-
     };
 
     const handleSubmit = () => {
