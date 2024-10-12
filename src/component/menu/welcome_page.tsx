@@ -29,10 +29,7 @@ const WelcomePage = ({ data, restId, table, bgColor }: { data: any, restId: stri
     };
 
     const handleSubmit = (rating: number) => {
-        console.log(rating,"rating");
-        
         if (rating > 3) {
-            console.log(link,"link");
             router.push(link);
             setDrawerOpen(false);
         } else {
@@ -77,7 +74,7 @@ const WelcomePage = ({ data, restId, table, bgColor }: { data: any, restId: stri
                 {data.logo && data.logo != "" ?
                     <div className=" w-full mt-8 flex items-center justify-center">
                         <div className="rounded-full overflow-hidden w-[150px] h-[150px]  boxshadow-3">
-                            <Image src={data.logo} alt="restarunt logo" height={150} width={150} />
+                            <img src={data.logo} alt="restarunt logo" height={150} width={150} />
                         </div>
                     </div>
 
