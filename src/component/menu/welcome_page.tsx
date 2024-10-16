@@ -30,7 +30,8 @@ const WelcomePage = ({ data, restId, table, bgColor }: { data: any, restId: stri
 
     const handleSubmit = (rating: number) => {
         if (rating > 3) {
-            router.push(link);
+            // router.push(link);
+            window.open(link, '_blank');
             setDrawerOpen(false);
         } else {
             setDrawerOpen(false);
@@ -53,7 +54,8 @@ const WelcomePage = ({ data, restId, table, bgColor }: { data: any, restId: stri
             router.push(link);
         } else if (type == "gReview") {
             if (!(data.ratingLimit == true)) {
-                router.push(link);
+                // router.push(link);
+                window.open(link, '_blank');
             } else {
                 setDrawerOpen(true);
                 setLink(link);

@@ -31,30 +31,6 @@ export default function MenuItemCard({
     >
       <div className="relative z-0">
         <div className={`h-full bg-slate-200  flex items-center`}>
-          {/* {imageError ? (
-            <Image
-              src="/images/png/empty_menu_item.png"
-              alt={ele.name! + "empty"}
-              height={80}
-              width={80}
-              style={{ objectFit: "cover", height: "80px" }}
-            />
-          ) : (
-            <Image
-              src={ele.itemsImageUrl && ele.itemsImageUrl != "" ? ele.itemsImageUrl : '/images/png/empty_menu_item.png'}
-              alt={ele.name!}
-              height={80}
-              width={80}
-              priority={catIndex ? false : catIndex == 0 ? true : false}
-              onError={handleImageError}
-              style={{
-                objectFit: "cover",
-                height: "80px",
-                opacity: !ele.isActive ? 0.4 : 1
-              }}
-            />
-          )} */}
-
           {imageError ? (
             <img
               src="/images/png/empty_menu_item.png"
@@ -93,9 +69,9 @@ export default function MenuItemCard({
             {ele.capitalizeNameFirstLetter()}
           </h1>
           <div
-            className={`text-xs md:text-sm  ${!ele.isActive ? "text-gray-300" : "text-gray-800"} font-medium`}
+            className={`text-xs md:text-sm overflow-hidden ${!ele.isActive ? "text-gray-300" : "text-gray-800"} font-medium`} style={{ maxWidth: '200px', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}
           >
-            {ele.foodType}
+            {ele.description ?? ele.foodType}
           </div>
         </div>
         {
