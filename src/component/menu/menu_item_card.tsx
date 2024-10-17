@@ -71,7 +71,7 @@ export default function MenuItemCard({
           <div
             className={`text-xs md:text-sm overflow-hidden ${!ele.isActive ? "text-gray-300" : "text-gray-800"} font-medium`} style={{ maxWidth: '200px', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}
           >
-            {ele.description ?? ele.foodType}
+            {ele?.capitalizeDescriptionFirstLetter() ?? ele.foodType}
           </div>
         </div>
         {
