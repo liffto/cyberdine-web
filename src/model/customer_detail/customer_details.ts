@@ -2,6 +2,7 @@ import { FirebaseServices } from "@/service/firebase.service";
 
 export class CustomerDetails {
     phoneNumber: Number | null = null;
+    customerName: string | null = null;
     date: string | null = null;
     deviceId: string | null = null;
 
@@ -10,6 +11,7 @@ export class CustomerDetails {
             this.phoneNumber = data.phoneNumber;
             this.date = data.date;
             this.deviceId = data.deviceId;
+            this.customerName = data.customerName;
         }
     }
 }

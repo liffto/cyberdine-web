@@ -87,14 +87,13 @@ export default function DescriptionSheet({
                 <div className={`flex justify-center items-center`}>
                   <div className="">
                     <Image
-                      src={selectedMenuData?.foodType == "Veg" ? "/images/svg/veg_icon.svg" : "/images/svg/non_veg_icon.svg"}
+                      src={selectedMenuData?.foodType === "Egg" ? "/images/svg/egg_icon.svg" : selectedMenuData?.foodType == "Drinks" ? "/images/svg/liquor_icon.svg" : selectedMenuData?.foodType == "Veg" ? "/images/svg/veg_icon.svg" : selectedMenuData?.foodType == "Non Veg" ? "/images/svg/non_veg_icon.svg" : ""}
                       alt={selectedMenuData?.name!}
                       height={16}
                       width={16}
                       priority={false}
                       style={{
                         objectFit: "cover",
-                        background: "var(--secondary-bg)"
                       }}
                     />
                   </div>
@@ -105,7 +104,7 @@ export default function DescriptionSheet({
                   </div>
                 </div>
               </div>
-              <div className={`pt-[1px] font-medium text-[#7A7A7A]`}>&#x20B9; {selectedMenuData?.price}</div>
+              {selectedMenuData?.price && <div className={`pt-[1px] font-medium text-[#7A7A7A]`}>&#x20B9; {selectedMenuData?.price}</div>}
             </div>
             {selectedMenuData && selectedMenuData?.description && <div className="text-[#7A7A7A] text-base mb-2">
               {selectedMenuData?.capitalizeDescriptionFirstLetter()}

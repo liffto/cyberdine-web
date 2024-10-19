@@ -11,7 +11,7 @@ export default function HomePage({
     table: string;
     bgColor: string;
 }) {
-   
+
 
     return (
         <div className="">

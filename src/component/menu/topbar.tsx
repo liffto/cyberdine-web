@@ -12,12 +12,12 @@ export default function Topbar({ data, restId, table }: { data: any, table: any,
             <div className="flex items-center">
                 <div className="flex-1">
                     <div className="flex gap-3 items-center justify-start ">
-                        <div className="rounded-full overflow-hidden w-[50px] h-[50px] flex items-center justify-center">
+                        <div onClick={() => { handleClick() }} className="rounded-full overflow-hidden w-[50px] h-[50px] flex items-center justify-center">
                             {data?.logo ? <img src={data.logo} alt="restarunt logo" height={50} width={50} />
                                 : <StorefrontIcon />
                             }
                         </div>
-                        <div className="">
+                        <div onClick={() => { handleClick() }} className="">
                             <div className="text-lg truncate font-bold leading-tight">
                                 {data.hname}
                             </div>

@@ -1,8 +1,6 @@
 "use client";
 import React, { useState } from 'react';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import Image from "next/image"
-import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import StarRating from './start_rating';
 import { useRouter } from 'next/navigation';
 // Card component
@@ -21,22 +19,10 @@ const Card = ({ svg, text }: { svg: string, text: string }) => (
 );
 
 const WelcomePage = ({ data, restId, table, bgColor }: { data: any, restId: string; table: string, bgColor: string; }) => {
-    const [drawerOpen, setDrawerOpen] = useState(false);
+    const [ratingDrawerStatus, setratingDrawerStatus] = useState(false);
     const [link, setLink] = useState('');
     const router = useRouter();
-    const toggleDrawer = (open: boolean) => () => {
-        setDrawerOpen(open);
-    };
 
-    const handleSubmit = (rating: number) => {
-        if (rating > 3) {
-            // router.push(link);
-            window.open(link, '_blank');
-            setDrawerOpen(false);
-        } else {
-            setDrawerOpen(false);
-        }
-    };
     const items = [
         { svg: '/images/svg/welcome_page/food_menu_icon.svg', text: 'View Food Menu', type: 'foodMenu', showCard: true, link: `/rest/${restId}/menu?table=${table}` },
         { svg: '/images/svg/welcome_page/drinks_menu_icon.svg', text: 'View Drinks Menu', type: 'drinksMenu', showCard: data.businessType == "restroBar", link: `/rest/${restId}/menu?table=${table}` },
@@ -54,10 +40,9 @@ const WelcomePage = ({ data, restId, table, bgColor }: { data: any, restId: stri
             router.push(link);
         } else if (type == "gReview") {
             if (!(data.ratingLimit == true)) {
-                // router.push(link);
                 window.open(link, '_blank');
             } else {
-                setDrawerOpen(true);
+                setratingDrawerStatus(true);
                 setLink(link);
             }
 
@@ -67,7 +52,16 @@ const WelcomePage = ({ data, restId, table, bgColor }: { data: any, restId: stri
     }
 
     return (
-        <div className={`text-white min-h-screen flex flex-col items-center justify-center p-4`} style={{ backgroundColor: bgColor }} >
+        <div className={`text-white min-h-screen flex flex-col items-center justify-center p-4`}
+            style={{
+                backgroundImage: 'url(/images/svg/home_background.svg)',
+                backgroundSize: 'cover',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center',
+                minHeight: '100vh',
+                backgroundColor: bgColor,
+            }}
+        >
             <div className="text-center mt-2 mb-8 flex-1">
                 <p className="text-xl font-normal">Welcome</p>
                 <p className="text-3xl font-bold mt-2" style={{ fontFamily: 'mum mum restaurant' }}>
@@ -93,20 +87,7 @@ const WelcomePage = ({ data, restId, table, bgColor }: { data: any, restId: stri
                     </a>
                 ))}
             </div>
-            <SwipeableDrawer
-                anchor="bottom"
-                open={drawerOpen}
-                onClose={toggleDrawer(false)}
-                onOpen={toggleDrawer(true)}
-                PaperProps={{
-                    style: {
-                        width: '100%',
-                        borderRadius: '20px 20px 0 0'
-                    },
-                }}
-            >
-                <StarRating onSubmit={handleSubmit} bgColor={bgColor} />
-            </SwipeableDrawer>
+            <StarRating bgColor={bgColor} restId={restId} ratingDrawerStatus={ratingDrawerStatus} link={link} closeDrawer={() => { setratingDrawerStatus(false) }} />
         </div>
     );
 };

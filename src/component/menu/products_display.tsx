@@ -23,8 +23,10 @@ import { BasicCard, ProCard } from "./cards";
 import HorizontalScrollSnap from "../common/horizontal_scroll_snap";
 import { Menu } from "@/model/products/menu";
 import { SwipeableDrawer } from "@mui/material";
-import CloseIcon from '@mui/icons-material/Close';
+import SortIcon from '@mui/icons-material/Sort';
 import React from "react";
+import StarRating from "./start_rating";
+import FoodMenuBanner from "../common/request_menu_bell_icon";
 const notify = () => toast("Notified successfully");
 const soldOutNotify = () => toast("Temporarily out of stock");
 
@@ -39,34 +41,36 @@ export default function ProductDisplay({
   menuTypes,
   restId,
   table,
-  topic,
   bgColor,
   notification,
   plan,
   isPayCompleted,
   customerDetails,
   review,
+  ratingLimit,
 }: {
   menuTypes: string;
   restId: string;
   table: string;
-  topic: string;
   bgColor: string;
   notification: boolean;
   plan: string;
   isPayCompleted: boolean;
   customerDetails: boolean;
   review: string;
+  ratingLimit: boolean;
 }) {
   const [selectedMenuData, setSelectedMenuData] = useState<Item | null>(null);
   const [wait, setWait] = useState<boolean>(false);
   const [showDialog, setShowDialog] = useState<boolean>(false);
   const [phoneNumber, setPhoneNumber] = useState<Number>();
+  const [customerName, setCustomerName] = useState<string>();
   const [filterList, setFilterList] = useState<Array<any>>([]);
   const [preOrderData, setPreOrderData] = useState<boolean>(true);
   const [openMenu, setOpenMenu] = useState<boolean>(false);
   const categoryRef = useRef<HTMLDivElement>(null);
   const [menu, setMenu] = useState<Menu | null>(null);
+  const [ratingDrawerStatus, setratingDrawerStatus] = useState(false);
   const { menuData, category, cartMenuData, deviceId, menuType, setMenuType } =
     useContext(MenuDataContext);
   const [selectedCategoryName, setSelectedCategoryName] = useState<
@@ -75,6 +79,7 @@ export default function ProductDisplay({
   const [items, setItems] = useState([]);
   const refs = useRef<(React.RefObject<HTMLDivElement>)[]>([]); // Correctly type the refs
   const [topItem, setTopItem] = useState(null);
+
 
   const setSelectedData = (ele: Item) => {
     if (!ele.isActive) {
@@ -85,12 +90,6 @@ export default function ProductDisplay({
   };
 
   const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-    // // Check if the event is a keyboard event and ensure the key property exists
-    // if (event.type === 'keydown' && (event as React.KeyboardEvent).key) {
-    //   if ((event as React.KeyboardEvent).key === 'Tab' || (event as React.KeyboardEvent).key === 'Shift') {
-    //     return;
-    //   }
-    // }
     setOpenMenu(open);
   };
 
@@ -154,9 +153,13 @@ export default function ProductDisplay({
     setPhoneNumber(value);
   };
 
+  const handleNameChange = (event: any) => {
+    const { value } = event.target;
+    setCustomerName(value);
+  };
+
   const validatePhoneNumber = () => {
-    // Check if the phone number contains only digits and has a length of 10
-    if (phoneNumber) {
+    if (phoneNumber && customerName) {
       return /^\d{10}$/.test(phoneNumber!.toString());
     }
   };
@@ -170,6 +173,7 @@ export default function ProductDisplay({
   const addFirebase = () => {
     const customerDetails = new CustomerDetails({
       phoneNumber: phoneNumber!,
+      customerName: customerName!,
       date: getCurrentDate(),
       deviceId: deviceId,
     });
@@ -204,6 +208,14 @@ export default function ProductDisplay({
       });
     }
   };
+
+  const googleReviewRedirection = () => {
+    if (ratingLimit == true) {
+      setratingDrawerStatus(true);
+    } else {
+      window.open(review, '_blank');
+    }
+  }
 
   const handleItemClick = (index: any) => {
     const element = document.getElementById(`${index}`);
@@ -304,25 +316,31 @@ export default function ProductDisplay({
       }}
       className={"bg-primary  rounded-md"}
     >
-      <Image
+      {menuType == "foodMenu" ? <Image
         src="/images/svg/our_special_banner.svg"
-        alt="restarunt logo"
+        alt="our special banner"
+        width="443"
+        height="123"
+        priority={true}
+      /> : <Image
+        src="/images/svg/drinks_menu_banner.svg"
+        alt="drinks menu banner"
+        width="453"
+        height="123"
+        priority={true}
+      />}
+    </div>
+  );
+  const GoogleReview = (
+    <div onClick={() => { googleReviewRedirection() }} className="">
+      <Image
+        src="/images/svg/g_review_banner.svg"
+        alt="google review banner"
         width="443"
         height="123"
         priority={true}
       />
     </div>
-  );
-  const GoogleReview = (
-    <Link href={review} target="_blank" aria-label="Link to google review">
-      <Image
-        src="/images/svg/g_review_banner.svg"
-        alt="restarunt logo"
-        width="443"
-        height="123"
-        priority={true}
-      />
-    </Link>
   );
   return (
     <div className="">
@@ -368,7 +386,8 @@ export default function ProductDisplay({
                     >
                       <div className="flex justify-center items-center pl-3 ">
                         <div className="">
-                          <svg
+                          <FoodMenuBanner bgColor={bgColor} wait={wait} />
+                          {/* <svg
                             width="20"
                             height="21"
                             viewBox="0 0 20 21"
@@ -399,7 +418,7 @@ export default function ProductDisplay({
                               d="M19.5 18.9668H0V20.1387H19.5V18.9668Z"
                               fill={wait ? "#c2beb4" : bgColor}
                             />
-                          </svg>
+                          </svg> */}
                         </div>
                         <div className="ml-3 leading-3 mt-[2px]">
                           <div
@@ -482,7 +501,7 @@ export default function ProductDisplay({
                 PaperProps={{
                   style: {
                     width: '90%', // Set width to 90%
-                    height: '70%',
+                    maxHeight: '70%',
                     position: 'absolute', // Use absolute positioning
                     bottom: cartMenuData &&
                       cartMenuData?.getMenuList() &&
@@ -537,17 +556,11 @@ export default function ProductDisplay({
               <div className={`flex item-center justify-center sticky ${cartMenuData &&
                 cartMenuData?.getMenuList() &&
                 cartMenuData?.getMenuList()?.length != 0 ? 'bottom-[70px]' : 'bottom-5'} z-10`}>
-                <div className="bg-primary text-white flex item-center justify-center rounded-md py-3 w-28" onClick={() => { setOpenMenu(true) }} >
+                <div style={{ boxShadow: "0px 0px 6px 0px gray" }} className="bg-primary text-white flex item-center justify-center rounded-md py-3 w-28" onClick={() => { setOpenMenu(true) }} >
                   <div className="">
-                    <Image
-                      src="/images/svg/menu_icon.svg"
-                      alt="menu icon"
-                      width="16"
-                      height="16"
-                      priority={true}
-                    />
+                    <SortIcon />
                   </div>
-                  <div className="text-base pl-2 font-semibold">Menu</div>
+                  <div className="text-base pl-2 font-semibold">Sort</div>
                 </div>
               </div>
             )}
@@ -591,9 +604,11 @@ export default function ProductDisplay({
       <PhoneNoDialog
         showDialog={showDialog}
         handleNumberChange={handleNumberChange}
+        handleNameChange={handleNameChange}
         addPhoneNumber={addPhoneNumber}
         validatePhoneNumber={validatePhoneNumber}
       />
+      <StarRating bgColor={bgColor} restId={restId} ratingDrawerStatus={ratingDrawerStatus} link={review} closeDrawer={() => { setratingDrawerStatus(false) }} />
     </div>
   );
 }

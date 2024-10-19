@@ -4,6 +4,7 @@ import { ref, onValue as getFirebaseData, Query, Unsubscribe, set } from "fireba
 import { Item } from "@/model/products/items";
 import { CartMenu } from "@/model/orders/cart_menu";
 import { CustomerDetails } from "@/model/customer_detail/customer_details";
+import { FeedBackDetailsModel } from "@/model/feedback_detail/feedback_details";
 
 export class FirebaseServices {
     static shared: FirebaseServices = new FirebaseServices();
@@ -17,8 +18,8 @@ export class FirebaseServices {
         })
     }
 
-    getCartMenu(restId: string,deviceId:string, callBack: Function): Unsubscribe {
-        
+    getCartMenu(restId: string, deviceId: string, callBack: Function): Unsubscribe {
+
         const completedTasksRef: Query = ref(database, `order/${restId}/${deviceId}`);
         return getFirebaseData(completedTasksRef, (snapshot) => {
             if (snapshot.exists()) {
@@ -36,17 +37,17 @@ export class FirebaseServices {
         });
     }
 
-    async addToCart(menu: Item, restId: string,deviceId: string, callback?: (ele: string) => void) {
+    async addToCart(menu: Item, restId: string, deviceId: string, callback?: (ele: string) => void) {
         const updateMenu = await ref(database, `/order/${restId}/${deviceId}/${menu.category}/${menu.id}`);
         await set(updateMenu, JSON.parse(JSON.stringify(menu))).then(() => {
-           callback && callback("done")
+            callback && callback("done")
         }).catch((error) => {
             console.error(error);
             callback && callback("error")
         });
     }
 
-    async removeToCart(menu: Item, restId: string,deviceId: string, callback?: (ele: string) => void) {
+    async removeToCart(menu: Item, restId: string, deviceId: string, callback?: (ele: string) => void) {
         const updateMenu = await ref(database, `/order/${restId}/${deviceId}/${menu.category}/${menu.id}`);
         await set(updateMenu, null).then(() => {
             callback && callback("done")
@@ -56,7 +57,7 @@ export class FirebaseServices {
         });
     }
 
-    getCustomerDetails(restId: string,deviceId: string, callback?: (ele: boolean) => void): Unsubscribe {        
+    getCustomerDetails(restId: string, deviceId: string, callback?: (ele: boolean) => void): Unsubscribe {
         const completedTasksRef: Query = ref(database, `customerDetails/${restId}/${deviceId}`);
         return getFirebaseData(completedTasksRef, (snapshot) => {
             if (!(snapshot.exists())) {
@@ -65,10 +66,20 @@ export class FirebaseServices {
         });
     }
 
-    async addCustomerDetails(customerDetails: CustomerDetails, restId: string,deviceId: string, callback?: (ele: string) => void) {
+    async addCustomerDetails(customerDetails: CustomerDetails, restId: string, deviceId: string, callback?: (ele: string) => void) {
         const updateMenu = await ref(database, `/customerDetails/${restId}/${deviceId}`);
         await set(updateMenu, JSON.parse(JSON.stringify(customerDetails))).then(() => {
-           callback && callback("done")
+            callback && callback("done")
+        }).catch((error) => {
+            console.error(error);
+            callback && callback("error")
+        });
+    }
+
+    async addFeedbackDetails(feedbackDetails: FeedBackDetailsModel, restId: string, feedbackId: string, callback?: (ele: string) => void) {
+        const updateMenu = await ref(database, `/feedback/${restId}/${feedbackId}`);
+        await set(updateMenu, JSON.parse(JSON.stringify(feedbackDetails))).then(() => {
+            callback && callback("done")
         }).catch((error) => {
             console.error(error);
             callback && callback("error")
