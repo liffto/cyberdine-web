@@ -38,6 +38,21 @@ export class Menu {
     }
   }
 
+  getMenuLength(categories: string[], pref: Array<any> = []): number | null {
+    let categoryCount = 0;
+
+    for (const category of categories) {
+      if (this.getMenuList(category, pref) && this.getMenuList(category, pref)?.length != 0) {
+        categoryCount = categoryCount + 1;
+      }
+    }
+
+    console.log(categoryCount, "categoryCount");
+
+
+    return categoryCount > 0 ? categoryCount : null;
+  }
+
   getSearchedMenu(
     searchString: string = "",
     pref: Array<any> = []
@@ -48,20 +63,20 @@ export class Menu {
       return null;
     } else if (this.menuMap != null) {
       const categories = Array.from(this.menuMap!.values());
-      
+
       // Combine all items from all categories into the response array
       categories.forEach((value) => {
         response = response.concat(Array.from(value.values()));
       });
-  
+
       // Filter menu based on search string
       const menu = response.filter((item) =>
         item.name?.toLowerCase()?.includes(searchString.toLowerCase())
       );
-  
+
       // Extract selected preferences
       const selectedPref = pref.filter(item => item.selected).map(item => item.name);
-  
+
       if (selectedPref.length === 1 && selectedPref.includes("Our Special")) {
         const ourSpecial = menu.filter((item: Item) => item.isSpecial === true);
         return this.convertListToArray(ourSpecial);

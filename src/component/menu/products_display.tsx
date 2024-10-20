@@ -501,6 +501,7 @@ export default function ProductDisplay({
                 PaperProps={{
                   style: {
                     width: '90%', // Set width to 90%
+                    height: menu && menu.getMenuLength(category[menuType], filterList) && menu.getMenuLength(category[menuType], filterList)! > 10 ? '70%' : '',
                     maxHeight: '70%',
                     position: 'absolute', // Use absolute positioning
                     bottom: cartMenuData &&
@@ -552,7 +553,7 @@ export default function ProductDisplay({
                 </div>
               </SwipeableDrawer>
             </div>
-            {plan !== "basic" && !openMenu && (
+            {plan !== "basic" && menu && menu.getMenuLength(category[menuType], filterList) && menu && menu.getMenuLength(category[menuType], filterList)! > 0 && !openMenu && (
               <div className={`flex item-center justify-center sticky ${cartMenuData &&
                 cartMenuData?.getMenuList() &&
                 cartMenuData?.getMenuList()?.length != 0 ? 'bottom-[70px]' : 'bottom-5'} z-10`}>
