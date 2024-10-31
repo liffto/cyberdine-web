@@ -6,6 +6,7 @@ import { CartMenu } from "@/model/orders/cart_menu";
 import { CustomerDetails } from "@/model/customer_detail/customer_details";
 import { FeedBackDetailsModel } from "@/model/feedback_detail/feedback_details";
 import { FoodItem } from "@/model/manage_org_model/hotel_list";
+import { deleteObject, ref as uploadImage, getStorage } from "firebase/storage";
 
 export class FirebaseServices {
     static shared: FirebaseServices = new FirebaseServices();
@@ -76,6 +77,15 @@ export class FirebaseServices {
         });
     }
 
+    getToken(callback: (data: any) => void): Unsubscribe {
+        const completedTasksRef: Query = ref(database, `githubKey`);
+        return getFirebaseData(completedTasksRef, (snapshot) => {
+            if (!(snapshot.exists())) {
+                callback && callback(snapshot.val())
+            }
+        });
+    }
+
     async addCustomerDetails(customerDetails: CustomerDetails, restId: string, deviceId: string, callback?: (ele: string) => void) {
         const updateMenu = await ref(database, `/customerDetails/${restId}/${deviceId}`);
         await set(updateMenu, JSON.parse(JSON.stringify(customerDetails))).then(() => {
@@ -113,5 +123,25 @@ export class FirebaseServices {
                 callBack(snapshot.val())
             }
         });
+    }
+
+    removeLogo(imageUrl: string, callBack: (success: boolean) => void): Unsubscribe {
+        const storage = getStorage();
+        const storageRef = uploadImage(storage, imageUrl);
+
+        const deleteFile = async () => {
+            try {
+                await deleteObject(storageRef);
+                callBack(true); // Notify success
+            } catch (e) {
+                console.error("Error deleting file:", e);
+                callBack(false); // Notify failure
+            }
+        };
+
+        deleteFile();
+        return () => {
+            // Optionally return a cleanup function if needed
+        };
     }
 }

@@ -65,6 +65,7 @@ export default function MenuItemsDrawer({ handleBackClick, selectedFoodItems }: 
     const [isDirty, setIsDirty] = useState(false);
     const [imagePath, setImagePath] = useState('');
     const [itemsImageUrl, setItemsImageUrl] = useState('');
+    const [token, setToken] = useState('');
     const itemTypes = ["Non Veg", "Veg", "Egg", "Drinks"];
     const params = useParams();
     const restId = params.restId;
@@ -81,6 +82,12 @@ export default function MenuItemsDrawer({ handleBackClick, selectedFoodItems }: 
             setImagePath(selectedFoodItems.imagePath || '')
         }
     }, [selectedFoodItems]);
+
+    useEffect(() => {
+        FirebaseServices.shared.getToken((data) => {
+            setToken(data);
+        })
+    }, [])
 
     useEffect(() => {
         const isFormDirty = () => {
@@ -150,7 +157,6 @@ export default function MenuItemsDrawer({ handleBackClick, selectedFoodItems }: 
     };
 
     const deleteFileApi = async () => {
-        const token = "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";
         let response = await GithubService.shared.deleteFileApi(token, imagePath);
         if (response) {
             setImagePath('');
@@ -159,8 +165,23 @@ export default function MenuItemsDrawer({ handleBackClick, selectedFoodItems }: 
         }
     };
 
+    const removeImage = () => {
+        if (imageUrl && imageUrl.startsWith("https://firebasestorage.googleapis.com")) {
+            firebaseRemoveApi();
+        } else {
+            deleteFileApi();
+        }
+    }
+
+    const firebaseRemoveApi = () => {
+        FirebaseServices.shared.removeLogo(imageUrl!, () => {
+            setImagePath('');
+            setImageUrl('');
+            setItemsImageUrl('');
+        });
+    }
+
     const uploadFileApi = async (base64Data: string, filePath: string, message: string) => {
-        const token = "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";
         let response = await GithubService.shared.uploadFileApi(token, base64Data, filePath, message);
         if (response) {
             setItemsImageUrl(response['content']['download_url']);
@@ -220,7 +241,7 @@ export default function MenuItemsDrawer({ handleBackClick, selectedFoodItems }: 
                             </label>
                         )}
                     </div>
-                    {imageUrl ? <div onClick={() => { deleteFileApi() }} className="absolute top-0 right-0 cursor-pointer bg-red-500 rounded-full text-center px-2 pb-1 text-white">
+                    {imageUrl ? <div onClick={() => { removeImage() }} className="absolute top-0 right-0 cursor-pointer bg-red-500 rounded-full text-center px-2 pb-1 text-white">
                         <CloseIcon sx={{
                             fontSize: '16px'
                         }} />
