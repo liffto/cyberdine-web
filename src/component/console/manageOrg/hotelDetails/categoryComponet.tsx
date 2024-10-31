@@ -2,7 +2,7 @@
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { useEffect, useState } from 'react';
 import { FirebaseServices } from '@/service/firebase.service';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 export default function CategoryComponents({ onBackClicked, onCardClicked }: { onBackClicked: () => void, onCardClicked: () => void }) {

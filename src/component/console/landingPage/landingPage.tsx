@@ -10,7 +10,7 @@ export default function LandingPage({ onCardClicked }: { onCardClicked: () => vo
                     <h1 className="text-xl lg:text-3xl mb-4">{dashboard.title}</h1> {/* Normal title */}
                     <div className="flex flex-wrap gap-4 overflow-x-auto"> {/* Flex with wrap for responsiveness */}
                         {dashboard.sections && dashboard.sections.map((section, secIndex) => (
-                            <div className="flex-shrink-0 mb-1"> {/* Prevent cards from shrinking */}
+                            <div key={secIndex} className="flex-shrink-0 mb-1"> {/* Prevent cards from shrinking */}
                                 <LandingPageCard key={secIndex} title={section.title} content={section.content} type={section.type} onCardClicked={onCardClicked} localStorageType={"selectedType"} />
                             </div>
                         ))}

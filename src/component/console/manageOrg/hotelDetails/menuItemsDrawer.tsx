@@ -304,7 +304,7 @@ export default function MenuItemsDrawer({ handleBackClick, selectedFoodItems }: 
                 </div>
 
                 <div className="mb-6 flex items-center justify-between">
-                    <Typography>Today's Special</Typography>
+                    <Typography>Today&apos;s Special</Typography>
                     <FormControlLabel
                         control={
                             <IOSSwitch
