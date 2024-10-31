@@ -80,7 +80,7 @@ export class FirebaseServices {
     getToken(callback: (data: any) => void): Unsubscribe {
         const completedTasksRef: Query = ref(database, `githubKey`);
         return getFirebaseData(completedTasksRef, (snapshot) => {
-            if (!(snapshot.exists())) {
+            if ((snapshot.exists())) {
                 callback && callback(snapshot.val())
             }
         });

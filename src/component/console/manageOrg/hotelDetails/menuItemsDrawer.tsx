@@ -208,7 +208,6 @@ export default function MenuItemsDrawer({ handleBackClick, selectedFoodItems }: 
 
         FirebaseServices.shared.updateMenuItem(updatedFoodItem, htlId, orgMenuType, category, itemId, (status) => {
             if (status === "done") {
-                console.log("Menu item updated successfully!");
                 handleBackClick();
             } else {
                 console.error("Error updating menu item.");
