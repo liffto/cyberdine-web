@@ -1,0 +1,49 @@
+{
+    "consoleDashboardData": [
+        {
+            "title": "Manage Cyberdine Cloud",
+            "sections": [
+                {
+                    "title": "Festival Templates",
+                    "content": "Create & Manage Festival templates",
+                    "type": "Template"
+                },
+                {
+                    "title": "Item Image Gallery",
+                    "content": "Add & Manage Item image for easy mapping to item",
+                    "type": "Gallery"
+                },
+                {
+                    "title": "Manage Org",
+                    "content": "Add, Edit & Manage Org Details & Subscription",
+                    "type": "Organization"
+                }
+            ]
+        },
+        {
+            "title": "System",
+            "sections": [
+                {
+                    "title": "Give Permission",
+                    "content": "Create Roles, Permissions & manage user to the platform",
+                    "type": "Permissions"
+                },
+                {
+                    "title": "Configuration",
+                    "content": "Configure Configurations & Settings",
+                    "type": "Settings"
+                }
+            ]
+        },
+        {
+            "title": "Accounts",
+            "sections": [
+                {
+                    "title": "Give Permission",
+                    "content": "Create Roles, Permissions & manage user to the platform",
+                    "type": "Permissions"
+                }
+            ]
+        }
+    ]
+}

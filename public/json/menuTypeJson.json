@@ -1,0 +1,14 @@
+{
+    "orgMenuType": [
+        {
+            "title": "Food Menu",
+            "content": "Manage Org details",
+            "type": "foodMenu"
+        },
+        {
+            "title": "Drinks Menu",
+            "content": "Manage Org details",
+            "type": "drinksMenu"
+        }
+    ]
+}

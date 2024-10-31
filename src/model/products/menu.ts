@@ -46,10 +46,6 @@ export class Menu {
         categoryCount = categoryCount + 1;
       }
     }
-
-    console.log(categoryCount, "categoryCount");
-
-
     return categoryCount > 0 ? categoryCount : null;
   }
 
