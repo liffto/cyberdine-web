@@ -228,10 +228,10 @@ export default function ProductDisplay({
   }, [menuType, category, menu]);
 
   useEffect(() => {
-    const cat = menuTypes == "foodMenu" ? initialCategories : [];
+    const cat = menuType == "foodMenu" ? initialCategories : [];
     setFilterList(cat);
     // setSelFilterList(cat);
-  }, []);
+  }, [menuType]);
 
   useEffect(() => {
     // Ensure category is not null and has at least one item before setting selectedCategoryName
@@ -293,8 +293,6 @@ export default function ProductDisplay({
       window.removeEventListener('scroll', checkTopItem);
     };
   }, [items]);
-
-  console.log(filterList,"filterList");
 
   const OurSpecial = (
     <div

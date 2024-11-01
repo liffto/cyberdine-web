@@ -15,6 +15,7 @@ import DescriptionSheet from "../menu/description_sheet";
 import BasicMenuItemCard from "../menu/basic_menu_item_card";
 import { Menu } from "@/model/products/menu";
 import CategoryList from "../menu/category_list";
+import ProductBottommButton from "../menu/product_bottom_button";
 
 const initialCategories = [
   { name: "Veg", selected: false },
@@ -237,6 +238,11 @@ export default function SearchComponent({
               </div>
             );
           })}
+        {cartMenuData &&
+          cartMenuData?.getMenuList() &&
+          cartMenuData?.getMenuList()?.length != 0 && (
+            <ProductBottommButton cartCount={cartMenuData.getCartLength()} pendingCount={cartMenuData.getPendingLength()} approvedCount={cartMenuData.getApprovedLength()} restId={restId} table={table} />
+          )}
       </div>
       {selectedMenuData && (
         <DescriptionSheet

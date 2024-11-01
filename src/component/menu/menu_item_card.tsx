@@ -1,7 +1,6 @@
 import { Item } from "@/model/products/items";
 import Image from "next/image";
 import { useState } from "react";
-import BookmarkSharpIcon from '@mui/icons-material/BookmarkSharp';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 
