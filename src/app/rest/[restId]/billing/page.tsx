@@ -44,7 +44,7 @@ export default async function Billing({
                     "--secondary-bg": lightenColor('#' + json.data.hcolor?.slice(2, 10), 40) + "4a",
                 } as React.CSSProperties
             }>
-            <Topbar data={json.data} />
+            <Topbar data={json.data} table={searchParams.table} restId={params.restId} />
             <BillingComponents restId={params.restId} bgColor={"#" + json.data.hcolor?.slice(2, 10)} table={searchParams.table} topic={json?.data?.fcmTopic} />
         </div>
     );

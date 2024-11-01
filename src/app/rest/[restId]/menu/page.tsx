@@ -47,7 +47,7 @@ export default async function OrgProductsPage({
         } as React.CSSProperties
       }
     >
-      <Topbar data={json.data} />
+      <Topbar data={json.data} table={searchParams.table} restId={params.restId} />
       <ProductDisplay restId={params.restId} table={searchParams.table} topic={json?.data?.fcmTopic} notification={json?.data?.isNoticifation} bgColor={"#" + json.data.hcolor?.slice(2, 10)} plan={json?.data?.plan} isPayCompleted={json?.data?.isPayCompleted} customerDetails={json?.data?.customerDetails} review={json?.data?.googleReviewLink} menuTypes={""} />
     </div>
   );

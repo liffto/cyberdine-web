@@ -45,7 +45,7 @@ export default async function MenuOrders({
                     "--secondary-bg": lightenColor('#' + json.data.hcolor?.slice(2, 10), 40) + "4a",
                 } as React.CSSProperties
             }>
-            <Topbar data={json.data} />
+            <Topbar data={json.data} table={searchParams.table} restId={params.restId} />
             <OrdersComponent bgColor={"#" + json.data.hcolor?.slice(2, 10)} restId={params.restId} table={searchParams.table} />
         </div>
     );
