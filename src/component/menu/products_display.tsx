@@ -210,8 +210,8 @@ export default function ProductDisplay({
     setOpenMenu(open);
   };
 
-   // First useEffect to set items when menuType changes
-   useEffect(() => {
+  // First useEffect to set items when menuType changes
+  useEffect(() => {
     if (category && menuType && menu) {
       const newItems = (category[menuType] || [])
         .map((item: any) => {
@@ -293,6 +293,8 @@ export default function ProductDisplay({
       window.removeEventListener('scroll', checkTopItem);
     };
   }, [items]);
+
+  console.log(filterList,"filterList");
 
   const OurSpecial = (
     <div
@@ -382,10 +384,10 @@ export default function ProductDisplay({
                     </div>
                   )}
                 </div>
-                <CategoryList
+                {filterList && filterList.length > 0 && <CategoryList
                   handleCatClick={handleCatClick}
                   filterList={filterList}
-                />
+                />}
                 {!(filterList && filterList.some(cat => cat.selected === true)) &&
                   <HorizontalScrollSnap
                     items={review && GoogleReview ? [OurSpecial, review && GoogleReview] : [OurSpecial]}
@@ -508,7 +510,7 @@ export default function ProductDisplay({
             {plan !== "basic" && menu && menu.getMenuLength(category[menuType], filterList) && menu && menu.getMenuLength(category[menuType], filterList)! > 0 && !openMenu && (
               <div className={`flex item-center justify-center sticky ${cartMenuData &&
                 cartMenuData?.getMenuList() &&
-                cartMenuData?.getMenuList()?.length != 0 ? 'bottom-[70px]' : 'bottom-5'} z-10`}>
+                cartMenuData?.getMenuList()?.length != 0 ? 'bottom-[80px]' : 'bottom-5'} z-10`}>
                 <div style={{ boxShadow: "0px 0px 6px 0px gray" }} className="bg-primary text-white flex item-center justify-center rounded-md py-3 w-28" onClick={() => { setOpenMenu(true) }} >
                   <div className="">
                     <SortIcon />
