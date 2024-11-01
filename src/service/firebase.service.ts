@@ -3,6 +3,7 @@ import { ref, onValue as getFirebaseData, Query, Unsubscribe, set, update } from
 import { Item } from "@/model/products/items";
 import { CartMenu } from "@/model/orders/cart_menu";
 import { CustomerDetails } from "@/model/customer_detail/customer_details";
+import { FeedBackDetailsModel } from "@/model/feedback_detail/feedback_details";
 
 export class FirebaseServices {
     static shared: FirebaseServices = new FirebaseServices();
@@ -66,6 +67,16 @@ export class FirebaseServices {
     async addCustomerDetails(customerDetails: CustomerDetails, restId: string, deviceId: string, callback?: (ele: string) => void) {
         const updateMenu = await ref(database, `/customerDetails/${restId}/${deviceId}`);
         await set(updateMenu, JSON.parse(JSON.stringify(customerDetails))).then(() => {
+            callback && callback("done")
+        }).catch((error) => {
+            console.error(error);
+            callback && callback("error")
+        });
+    }
+
+    async addFeedbackDetails(feedbackDetails: FeedBackDetailsModel, restId: string, feedbackId: string, callback?: (ele: string) => void) {
+        const updateMenu = await ref(database, `/feedback/${restId}/${feedbackId}`);
+        await set(updateMenu, JSON.parse(JSON.stringify(feedbackDetails))).then(() => {
             callback && callback("done")
         }).catch((error) => {
             console.error(error);
