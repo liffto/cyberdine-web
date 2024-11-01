@@ -65,7 +65,6 @@ export default function ProductDisplay({
   const [wait, setWait] = useState<boolean>(false);
   const [showDialog, setShowDialog] = useState<boolean>(false);
   const [phoneNumber, setPhoneNumber] = useState<Number>();
-  const [selfilterList, setSelFilterList] = useState<Array<any>>([]);
   const [filterList, setFilterList] = useState<Array<any>>([]);
   const [openMenu, setOpenMenu] = useState<boolean>(false);
   const [preOrderData, setPreOrderData] = useState<boolean>(true);
@@ -116,31 +115,6 @@ export default function ProductDisplay({
 
   const handleCatClick = (catName: string, isFromSelected: boolean) => {
     setFilterList((prevCats) => {
-      return prevCats.map((cat) => {
-        // Check if the current category is the one being clicked
-        if (cat.name === catName) {
-          // Toggle the selected state of the clicked category
-          return { ...cat, selected: !cat.selected };
-        }
-        if (catName === "Veg") {
-          if (cat.name === "Non Veg" || cat.name === "Egg") {
-            return { ...cat, selected: false }; // Deselect Non Veg and Egg
-          }
-        }
-
-        // Logic to deselect other categories based on the selected category
-        if ((catName === "Non Veg" || catName === "Egg")) {
-          // Deselect Veg
-          if (cat.name === "Veg") {
-            return { ...cat, selected: false };
-          }
-        }
-
-
-        return cat; // Return other categories unchanged
-      });
-    });
-    setSelFilterList((prevCats) => {
       return prevCats.map((cat) => {
         // Check if the current category is the one being clicked
         if (cat.name === catName) {
@@ -256,6 +230,7 @@ export default function ProductDisplay({
   useEffect(() => {
     const cat = menuTypes == "foodMenu" ? initialCategories : [];
     setFilterList(cat);
+    // setSelFilterList(cat);
   }, []);
 
   useEffect(() => {
@@ -411,7 +386,7 @@ export default function ProductDisplay({
                   handleCatClick={handleCatClick}
                   filterList={filterList}
                 />
-                {selfilterList.length == 0 &&
+                {!(filterList && filterList.some(cat => cat.selected === true)) &&
                   <HorizontalScrollSnap
                     items={review && GoogleReview ? [OurSpecial, review && GoogleReview] : [OurSpecial]}
                   />
@@ -424,22 +399,22 @@ export default function ProductDisplay({
                       return (
                         <div key={catIndex} id={ele}>
                           {menu &&
-                            menu.getMenuList(ele, selfilterList) &&
-                            menu.getMenuList(ele, selfilterList)!.length >
+                            menu.getMenuList(ele, filterList) &&
+                            menu.getMenuList(ele, filterList)!.length >
                             0 &&
                             (plan === "basic" ? (
                               <BasicCard
                                 setCatName={setCatName}
                                 ele={ele}
                                 menuData={menu}
-                                selfilterList={selfilterList}
+                                selfilterList={filterList}
                                 selectedCategoryName={selectedCategoryName}
                               />
                             ) : (
                               <ProCard
                                 ele={ele}
                                 menuData={menu}
-                                selfilterList={selfilterList}
+                                selfilterList={filterList}
                                 setSelectedData={setSelectedData}
                                 catIndex={catIndex}
                                 bgColor={bgColor}

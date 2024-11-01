@@ -63,13 +63,12 @@ export default function DescriptionSheet({
   const description = () => {
     return (
       <div className="h-full flex flex-col justify-between">
-        <Toaster position="top-center" />
         <div onClick={() => { setSelectedMenuData(null); }} className="text-white bg-black text-center rounded-full w-12 py-3 mx-auto mb-4">
           <CloseIcon />
         </div>
-        <div className="bg-white" style={{ borderRadius: '20px 20px 0 0' }} >
-          {selectedMenuData.itemsImageUrl && (
-            <div className="rounded overflow-hidden mb-3 ">
+        <div className="bg-white " style={{ borderRadius: '16px 16px 0 0' }} >
+          <div className="rounded overflow-hidden pb-3 px-4 pt-4">
+            {selectedMenuData && selectedMenuData.itemsImageUrl && (
               <Image
                 src={selectedMenuData.itemsImageUrl!}
                 alt={selectedMenuData.name!}
@@ -83,24 +82,24 @@ export default function DescriptionSheet({
                   borderRadius: '20px 20px 0 0'
                 }}
               />
-            </div>
-          )}
-          <div className="px-4 py-2 text-black">
-            <div className="mb-2">
+            )}
+          </div>
+
+          <div className="px-4 pb-2 text-black">
+            <div className="mb-3">
               <div className=" flex justify-between items-center">
                 <div className="flex-1 font-bold text-xl">{selectedMenuData?.capitalizeNameFirstLetter()}</div>
 
                 <div className={`flex justify-center items-center`}>
                   <div className="">
                     <Image
-                      src={selectedMenuData?.foodType == "Veg" ? "/images/svg/veg_icon.svg" : "/images/svg/non_veg_icon.svg"}
-                      alt={selectedMenuData.name!}
+                      src={selectedMenuData?.foodType === "Egg" ? "/images/svg/egg_icon.svg" : selectedMenuData?.foodType == "Drinks" ? "/images/svg/liquor_icon.svg" : selectedMenuData?.foodType == "Veg" ? "/images/svg/veg_icon.svg" : selectedMenuData?.foodType == "Non Veg" ? "/images/svg/non_veg_icon.svg" : ""}
+                      alt={selectedMenuData?.name!}
                       height={16}
                       width={16}
                       priority={false}
                       style={{
                         objectFit: "cover",
-                        background: "var(--secondary-bg)"
                       }}
                     />
                   </div>
@@ -111,17 +110,16 @@ export default function DescriptionSheet({
                   </div>
                 </div>
               </div>
-              <div className={`font-medium text-gray-400`}>&#x20B9; {selectedMenuData?.price}</div>
+              {selectedMenuData?.price && <div className={`pt-[1px] font-medium text-[#7A7A7A]`}>&#x20B9; {selectedMenuData?.price}</div>}
             </div>
-            {selectedMenuData?.description && <div className="font-medium text-base mb-2">
+            {selectedMenuData && selectedMenuData?.description && <div className="text-[#7A7A7A] text-base mb-2">
               {selectedMenuData?.capitalizeDescriptionFirstLetter()}
             </div>}
           </div>
           <div
-            className={`text-lg text-center flex justify-between px-4 items-center w-full py-3 font-semibold`} style={{ backgroundColor: bgColor }}
+            className={`text-lg text-center flex justify-between px-4 items-center w-full py-3 font-semibold`} style={{ backgroundColor: bgColor, boxShadow: "0px 0px 10px 0.5px #00000040" }}
           >
-            <div className="flex-1 bg-white px-4 py-2 rounded font-semibold text-xl" onClick={() => { setSelectedMenuData(null); }} style={{ color: bgColor }} >Cancel</div>
-            <div onClick={() => { addToWishList(); }} className="border-2 border-white px-[8px] ml-3 py-[7px] rounded"  >{itemCount != null ? <BookmarkIcon sx={{ color: "white" }} /> : <BookmarkBorderIcon sx={{ color: "white" }} />}</div>
+            <div className="flex-1 bg-white px-4 py-2 rounded font-semibold text-xl" onClick={() => { addToWishList(); }} style={{ color: selectedMenuData && selectedMenuData.quantity != null ? '#DD0000' : bgColor }} >{selectedMenuData && selectedMenuData.quantity != null ? "Remove from wishlist" : "+ Add to wishlist"}</div>
           </div>
         </div>
       </div>
