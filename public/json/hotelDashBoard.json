@@ -1,0 +1,29 @@
+{
+    "hotelDashBoard": [
+        {
+            "title": "Org details",
+            "content": "Manage Org details",
+            "type": "details"
+        },
+        {
+            "title": "Menu",
+            "content": "Manage Org details",
+            "type": "menuManagement"
+        },
+        {
+            "title": "User & Access Accounts",
+            "content": "Manage Org details",
+            "type": "userManagement"
+        },
+        {
+            "title": "Subscription",
+            "content": "Manage Org details",
+            "type": "billing"
+        },
+        {
+            "title": "Masters",
+            "content": "Manage Org details",
+            "type": "dataManagement"
+        }
+    ]
+}
