@@ -26,7 +26,7 @@ import ProductBottommButton from "./product_bottom_button";
 
 const notify = () => toast("Notified successfully");
 const soldOutNotify = () => toast("Temporarily out of stock");
-
+////asdasd
 export default function ProductDisplay({
   menuTypes,
   restId,
