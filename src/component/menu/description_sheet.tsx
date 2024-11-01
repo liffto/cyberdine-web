@@ -50,16 +50,6 @@ export default function DescriptionSheet({
     checkOrderList(temp);
   };
 
-  // const itemCountFunc = () => {
-  //   let temp = itemCount;
-  //   if (temp == 0) {
-  //     temp = temp + 1;
-  //   } else if (temp > 0) {
-  //     temp = temp - 1;
-  //   }
-  //   setItemCount(temp);
-  // };
-
   const checkOrderList = (count: number | null) => {
     menu?.addQantity(selectedMenuData, count, restId, deviceId, menuType, table, (val: any) => {
       if (val == "remove" && cartMenuData && cartMenuData?.getMenuList()!.length < 2 && (itemCount == 1)) {
@@ -140,7 +130,6 @@ export default function DescriptionSheet({
   return (
     <div className="md:hidden block">
       <SwipeableDrawer
-        disableSwipeToOpen={true}
         open={selectedMenuData != null}
         anchor="bottom"
         PaperProps={{

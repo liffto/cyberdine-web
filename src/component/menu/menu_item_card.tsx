@@ -95,21 +95,12 @@ export default function MenuItemCard({
             {ele.capitalizeNameFirstLetter()}
           </h1>
           <div
-            className={`text-xs md:text-sm  ${!ele.isActive ? "text-gray-300" : "text-gray-800"} font-medium`}
+            className={`text-xs md:text-sm overflow-hidden ${!ele.isActive ? "text-gray-300" : "text-gray-800"} font-medium`} style={{ maxWidth: '200px', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}
           >
-            {ele.foodType}
+            {ele?.capitalizeDescriptionFirstLetter() ?? ele.foodType}
           </div>
           <div className={`font-bold pr-1 text-sm pt-1 ${!ele.isActive ? "text-gray-300" : "text-gray-700"}`}>&#x20B9; {ele.price}</div>
         </div>
-        {
-          // ele.quantity != undefined && ele.quantity > 0 ?
-          //  <div className="flex flex-col justify-center items-center pr-3">
-          //   <div className={`font-bold text-black text-2xl`}>{ele.quantity}</div>
-          //   <div className={`text-xs md:text-sm font-medium text-black`}>Qty</div>
-          // </div> 
-          // :
-          // <div className={`font-bold pr-1 ${!ele.isActive ? "text-gray-300" : "text-gray-700"}`}>&#x20B9; {ele.price}</div>
-        }
         {ele.isActive ?
           ele.quantity != null && ele.quantity > 0 ?
             <div className="flex justify-center items-center rounded border-2 border-primary mb-1">
@@ -126,9 +117,6 @@ export default function MenuItemCard({
             <AddIcon sx={{ fontSize: '13px' }} />
           </div>
         }
-        {/* {ele.quantity != undefined && ele.quantity > 0 && <div className="absolute -top-[5px] right-2">
-          <BookmarkSharpIcon sx={{ color: bgColor }} />
-        </div>} */}
       </div>
     </div>
   );

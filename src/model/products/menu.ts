@@ -73,6 +73,17 @@ export class Menu {
     }
   }
 
+  getMenuLength(categories: string[], pref: Array<any> = []): number | null {
+    let categoryCount = 0;
+
+    for (const category of categories) {
+      if (this.getMenuList(category, pref) && this.getMenuList(category, pref)?.length != 0) {
+        categoryCount = categoryCount + 1;
+      }
+    }
+    return categoryCount > 0 ? categoryCount : null;
+  }
+
   convertListToArray(menu: Item[]) {
     const tempMap = new Map();
     menu.forEach((obj) => {
