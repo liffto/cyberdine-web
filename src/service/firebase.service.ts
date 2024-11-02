@@ -17,6 +17,15 @@ export class FirebaseServices {
         })
     }
 
+    getOrgCategoryMenu(restId: string, orgMenuType: string, category: string, callBack: Function): Unsubscribe {
+        const completedTasksRef: Query = ref(database, `menu/${restId}/${orgMenuType}/${category}`);
+        return getFirebaseData(completedTasksRef, (snapshot) => {
+            if (snapshot.exists()) {
+                callBack(snapshot.val())
+            }
+        })
+    }
+
     getCartMenu(restId: string, table: string, deviceId: string, callBack: Function): Unsubscribe {
         const completedTasksRef: Query = ref(database, `order/${restId}/table${table}/${deviceId}`);
         return getFirebaseData(completedTasksRef, (snapshot) => {
