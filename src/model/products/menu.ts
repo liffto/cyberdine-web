@@ -106,7 +106,7 @@ export class Menu {
   }
 
   async addQantity(menu: Item, count: number | null, restId: string, deviceId: string, type: string, table: string, callback?: (ele: string) => void) {
-    let res = this.menuMap!.get(menu.category!)?.get(menu.id!);
+    let res = menu;
     if (res != undefined) {
       res.quantity = 0;
       res.quantity = count;
