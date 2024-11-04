@@ -42,31 +42,32 @@ const OrdersComponent: React.FC<OrdersComponentProps> = ({ bgColor, restId, tabl
     };
 
     return <div className="mt-6">
-        {cartMenuData && cartMenuData.getMenuList() && cartMenuData.getMenuList()?.some((ele) => ele.isApproved == null || ele.isApproved == false) ?
-            <div className="bg-[#FF7D20] px-4 text-white py-2 font-semibold text-xs">
-                <div className="flex justify-between items-center">
-                    <div className="flex justify-v items-center gap-3">
-                        <div className=""><AccessTimeIcon /></div>
-                        <div className="">Your order is waiting for approval</div>
-                    </div>
-                    <div className="">
-                        <CircularProgress size={20} thickness={6} sx={{ color: "white", }} />
-                    </div>
-                </div></div> : <></>}
-        {cartMenuData && cartMenuData.getPendingLength() != 0 ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 py-4 px-4">
-            {cartMenuData && cartMenuData.getMenuList() && cartMenuData.getMenuList()?.length != 0 ?
-                cartMenuData
-                    .getMenuList()!
-                    .map((ele: Item, index: any) => {
-                        return (ele.isApproved == null || ele.isApproved == false) && ele.isOrdered == true && (
-                            <div key={index} className="">
-                                <OrderCard
-                                    index={index}
-                                    ele={ele} bgColor={bgColor} addOrderItems={checkOrderList} canAddItems={true} />
-                            </div>
-                        );
-                    }) : <></>}
-        </div> : <></>}
+        {cartMenuData && cartMenuData.getMenuList() && cartMenuData.getMenuList()?.some((ele) => (ele.isApproved == null || ele.isApproved == false) && (ele.rejectReason == undefined || ele.rejectReason == null)) ?
+            <div className="">
+                <div className="bg-[#FF7D20] px-4 text-white py-2 font-semibold text-xs">
+                    <div className="flex justify-between items-center">
+                        <div className="flex justify-v items-center gap-3">
+                            <div className=""><AccessTimeIcon /></div>
+                            <div className="">Your order is waiting for approval</div>
+                        </div>
+                        <div className="">
+                            <CircularProgress size={20} thickness={6} sx={{ color: "white", }} />
+                        </div>
+                    </div></div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 py-4 px-4">
+                    {cartMenuData && cartMenuData.getMenuList() && cartMenuData.getMenuList()?.length != 0 ?
+                        cartMenuData
+                            .getMenuList()!
+                            .map((ele: Item, index: any) => {
+                                return (ele.isApproved == null || ele.isApproved == false) && ele.isOrdered == true && (ele.rejectReason == undefined || ele.rejectReason == null) && (
+                                    <div key={index} className="">
+                                        <OrderCard
+                                            index={index}
+                                            ele={ele} bgColor={bgColor} addOrderItems={checkOrderList} canAddItems={true} />
+                                    </div>
+                                );
+                            }) : <></>}
+                </div> </div> : <></>}
 
         {cartMenuData && cartMenuData.getMenuList() && cartMenuData.getMenuList()?.some((ele) => ele.isApproved == true && (ele.rejectReason == undefined || ele.rejectReason == null)) &&
             <div className="">

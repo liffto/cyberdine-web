@@ -70,7 +70,7 @@ export default function OrderCard({ ele, index, bgColor, addOrderItems, canAddIt
                     </div>
                 )}
             </div>
-            <div className={`relative z-0 flex items-center border-y border-r border-[#FF7D20] rounded-e-md p-2 flex-1`}>
+            <div className={`relative z-0 flex items-center rounded-e-md p-2 flex-1`}>
                 <div className="flex flex-col  flex-1 pl-1" >
                     <h1 className={`text-base capitalize md:text-lg font-bold ${!ele.isActive ? "text-gray-400" : "text-black"}`}>
                         {ele.capitalizeNameFirstLetter()}
