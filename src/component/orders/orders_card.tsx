@@ -75,29 +75,9 @@ export default function OrderCard({ ele, index, bgColor, addOrderItems, canAddIt
                     <h1 className={`text-base capitalize md:text-lg font-bold ${!ele.isActive ? "text-gray-400" : "text-black"}`}>
                         {ele.capitalizeNameFirstLetter()}
                     </h1>
-                    {/* <div
-                        className={`text-xs md:text-sm  ${!ele.isActive ? "text-gray-300" : "text-gray-800"} font-medium`}
-                    >
-                        {ele.foodType}
-                    </div> */}
-                    <div className={`text-sm pr-1 ${!ele.isActive ? "text-gray-300" : "text-gray-700"}`}>&#x20B9; {ele.price}</div>
+                    { ele.rejectReason ? <div className="">{ele.rejectReason}</div> : <div className={`text-sm pr-1 ${!ele.isActive ? "text-gray-300" : "text-gray-700"}`}>&#x20B9; {ele.price}</div>}
                 </div>
-                {ele.isActive && <div className="font-semibold">{ele.quantity} Qty</div>
-                    // ele.quantity != null && ele.quantity > 0 ?
-                    //     <div className={`flex justify-center items-center rounded border-2 ${!canAddItems ? "border-gray-400" : "border-primary"} mb-1`}>
-                    //         <div onClick={() => { addToItems("remove") }} className={`${!canAddItems ? "bg-gray-400" : "bg-primary"} px-1`}><RemoveIcon sx={{ fontSize: '13px', color: 'white' }} /></div>
-                    //         <div className={`${!canAddItems ? "text-gray-400" : "text-black"} px-2`}>{ele.quantity ?? 0}</div>
-                    //         <div onClick={() => { addToItems("add") }} className={`${!canAddItems ? "bg-gray-400" : "bg-primary"} px-1`}><AddIcon sx={{ fontSize: '13px', color: 'white' }} /></div>
-                    //     </div>
-                    //     :
-                    //     <div onClick={() => { addToItems("add") }} className={`flex justify-center items-center pl-4 pr-3 py-1 rounded border-2 border-primary text-primary`}>
-                    //         <div className="text-xs pr-1">Add</div>
-                    //         <AddIcon sx={{ fontSize: '13px' }} />
-                    //     </div> : <div className={`flex justify-center items-center pl-4 pr-3 py-1 rounded border-2 border-gray text-gray-400`}>
-                    //     <div className="text-xs pr-1">Add</div>
-                    //     <AddIcon sx={{ fontSize: '13px' }} />
-                    // </div>
-                }
+                {ele.isActive && <div className="font-semibold">{ele.quantity} Qty</div>}
             </div>
         </div>
     </div>

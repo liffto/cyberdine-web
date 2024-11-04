@@ -115,16 +115,16 @@ export default function DescriptionSheet({
           <div
             className={`text-lg text-center flex gap-4 justify-between px-4 items-center w-full py-3 font-semibold`} style={{ backgroundColor: bgColor, boxShadow: "0px 0px 10px 0.5px #00000040" }}
           >
-            <div className="flex-1 bg-white px-4 py-2 rounded font-semibold text-xl" onClick={() => { setSelectedMenuData(null); }} style={{ color: '#DD0000' }} >{"Cancel"}</div>
             <div className="flex-1 bg-white flex items-center justify-between rounded font-semibold text-xl"  >
               <div className="bg-gray-900 py-2 px-4 rounded-tl rounded-bl text-white" onClick={() => { addToItems("remove") }}>
                 <RemoveIcon />
               </div>
-              <div className="">{selectedMenuData.quantity}</div>
+              <div className="">{selectedMenuData.quantity ?? '0'}</div>
               <div className="bg-gray-900 py-2 px-4 rounded-tr rounded-br text-white" onClick={() => { addToItems("add") }}>
                 <AddIcon />
               </div>
             </div>
+            <div className="flex-1 bg-white px-4 py-2 rounded font-semibold text-xl" onClick={() => { setSelectedMenuData(null); }} style={{ color: bgColor }} >{"Add Item"}</div>
           </div>
         </div>
       </div>

@@ -11,8 +11,8 @@ export default function ProductBottommButton({ cartCount, pendingCount, approved
             <div className="flex items-center">
                 <Image src={'/images/svg/placed_order.svg'} alt="placed order" height={20} width={20} />
                 <div className="ml-2">
-                    <div className="text-sm font-semibold">{pendingCount} waiting | {approvedCount} approved</div>
-                    <div className="text-xs text-gray-400">View Cart</div>
+                    <div className="text-xs font-semibold">{`${cartCount} Selected`}</div>
+                    <div className="text-sm text-gray-400">{pendingCount} waiting | {approvedCount} approved</div>
                 </div>
             </div>
             <Link href={cartCount == 0 ? `/rest/${restId}/orders?table=${table}` : `/rest/${restId}/cart?table=${table}`}>

@@ -12,6 +12,7 @@ export class Item {
     isApproved: boolean | null = null;
     isOrdered: boolean | null = null;
     dateAndTime: string | null = null;
+    rejectReason: string | null = null;
 
     constructor(data?: Item) {
         if (data) {
@@ -28,6 +29,7 @@ export class Item {
             this.isApproved = data.isApproved;
             this.isOrdered = data.isOrdered;
             this.dateAndTime = data.dateAndTime;
+            this.rejectReason = data.rejectReason;
         }
     }
 

@@ -34,6 +34,11 @@ export class CartMenu {
         return pending ? Array.from(pending.values()).reduce((count, category) => count + category.size, 0) : 0;
     }
 
+    getRejectedLength(): number {
+        const pending = this.cartMenuMap?.get('rejected');
+        return pending ? Array.from(pending.values()).reduce((count, category) => count + category.size, 0) : 0;
+    }
+
     getApprovedLength(): number {
         const approved = this.cartMenuMap?.get('approved');
         return approved ? Array.from(approved.values()).reduce((count, category) => count + category.size, 0) : 0;
@@ -67,21 +72,9 @@ export class CartMenu {
             const formattedDate = `${day} ${month} ${year}`; // "12 Jan 2024"
 
             // Format time as "hh:mm AM/PM"
-            const optionsTime: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit', hour12: true };
+            const optionsTime: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
             const formattedTime = dateObj.toLocaleTimeString('en-US', optionsTime); // e.g., "04:04 PM"
-
-            // Calculate sixDigitId
-            const lastTwoDigitsOfYear: number = year % 100; // Last two digits of the year
-            const monthValue: number = dateObj.getMonth() + 1; // Month (1-12)
-            const dayValue: number = dateObj.getDate(); // Day (1-31)
-
-            // Break down the calculation into steps
-            const yearContribution: number = lastTwoDigitsOfYear * 10000;
-            const monthContribution: number = monthValue * 100;
-            const total: number = yearContribution + monthContribution + dayValue;
-            const timestamp: string = (total % 1000000).toString().padStart(6, '0'); // Ensure it is 6 digits
-
-
+            const timestamp: string = `${formattedTime.replace(/(AM|PM)/, '').replace(/:/g, '')}`; // Ensure it is 6 digits
             return {
                 date: formattedDate,
                 time: formattedTime,

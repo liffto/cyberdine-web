@@ -12,6 +12,7 @@ import { Menu } from "@/model/products/menu";
 import BottomButton from "../common/bottom_button";
 import Image from "next/image";
 import { FirebaseServices } from "@/service/firebase.service";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const notify = () => toast('Notified successfully');
 interface CartComponentProps {
@@ -87,43 +88,43 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
     const mergeCartAndPendingData = (
         cartData: Map<string, Map<string, Item>> | undefined,
         pendingData: Map<string, Map<string, Item>> | undefined
-      ): Map<string, Map<string, Item>> => {
+    ): Map<string, Map<string, Item>> => {
         const body: Map<string, Map<string, Item>> = new Map();
-      
+
         // Iterate through cartData
         if (cartData) {
-          cartData.forEach((items, category) => {
-            const categoryMap = new Map<string, Item>(items); // Clone the items for the category
-            body.set(category, categoryMap);
-          });
+            cartData.forEach((items, category) => {
+                const categoryMap = new Map<string, Item>(items); // Clone the items for the category
+                body.set(category, categoryMap);
+            });
         }
-      
+
         // Merge pending items
         if (pendingData) {
-          pendingData.forEach((items, category) => {
-            // Ensure the category exists in body
-            if (!body.has(category)) {
-              body.set(category, new Map<string, Item>());
-            }
-            const existingItemMap = body.get(category);
-            if (existingItemMap) {
-              items.forEach((item) => {
-                const existingItem = existingItemMap.get(item.id!);
-                if (existingItem) {
-                  // Update quantity if item already exists
-                  existingItem.quantity! += item.quantity!; // Combine quantities
-                } else {
-                  // Add new item if it doesn't exist
-                  existingItemMap.set(item.id!, { ...item });
+            pendingData.forEach((items, category) => {
+                // Ensure the category exists in body
+                if (!body.has(category)) {
+                    body.set(category, new Map<string, Item>());
                 }
-              });
-            }
-          });
+                const existingItemMap = body.get(category);
+                if (existingItemMap) {
+                    items.forEach((item) => {
+                        const existingItem = existingItemMap.get(item.id!);
+                        if (existingItem) {
+                            // Update quantity if item already exists
+                            existingItem.quantity! += item.quantity!; // Combine quantities
+                        } else {
+                            // Add new item if it doesn't exist
+                            existingItemMap.set(item.id!, { ...item });
+                        }
+                    });
+                }
+            });
         }
-      
+
         return body;
-      };
-      
+    };
+
 
     const getQuantityFromOrder = () => {
         if (cartMenuData) {
@@ -144,31 +145,36 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
 
     return (
         <div className="md:container mx-auto">
-            <Toaster position="top-center" />
-            <div className="border border-primary mx-4 mt-2"></div>
-            {cartMenuData && cartMenuData?.getApprovedLength() != 0 && <div className="w-full" onClick={handleViewOrderClick} >
-                <Image src={'/images/png/view_selected_order.png'} alt="placed order" height={10} width={430} />
-            </div>}
-            <div className={`${cartMenuData && cartMenuData?.getApprovedLength() != 0 ? "" : "mt-4"} px-4 py-1 font-bold text-sm bg-secondary text-black capitalize flex`}>
-                <div className=" ">Items in cart</div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 py-4 px-4">
-                {cartMenuData && cartMenuData.getMenuList() && cartMenuData.getMenuList()?.length != 0 &&
-                    cartMenuData
-                        .getMenuList()!
-                        .map((ele: Item, index: any) => {
-                            return (!(ele.isApproved == true) && !(ele.isOrdered == true) &&
-                                <div key={index} className="">
-                                    <MenuItemCard
-                                        index={index}
-                                        setSelectedData={setSelectedData}
-                                        ele={ele} bgColor={bgColor} addOrderItems={checkOrderList} />
-                                </div>
-                            );
-                        })}
-            </div>
-            <div className="h-20"></div>
-            <BottomButton onBackClick={back} onNextClick={handleClick} wait={wait} backButton={"Select More"} nextButton={"Order Now"} />
+                {loader ? <div className="flex flex-col justify-center items-center h-[600px]">
+                    <CircularProgress sx={{ color: "var(--primary-bg)" }} />
+                    <div className="mt-6" style={{color: bgColor}} >Placing your order... Please hold on...</div>
+                </div>  : <div className="">
+                    <Toaster position="top-center" />
+                    <div className="border border-primary mx-4 mt-2"></div>
+                    {cartMenuData && (cartMenuData?.getApprovedLength() != 0 || cartMenuData?.getPendingLength() != 0)  && <div className="w-full" onClick={handleViewOrderClick} >
+                        <Image src={'/images/png/view_selected_order.png'} alt="placed order" height={10} width={430} />
+                    </div>}
+                    <div className={`${cartMenuData && (cartMenuData?.getApprovedLength() != 0 || cartMenuData?.getPendingLength() != 0) ? "" : "mt-4"} px-4 py-1 font-bold text-sm bg-secondary text-black capitalize flex`}>
+                        <div className=" ">Items in cart</div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 py-4 px-4">
+                        {cartMenuData && cartMenuData.getMenuList() && cartMenuData.getMenuList()?.length != 0 &&
+                            cartMenuData
+                                .getMenuList()!
+                                .map((ele: Item, index: any) => {
+                                    return (!(ele.isApproved == true) && !(ele.isOrdered == true) &&
+                                        <div key={index} className="">
+                                            <MenuItemCard
+                                                index={index}
+                                                setSelectedData={setSelectedData}
+                                                ele={ele} bgColor={bgColor} addOrderItems={checkOrderList} />
+                                        </div>
+                                    );
+                                })}
+                    </div>
+                    <div className="h-20"></div>
+                    <BottomButton onBackClick={back} onNextClick={handleClick} wait={wait} backButton={"Select More"} nextButton={"Order Now"} />
+                </div>}
             {selectedMenuData && (
                 <DescriptionSheet
                     setSelectedMenuData={setSelectedData}
