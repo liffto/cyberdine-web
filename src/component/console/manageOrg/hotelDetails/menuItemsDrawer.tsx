@@ -16,6 +16,8 @@ import { GithubService } from '@/service/githubImageUpload';
 import { useParams } from 'next/navigation';
 import { FirebaseServices } from '@/service/firebase.service';
 import CloseIcon from '@mui/icons-material/Close';
+import DownloadIcon from '@mui/icons-material/Download'; // Import download icon
+
 const IOSSwitch = styled((props: SwitchProps) => (
     <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
 ))(({ theme }) => ({
@@ -215,6 +217,51 @@ export default function MenuItemsDrawer({ handleBackClick, selectedFoodItems }: 
         });
     };
 
+    const handleDownloadImage = async () => {
+        if (imageUrl) {
+            try {
+                // Fetch the image from the URL
+                const response = await fetch(imageUrl);
+
+                // Get the Content-Type header to determine the file type (MIME type)
+                const contentType = response.headers.get('Content-Type');
+                if (!contentType) {
+                    throw new Error('Unable to determine file type');
+                }
+
+                // Get the file extension based on the MIME type
+                const fileExtension = contentType.split('/')[1]; // e.g., 'jpeg' or 'png'
+
+                // Ensure the file extension is valid
+                if (!fileExtension) {
+                    throw new Error('Invalid file type');
+                }
+
+                // Convert the response to a Blob
+                const blob = await response.blob();
+
+                // Create a URL for the Blob
+                const blobUrl = URL.createObjectURL(blob);
+
+                // Create an invisible link element to trigger the download
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                console.log(link, "link");
+
+                // Set the name of the downloaded file dynamically with the correct file extension
+                link.download = `${itemName}.${fileExtension}`;
+
+                // Trigger the download by programmatically clicking the link
+                link.click();
+
+                // Clean up the blob URL after download
+                URL.revokeObjectURL(blobUrl);
+            } catch (error) {
+                console.error('Error downloading image:', error);
+            }
+        }
+    };
+
 
     return (
         <div className="">
@@ -224,6 +271,9 @@ export default function MenuItemsDrawer({ handleBackClick, selectedFoodItems }: 
                         <ArrowBackIosIcon className="text-gray-700" />
                     </div>
                     <Typography variant="h5">{selectedFoodItems.name}</Typography>
+                    <div className="absolute top-0 right-0 cursor-pointer p-2" onClick={handleDownloadImage}>
+                        <DownloadIcon className="text-gray-700" />
+                    </div>
                 </div>
                 <div className="relative">
                     <div
