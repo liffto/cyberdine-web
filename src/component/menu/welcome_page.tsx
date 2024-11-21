@@ -80,13 +80,13 @@ const WelcomePage = ({ data, restId, table, bgColor }: { data: any, restId: stri
                         className="w-26 h-26 my-4 object-contain m-auto" // Adjust size and ensure the image fits
                     />}
             </div>
-            <div className={`w-full flex flex-col mb-14 max-w-4xl overflow-y-hidden	`}>
+            {data.isPayCompleted == true ?<></>: <div className={`w-full flex flex-col mb-14 max-w-4xl overflow-y-hidden	`}>
                 {items.map((item, index) => (
                     <a key={index} className=""  >
                         {item.showCard && <div className="mb-4" onClick={() => { onClickMenu(item.type, item.link) }}><Card svg={item.svg} text={item.text} /></div>}
                     </a>
                 ))}
-            </div>
+            </div>}
             <StarRating bgColor={bgColor} restId={restId} ratingDrawerStatus={ratingDrawerStatus} link={link} closeDrawer={() => { setratingDrawerStatus(false) }} />
         </div>
     );
