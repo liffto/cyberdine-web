@@ -49,6 +49,7 @@ export default function ProductDisplay({
   isPayCompleted,
   customerDetails,
   review,
+  isOrderFlow
 }: {
   menuTypes: string;
   restId: string;
@@ -60,6 +61,7 @@ export default function ProductDisplay({
   isPayCompleted: boolean;
   customerDetails: boolean;
   review: string;
+  isOrderFlow: boolean;
 }) {
   const [selectedMenuData, setSelectedMenuData] = useState<Item | null>(null);
   const [wait, setWait] = useState<boolean>(false);
@@ -420,7 +422,7 @@ export default function ProductDisplay({
                                 bgColor={bgColor}
                                 restId={restId}
                                 deviceId={deviceId ?? ""}
-                                menuTypes={menuType} onRemoveOrders={() => { setPreOrderData(true); }} table={table} />
+                                menuTypes={menuType} onRemoveOrders={() => { setPreOrderData(true); }} table={table} isOrderFlow={isOrderFlow} />
                             ))}
                         </div>
                       );

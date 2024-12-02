@@ -45,7 +45,7 @@ export default async function MenuCart({
                 } as React.CSSProperties
             }>
             <Topbar data={json.data} table={searchParams.table} restId={params.restId} />
-            <CartComponent restId={params.restId} bgColor={"#" + json.data.hcolor?.slice(2, 10)} table={searchParams.table} topic={json?.data?.fcmTopic} notification={json?.data?.isNoticifation} />
+            <CartComponent isOrderFlow={json?.data?.customerOrders} restId={params.restId} bgColor={"#" + json.data.hcolor?.slice(2, 10)} table={searchParams.table} topic={json?.data?.fcmTopic} notification={json?.data?.isNoticifation} />
         </div>
     );
 }

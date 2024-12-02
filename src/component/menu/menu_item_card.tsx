@@ -3,14 +3,16 @@ import Image from "next/image";
 import { useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 export default function MenuItemCard({
   index,
   setSelectedData,
   ele,
   catIndex,
   bgColor,
-  addOrderItems
+  addOrderItems,
+  isOrderFlow
 }: {
   index: any;
   setSelectedData?: (ele: Item) => void;
@@ -18,6 +20,7 @@ export default function MenuItemCard({
   catIndex?: number;
   bgColor: string;
   addOrderItems: (ele: Item, type: string) => void;
+  isOrderFlow: boolean;
 }) {
   const [imageError, setImageError] = useState(false);
 
@@ -39,6 +42,19 @@ export default function MenuItemCard({
         ele.quantity = null;
       }
       addOrderItems(ele, type);
+    }
+  };
+  const addWishList = () => {
+    if (ele.quantity == undefined || ele.quantity == 0 || ele.quantity == null) {
+      ele.quantity = 1;
+      addOrderItems(ele, "add");
+    } else {
+      if (ele.quantity > 1) {
+        ele.quantity = ele.quantity - 1;
+      } else {
+        ele.quantity = null;
+      }
+      addOrderItems(ele, "remove");
     }
   };
   return (
@@ -96,11 +112,11 @@ export default function MenuItemCard({
           <div
             className={`text-xs md:text-sm overflow-hidden ${!ele.isActive ? "text-gray-300" : "text-gray-800"} font-medium`} style={{ maxWidth: '200px', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}
           >
-            {ele?.capitalizeDescriptionFirstLetter() ?? ele.foodType}
+            {ele?.capitalizeDescriptionFirstLetter() && ele?.capitalizeDescriptionFirstLetter()!.length > 0 ? ele?.capitalizeDescriptionFirstLetter() : ele.foodType}
           </div>
           <div className={`font-bold pr-1 text-sm pt-1 ${!ele.isActive ? "text-gray-300" : "text-gray-700"}`}>&#x20B9; {ele.price}</div>
         </div>
-        {ele.isActive ?
+        {isOrderFlow ? ele.isActive ?
           ele.quantity != null && ele.quantity > 0 ?
             <div className="flex justify-center items-center rounded border-2 border-primary mb-1">
               <div onClick={() => { addToItems("remove") }} className="bg-primary px-1"><RemoveIcon sx={{ fontSize: '13px', color: 'white' }} /></div>
@@ -111,10 +127,12 @@ export default function MenuItemCard({
             <div onClick={() => { addToItems("add") }} className={`flex justify-center items-center pl-4 pr-3 py-1 rounded border-2 border-primary text-primary`}>
               <div className="text-xs pr-1">Add</div>
               <AddIcon sx={{ fontSize: '13px' }} />
-            </div> : <div className={`flex justify-center items-center pl-4 pr-3 py-1 rounded border-2 border-gray text-gray-400`}>
+            </div> : <div className={`flex justify-center items-centser pl-4 pr-3 py-1 rounded border-2 border-gray text-gray-400`}>
             <div className="text-xs pr-1">Add</div>
             <AddIcon sx={{ fontSize: '13px' }} />
-          </div>
+          </div> : <div onClick={() => { addWishList() }} style={{ border: `1px solid ${bgColor}`, borderRadius: '3px' }}>
+          {ele.quantity != null && ele.quantity > 0 ? <BookmarkIcon sx={{ color: bgColor, padding: '3px 2px' }} /> : <BookmarkBorderIcon sx={{ color: bgColor, padding: '3px 2px' }} />}
+        </div>
         }
       </div>
     </div>

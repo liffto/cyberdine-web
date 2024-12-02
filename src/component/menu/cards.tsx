@@ -19,7 +19,8 @@ export function ProCard({
   deviceId,
   menuTypes,
   table,
-  onRemoveOrders
+  onRemoveOrders,
+  isOrderFlow
 }: {
   ele: string;
   menuData: Menu | null;
@@ -32,6 +33,7 @@ export function ProCard({
   menuTypes: string;
   table: string;
   onRemoveOrders: (menuData: Menu) => void;
+  isOrderFlow: boolean;
 }) {
   const { cartMenuData } = useContext(MenuDataContext);
 
@@ -75,7 +77,7 @@ export function ProCard({
                     setSelectedData={setSelectedData}
                     ele={ele}
                     catIndex={catIndex}
-                    bgColor={bgColor} addOrderItems={checkOrderList} />
+                    bgColor={bgColor} addOrderItems={checkOrderList} isOrderFlow={isOrderFlow} />
                 </div>
               );
             })}

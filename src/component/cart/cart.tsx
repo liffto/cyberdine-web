@@ -21,9 +21,10 @@ interface CartComponentProps {
     table: string;
     topic: string;
     notification: boolean;
+    isOrderFlow: boolean;
 }
 
-const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, topic, notification }) => {
+const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, topic, notification, isOrderFlow }) => {
     const { back } = useRouter();
     const router = useRouter();
     const [selectedMenuData, setSelectedMenuData] = useState<Item | null>(null);
@@ -54,7 +55,7 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
                 'title': `Table ${table}`,
                 'body': `Requesting for Captain`
             },
-            topic: topic ? topic.replace(" ", "") : "",
+            topic: `${restId}table${table}`,
         };
         setWait(true);
         await FcmService.shared.fcmTopic(data);
@@ -145,36 +146,47 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
 
     return (
         <div className="md:container mx-auto">
-                {loader ? <div className="flex flex-col justify-center items-center h-[600px]">
-                    <CircularProgress sx={{ color: "var(--primary-bg)" }} />
-                    <div className="mt-6" style={{color: bgColor}} >Placing your order... Please hold on...</div>
-                </div>  : <div className="">
-                    <Toaster position="top-center" />
-                    <div className="border border-primary mx-4 mt-2"></div>
-                    {cartMenuData && (cartMenuData?.getApprovedLength() != 0 || cartMenuData?.getPendingLength() != 0)  && <div className="w-full" onClick={handleViewOrderClick} >
-                        <Image src={'/images/png/view_selected_order.png'} alt="placed order" height={10} width={430} />
-                    </div>}
-                    <div className={`${cartMenuData && (cartMenuData?.getApprovedLength() != 0 || cartMenuData?.getPendingLength() != 0) ? "" : "mt-4"} px-4 py-1 font-bold text-sm bg-secondary text-black capitalize flex`}>
-                        <div className=" ">Items in cart</div>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 py-4 px-4">
-                        {cartMenuData && cartMenuData.getMenuList() && cartMenuData.getMenuList()?.length != 0 &&
-                            cartMenuData
-                                .getMenuList()!
-                                .map((ele: Item, index: any) => {
-                                    return (!(ele.isApproved == true) && !(ele.isOrdered == true) &&
-                                        <div key={index} className="">
-                                            <MenuItemCard
-                                                index={index}
-                                                setSelectedData={setSelectedData}
-                                                ele={ele} bgColor={bgColor} addOrderItems={checkOrderList} />
-                                        </div>
-                                    );
-                                })}
-                    </div>
-                    <div className="h-20"></div>
-                    <BottomButton onBackClick={back} onNextClick={handleClick} wait={wait} backButton={"Select More"} nextButton={"Order Now"} />
+            {loader ? <div className="flex flex-col justify-center items-center h-[600px]">
+                <CircularProgress sx={{ color: "var(--primary-bg)" }} />
+                <div className="mt-6" style={{ color: bgColor }} >Placing your order... Please hold on...</div>
+            </div> : <div className="">
+                <Toaster position="top-center" />
+                <div className="border border-primary mx-4 mt-2"></div>
+                {cartMenuData && (cartMenuData?.getApprovedLength() != 0 || cartMenuData?.getPendingLength() != 0) && <div className="w-full" onClick={handleViewOrderClick} >
+                    <Image src={'/images/png/view_selected_order.png'} alt="placed order" height={10} width={430} />
                 </div>}
+                <div className={`${cartMenuData && (cartMenuData?.getApprovedLength() != 0 || cartMenuData?.getPendingLength() != 0) ? "" : "mt-4"} px-4 py-1 font-bold text-sm bg-secondary text-black capitalize flex`}>
+                    <div className=" ">Items in cart</div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 py-4 px-4">
+                    {cartMenuData && cartMenuData.getMenuList() && cartMenuData.getMenuList()?.length != 0 &&
+                        cartMenuData
+                            .getMenuList()!
+                            .map((ele: Item, index: any) => {
+                                return (!(ele.isApproved == true) && !(ele.isOrdered == true) &&
+                                    <div key={index} className="">
+                                        <MenuItemCard
+                                            index={index}
+                                            setSelectedData={setSelectedData}
+                                            ele={ele} bgColor={bgColor} addOrderItems={checkOrderList} isOrderFlow={isOrderFlow} />
+                                    </div>
+                                );
+                            })}
+                </div>
+                <div className="h-20"></div>
+                {isOrderFlow ? <BottomButton onBackClick={back} onNextClick={handleClick} wait={wait} backButton={"Select More"} nextButton={"Order Now"} /> :
+                    <div
+                        className={` fixed bottom-0 bg-primary text-white text-lg text-center flex justify-evenly items-center w-full py-3 font-semibold`}
+                    >
+                        <div className="" onClick={() => {
+                            back();
+                        }} >Select More</div>
+                        {notification && <div onClick={() => {
+                            wait ? null : sendFcm();
+                        }} className={`${wait ? "text-gray-300" : " text-primary"} bg-white px-8 py-2 rounded-sm font-bold text-xl `} >Request Waiter</div>}
+                    </div>
+                }
+            </div>}
             {selectedMenuData && (
                 <DescriptionSheet
                     setSelectedMenuData={setSelectedData}

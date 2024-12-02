@@ -27,12 +27,14 @@ export default function SearchComponent({
   restId,
   bgColor,
   plan,
-  table
+  table,
+  isOrderFlow
 }: {
   restId: string;
   bgColor: string;
   plan: string;
   table: string;
+  isOrderFlow: boolean;
 }) {
   const { menuData, category, cartMenuData, deviceId, menuType } = useContext(MenuDataContext);
   const searchParams = useSearchParams();
@@ -229,7 +231,7 @@ export default function SearchComponent({
                         <div className="pb-4" key={key} >
                           {plan === "basic" ? <BasicMenuItemCard
                             index={index}
-                            ele={item} /> : <MenuItemCard index={index} ele={item} setSelectedData={setSelectedData} bgColor={bgColor} addOrderItems={checkOrderList} />}
+                            ele={item} /> : <MenuItemCard index={index} ele={item} setSelectedData={setSelectedData} bgColor={bgColor} addOrderItems={checkOrderList} isOrderFlow={isOrderFlow} />}
                         </div>
                       );
                     })}
