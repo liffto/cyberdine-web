@@ -17,7 +17,8 @@ export default function DescriptionSheet({
   restId,
   deviceId,
   menu,
-  table
+  table,
+  isOrderFlow
 }: {
   menuType: string;
   setSelectedMenuData: any;
@@ -27,6 +28,7 @@ export default function DescriptionSheet({
   deviceId: string;
   menu: Menu;
   table: string;
+  isOrderFlow: boolean;
 }) {
   const [itemCount, setItemCount] = useState<number | null>(selectedMenuData.quantity && selectedMenuData.quantity != undefined ? selectedMenuData.quantity : null);
   const { cartMenuData } = useContext(MenuDataContext);
@@ -55,6 +57,20 @@ export default function DescriptionSheet({
       }
     })
   }
+
+  const addWishList = () => {
+    if (selectedMenuData.quantity == undefined || selectedMenuData.quantity == 0 || selectedMenuData.quantity == null) {
+      selectedMenuData.quantity = 1;
+      checkOrderList(selectedMenuData, "add");
+    } else {
+      if (selectedMenuData.quantity > 1) {
+        selectedMenuData.quantity = selectedMenuData.quantity - 1;
+      } else {
+        selectedMenuData.quantity = null;
+      }
+      checkOrderList(selectedMenuData, "remove");
+    }
+  };
 
   const description = () => {
     return (
@@ -112,7 +128,7 @@ export default function DescriptionSheet({
               {selectedMenuData?.capitalizeDescriptionFirstLetter()}
             </div>}
           </div>
-          <div
+          {isOrderFlow ? <div
             className={`text-lg text-center flex gap-4 justify-between px-4 items-center w-full py-3 font-semibold`} style={{ backgroundColor: bgColor, boxShadow: "0px 0px 10px 0.5px #00000040" }}
           >
             <div className="flex-1 bg-white flex items-center justify-between rounded font-semibold text-xl"  >
@@ -125,7 +141,11 @@ export default function DescriptionSheet({
               </div>
             </div>
             <div className="flex-1 bg-white px-4 py-2 rounded font-semibold text-xl" onClick={() => { setSelectedMenuData(null); }} style={{ color: bgColor }} >{"Add Item"}</div>
-          </div>
+          </div> : <div
+            className={`text-lg text-center flex justify-between px-4 items-center w-full py-3 font-semibold`} style={{ backgroundColor: bgColor, boxShadow: "0px 0px 10px 0.5px #00000040" }}
+          >
+            <div className="flex-1 bg-white px-4 py-2 rounded font-semibold text-xl" onClick={() => { addWishList(); }} style={{ color: selectedMenuData && selectedMenuData.quantity != null ? '#DD0000' : bgColor }} >{selectedMenuData && selectedMenuData.quantity != null ? "Remove from wishlist" : "+ Add to wishlist"}</div>
+          </div>}
         </div>
       </div>
     );

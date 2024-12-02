@@ -444,7 +444,7 @@ export default function ProductDisplay({
                 selectedMenuData={selectedMenuData}
                 bgColor={bgColor}
                 restId={restId}
-                deviceId={deviceId ?? ""} menu={menu ?? new Menu()} table={table} />
+                deviceId={deviceId ?? ""} menu={menu ?? new Menu()} table={table} isOrderFlow={isOrderFlow} />
             )}
             <div className="relative">
               <SwipeableDrawer
