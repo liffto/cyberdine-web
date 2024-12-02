@@ -117,7 +117,10 @@ const OrdersComponent: React.FC<OrdersComponentProps> = ({ bgColor, restId, tabl
                     }) : <></>}
         </div>}
         <div className="h-20"></div>
-        <BottomButton onBackClick={back} onNextClick={handleClick} backButton={"Order More"} nextButton={cartMenuData && cartMenuData.getPendingLength() != 0 ? "" : "View Bill"} />
+        <BottomButton onBackClick={back} onNextClick={handleClick} backButton={"Order More"}
+        nextButton={''}
+        //  nextButton={cartMenuData && cartMenuData.getPendingLength() != 0 ? "" : "View Bill"} 
+         />
 
     </div>
 }
