@@ -46,6 +46,21 @@ export class FirebaseServices {
         })
     }
 
+    listenOrder(restId: string, table: string, deviceId: string, callBack: Function): Unsubscribe {
+        const completedTasksRef: Query = ref(database, `order/${restId}/table${table}`);
+        return getFirebaseData(completedTasksRef, (snapshot) => {
+            if (snapshot.exists()) {
+                let data = snapshot.val();
+                const temp = data.hasOwnProperty(deviceId)
+                if(!temp){
+                    callBack("Done");
+                }
+            }else{
+                callBack("Done");
+            }
+        })
+    }
+
     getRestCategory(restId: string, callBack: Function): Unsubscribe {
         const completedTasksRef: Query = ref(database, `category/${restId}`);
         return getFirebaseData(completedTasksRef, (snapshot) => {

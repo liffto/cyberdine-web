@@ -51,10 +51,16 @@ function MenuDataProvider({ children }: { children: React.ReactNode }) {
       const menuUnSub = FirebaseServices.shared.getOrgMenu(restId, setMenuData);
 
       const cartMenuUnSub = FirebaseServices.shared.getCartMenu(restId, table ?? '', getDeviceId, setCartMenuData);
+      const listenOrder = FirebaseServices.shared.listenOrder(restId, table ?? '', getDeviceId, (each: any) => {
+        if (each == "Done") {
+          setCartMenuData(null)
+        }
+      });
       return () => {
         catUnsub();
         menuUnSub();
         cartMenuUnSub();
+        listenOrder();
       };
     }
   }, [restId, deviceId]);

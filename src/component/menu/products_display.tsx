@@ -508,7 +508,7 @@ export default function ProductDisplay({
               </SwipeableDrawer>
             </div>
             {plan !== "basic" && menu && menu.getMenuLength(category[menuType], filterList) && menu && menu.getMenuLength(category[menuType], filterList)! > 0 && !openMenu && (
-              <div className={`flex item-center justify-center sticky ${cartMenuData &&
+              <div className={` w-28 text-center mx-auto sticky ${cartMenuData &&
                 cartMenuData?.getMenuList() &&
                 cartMenuData?.getMenuList()?.length != 0 ? 'bottom-[80px]' : 'bottom-5'} z-10`}>
                 <div style={{ boxShadow: "0px 0px 6px 0px gray" }} className="bg-primary text-white flex item-center justify-center rounded-md py-3 w-28" onClick={() => { setOpenMenu(true) }} >
