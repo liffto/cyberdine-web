@@ -30,12 +30,7 @@ import enviroment from "../../firebase-admin-config.dev.json"
 import prodEnviroment from "../../firebase-admin-config.prod.json"
 
 
-// Slide transition for dialog
-const Transition = React.forwardRef<unknown, TransitionProps>((props, ref) => (
-  <Slide direction="up" ref={ref} {...props}>
-    {props.children as any}
-  </Slide>
-));
+
 
 // Interface for notification context
 interface NotificationContextType {
@@ -121,7 +116,6 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
 
       <Dialog
         open={notificationDialogOpen}
-        TransitionComponent={Transition}
         keepMounted
         // onClose={() => setNotificationDialogOpen(false)}
         aria-describedby="notification-dialog"
@@ -152,7 +146,6 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
         fullScreen={true}
         open={fullScreenDialog.open}
         onClose={() => {}} // Prevent closing
-        TransitionComponent={Transition}
       >
         <DialogTitle>
           <Box display="flex" alignItems="center" justifyContent="space-between">
