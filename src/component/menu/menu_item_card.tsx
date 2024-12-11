@@ -130,8 +130,8 @@ export default function MenuItemCard({
             </div> : <div className={`flex justify-center items-centser pl-4 pr-3 py-1 rounded border-2 border-gray text-gray-400`}>
             <div className="text-xs pr-1">Add</div>
             <AddIcon sx={{ fontSize: '13px' }} />
-          </div> : <div onClick={() => { addWishList() }} style={{ border: `1px solid ${bgColor}`, borderRadius: '3px' }}>
-          {ele.quantity != null && ele.quantity > 0 ? <BookmarkIcon sx={{ color: bgColor, padding: '3px 2px' }} /> : <BookmarkBorderIcon sx={{ color: bgColor, padding: '3px 2px' }} />}
+          </div> : <div onClick={() => { addWishList() }} style={{ border: `1px solid ${bgColor}`, borderRadius: '3px', marginRight: '6px' }}>
+          {ele.quantity != null && ele.quantity > 0 ? <BookmarkIcon sx={{ color: bgColor, width: '34px', height: '34px', padding: '3px 2px' }} /> : <BookmarkBorderIcon sx={{ color: bgColor, width: '34px', height: '34px', padding: '3px 2px' }} />}
         </div>
         }
       </div>

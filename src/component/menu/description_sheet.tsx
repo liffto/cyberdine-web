@@ -70,6 +70,7 @@ export default function DescriptionSheet({
       }
       checkOrderList(selectedMenuData, "remove");
     }
+    setSelectedMenuData(null);
   };
 
   const description = () => {

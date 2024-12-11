@@ -41,11 +41,28 @@ function MenuDataProvider({ children }: { children: React.ReactNode }) {
   const [deviceId, setDeviceId] = useState<string>('');
   const [menuType, setMenuType] = useState<string>('');
   const [redirect, setRedirect] = useState<boolean>(false);
+  const [hotelDetails, SetHotelDetails] = useState<any>();
   // const queryParams = new URLSearchParams(window.location.search);
   const params = useSearchParams();
   const table = params.get("table")
   const { openNotificationDialog } = useNotification()
   // const table = queryParams.get('table');
+  const getHotelDetails = async () => {
+    const response = await fetch(
+      `${process.env.NODE_ENV == "development"
+        ? "http://localhost:3000"
+        : "https://www.cyberdine.in"
+      }/api/rest/${restId}/detail`, { next: { revalidate: 60 * 60 * 2 } }
+    );
+    const json = await response.json();
+    SetHotelDetails(json.data);
+  }
+
+  useEffect(() => {
+    if (!hotelDetails) {
+      getHotelDetails();
+    }
+  }, [])
   useEffect(() => {
     const getDeviceId = generateDeviceId();
     setDeviceId(getDeviceId);
@@ -73,7 +90,7 @@ function MenuDataProvider({ children }: { children: React.ReactNode }) {
     if (deviceId) {
       const listenOrder = FirebaseServices.shared.listenOrder(restId, table ?? '', deviceId, (each: any) => {
         if (each == "Done") {
-          if (redirect) {
+          if (redirect && hotelDetails.customerOrders) {
             openNotificationDialog(true);
             setRedirect(false);
           }
