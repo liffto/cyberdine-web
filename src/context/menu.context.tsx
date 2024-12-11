@@ -58,8 +58,6 @@ function MenuDataProvider({ children }: { children: React.ReactNode }) {
       const cartMenuUnSub = FirebaseServices.shared.getCartMenu(restId, table ?? '', getDeviceId, (value: CartMenu) => {
         setCartMenuData(value);
         setRedirect(true);
-        console.log("123456");
-
       });
 
       return () => {
@@ -75,7 +73,6 @@ function MenuDataProvider({ children }: { children: React.ReactNode }) {
     if (deviceId) {
       const listenOrder = FirebaseServices.shared.listenOrder(restId, table ?? '', deviceId, (each: any) => {
         if (each == "Done") {
-          console.log("listen order", redirect);
           if (redirect) {
             openNotificationDialog(true);
             setRedirect(false);

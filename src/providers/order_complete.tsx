@@ -61,7 +61,6 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
 
   // Open notification dialog
   const openNotificationDialog = (value: boolean) => {
-    console.log("Opening notification dialog...", value);
     setNotificationDialogOpen(value);
   };
 

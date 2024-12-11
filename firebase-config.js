@@ -21,7 +21,6 @@ const firebaseConfig = {
   appId: process.env.APP_ID,
   measurementId: process.env.MEASUREMENT_ID,
 };
-console.log(firebaseConfig,"firebaseConfig");
 // Initialize Firebase
 const app = initializeApp(firebaseConfig,"cyberdine");
 // Initialize Realtime Database and get a reference to the service
@@ -42,9 +41,6 @@ const config = {
 };
 export const getMessagingFun = () => {
   if (typeof window !== "undefined"){
-    
-    console.log(config,"config");
-    
     const app = 
       initializeApp(config)
     return getMessaging(app);

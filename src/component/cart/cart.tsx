@@ -60,9 +60,9 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
         setWait(true);
         await FcmService.shared.fcmTopic(data);
         notify()
-        setTimeout(() => {
+        // setTimeout(() => {
             setWait(false);
-        }, 1000 * 60);
+        // }, 1000 * 3);
     };
 
     const checkOrderList = (data: Item, type: string) => {

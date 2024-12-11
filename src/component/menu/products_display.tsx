@@ -26,6 +26,7 @@ import ProductBottommButton from "./product_bottom_button";
 import FoodMenuBanner from "../common/request_menu_bell_icon";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import React from "react";
+import { log } from "console";
 
 const notify = () => toast("Notified successfully");
 const soldOutNotify = () => toast("Temporarily out of stock");
@@ -72,6 +73,7 @@ export default function ProductDisplay({
   const [preOrderData, setPreOrderData] = useState<boolean>(true);
   const [menu, setMenu] = useState<Menu | null>(null);
   const [topItem, setTopItem] = useState(null);
+  const [clicked, setClicked] = useState(false);
   const { menuData, category, cartMenuData, deviceId, menuType, setMenuType } =
     useContext(MenuDataContext);
   const [selectedCategoryName, setSelectedCategoryName] = useState<
@@ -109,9 +111,9 @@ export default function ProductDisplay({
       setWait(true);
       await FcmService.shared.fcmTopic(data);
       notify();
-      setTimeout(() => {
-        setWait(false);
-      }, 1000 * 60);
+      // setTimeout(() => {
+      setWait(false);
+      // }, 1000 * 3);
     }
   };
 
@@ -210,6 +212,12 @@ export default function ProductDisplay({
 
   const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
     setOpenMenu(open);
+  };
+
+  const handleClick = () => {
+    localStorage.setItem('sortAnimation', 'true')
+    setClicked(true);
+    setOpenMenu(true);
   };
 
   // First useEffect to set items when menuType changes
@@ -322,7 +330,7 @@ export default function ProductDisplay({
         priority={true}
       />
     </Link>
-  );
+  );  
   return (
     <div className="">
       {isPayCompleted ? (
@@ -511,7 +519,7 @@ export default function ProductDisplay({
               <div className={` w-28 text-center mx-auto sticky ${cartMenuData &&
                 cartMenuData?.getMenuList() &&
                 cartMenuData?.getMenuList()?.length != 0 ? 'bottom-[80px]' : 'bottom-5'} z-10`}>
-                <div style={{ boxShadow: "0px 0px 6px 0px gray" }} className="bg-primary text-white flex item-center justify-center rounded-md py-3 w-28" onClick={() => { setOpenMenu(true) }} >
+                <div style={{ boxShadow: "0px 0px 6px 0px gray", animation: !clicked && (localStorage.getItem('sortAnimation') != 'true' || localStorage.getItem('sortAnimation') == undefined) ? 'skew-x-shakeng 1s infinite' : 'none', }} className="bg-primary text-white flex item-center justify-center rounded-md py-3 w-28" onClick={() => { handleClick() }} >
                   <div className="">
                     <SortIcon />
                   </div>

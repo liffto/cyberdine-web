@@ -246,8 +246,6 @@ export default function MenuItemsDrawer({ handleBackClick, selectedFoodItems }: 
                 // Create an invisible link element to trigger the download
                 const link = document.createElement('a');
                 link.href = blobUrl;
-                console.log(link, "link");
-
                 // Set the name of the downloaded file dynamically with the correct file extension
                 link.download = `${itemName}.${fileExtension}`;
 

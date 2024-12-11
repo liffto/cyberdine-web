@@ -5,7 +5,6 @@ try {
   admin.initializeApp({
     credential: admin.credential.cert(firebaseConfig),
   })
-  console.log('Initialized.')
 } catch (error) {
   /*
    * We skip the "already exists" message which is
