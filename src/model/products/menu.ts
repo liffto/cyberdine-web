@@ -84,7 +84,7 @@ export class Menu {
 
   getMenuLength(categories: string[], pref: Array<any> = []): number | null {
     let categoryCount = 0;
-
+if(categories)
     for (const category of categories) {
       if (this.getMenuList(category, pref) && this.getMenuList(category, pref)?.length != 0) {
         categoryCount = categoryCount + 1;

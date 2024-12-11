@@ -1,4 +1,5 @@
 import { MenuDataProvider } from "@/context/menu.context";
+import { NotificationProvider } from "@/providers/order_complete";
 
 export default function RootLayout({
   children,
@@ -7,7 +8,12 @@ export default function RootLayout({
 }>) {
   return (
     <div className=" min-h-screen ">
-      <MenuDataProvider>{children}</MenuDataProvider>
+      <MenuDataProvider>
+      <NotificationProvider>
+
+        {children}
+        </NotificationProvider>
+        </MenuDataProvider>
     </div>
   );
 }

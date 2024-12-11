@@ -242,7 +242,7 @@ export default function ProductDisplay({
       setMenuType(value!);
       menuTypes = value!;
     }
-    if (category && category[menuTypes]!.length > 0) {
+    if (category && category[menuTypes]?.length > 0) {
       setSelectedCategoryName(category[menuTypes]![0]);
     }
     if (menuData) {

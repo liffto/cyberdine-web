@@ -2,7 +2,7 @@
 import { CartMenu } from "@/model/orders/cart_menu";
 import { Menu } from "@/model/products/menu";
 import { FirebaseServices } from "@/service/firebase.service";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import React, { createContext, useState, useEffect, useCallback } from "react";
 
 const MenuDataContext = createContext<{
@@ -39,8 +39,10 @@ function MenuDataProvider({ children }: { children: React.ReactNode }) {
   const { restId } = useParams<{ restId: string }>();
   const [deviceId, setDeviceId] = useState<string>('');
   const [menuType, setMenuType] = useState<string>('');
-  const queryParams = new URLSearchParams(window.location.search);
-  const table = queryParams.get('table');
+  // const queryParams = new URLSearchParams(window.location.search);
+  const params = useSearchParams();
+  const table = params.get("table")
+  // const table = queryParams.get('table');
   useEffect(() => {
     const getDeviceId = generateDeviceId();
     setDeviceId(getDeviceId);
