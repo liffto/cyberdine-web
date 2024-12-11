@@ -8,12 +8,12 @@ export default function RootLayout({
 }>) {
   return (
     <div className=" min-h-screen ">
-      <MenuDataProvider>
       <NotificationProvider>
+        <MenuDataProvider>
 
-        {children}
-        </NotificationProvider>
+          {children}
         </MenuDataProvider>
+      </NotificationProvider>
     </div>
   );
 }
