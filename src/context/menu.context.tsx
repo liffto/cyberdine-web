@@ -40,10 +40,11 @@ function MenuDataProvider({ children }: { children: React.ReactNode }) {
   const { restId } = useParams<{ restId: string }>();
   const [deviceId, setDeviceId] = useState<string>('');
   const [menuType, setMenuType] = useState<string>('');
+  const [redirect, setRedirect] = useState<boolean>(false);
   // const queryParams = new URLSearchParams(window.location.search);
   const params = useSearchParams();
   const table = params.get("table")
-  const {openNotificationDialog} = useNotification()
+  const { openNotificationDialog } = useNotification()
   // const table = queryParams.get('table');
   useEffect(() => {
     const getDeviceId = generateDeviceId();
@@ -54,24 +55,40 @@ function MenuDataProvider({ children }: { children: React.ReactNode }) {
       );
       const menuUnSub = FirebaseServices.shared.getOrgMenu(restId, setMenuData);
 
-      const cartMenuUnSub = FirebaseServices.shared.getCartMenu(restId, table ?? '', getDeviceId, setCartMenuData);
-      const listenOrder = FirebaseServices.shared.listenOrder(restId, table ?? '', getDeviceId, (each: any) => {
+      const cartMenuUnSub = FirebaseServices.shared.getCartMenu(restId, table ?? '', getDeviceId, (value: CartMenu) => {
+        setCartMenuData(value);
+        setRedirect(true);
+        console.log("123456");
+
+      });
+
+      return () => {
+        catUnsub();
+        menuUnSub();
+        cartMenuUnSub();
+
+      };
+    }
+  }, [restId, deviceId]);
+
+  useEffect(() => {
+    if (deviceId) {
+      const listenOrder = FirebaseServices.shared.listenOrder(restId, table ?? '', deviceId, (each: any) => {
         if (each == "Done") {
-          console.log("listen order");
-          if(cartMenuData){
-            openNotificationDialog(true)
+          console.log("listen order", redirect);
+          if (redirect) {
+            openNotificationDialog(true);
+            setRedirect(false);
           }
           setCartMenuData(null)
         }
       });
       return () => {
-        catUnsub();
-        menuUnSub();
-        cartMenuUnSub();
         listenOrder();
       };
     }
-  }, [restId, deviceId]);
+
+  }, [restId, deviceId, redirect])
 
   const generateDeviceId = useCallback(() => {
     const navigatorInfo = window.navigator;
