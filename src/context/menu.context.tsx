@@ -74,7 +74,9 @@ function MenuDataProvider({ children }: { children: React.ReactNode }) {
 
       const cartMenuUnSub = FirebaseServices.shared.getCartMenu(restId, table ?? '', getDeviceId, (value: CartMenu) => {
         setCartMenuData(value);
-        setRedirect(true);
+        if(value.getApprovedLength()){
+          setRedirect(true);
+        }
       });
 
       return () => {
