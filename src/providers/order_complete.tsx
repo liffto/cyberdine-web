@@ -57,7 +57,6 @@ const NotificationContext = createContext<NotificationContextType | undefined>(
 export const NotificationProvider: React.FC<NotificationProviderProps> = ({
   children,
 }) => {
-    const { deviceId } = useContext(MenuDataContext);
   const [notificationDialogOpen, setNotificationDialogOpen] = useState(false);
   const [fullScreenDialog, setFullScreenDialog] =
     useState<FullScreenDialogState>({
