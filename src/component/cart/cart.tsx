@@ -49,11 +49,11 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
         }
     };
 
-    const sendFcm = async () => {
+    const sendFcm = async (title: string, body: string) => {
         var data = {
             'data': {
-                'title': `Table ${table}`,
-                'body': `Requesting for Captain`
+                'title': title,
+                'body': body
             },
             topic: `${restId}table${table}`,
         };
@@ -81,6 +81,7 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
         var pendingData = cartMenuData?.cartMenuMap?.get('pending');
         const mergedData = mergeCartAndPendingData(cartData, pendingData);
         FirebaseServices.shared.placeOrder(mergedData, restId, deviceId ?? '', table, () => {
+            sendFcm(`New Order`,`New Order been assigned to you.`);
             router.replace(`/rest/${restId}/orders?table=${table}`);
             getQuantityFromOrder();
         });
@@ -182,7 +183,7 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
                             back();
                         }} >Select More</div>
                         {notification && <div onClick={() => {
-                            wait ? null : sendFcm();
+                            wait ? null : sendFcm(`Table ${table}`,`Requesting for Captain`);
                         }} className={`${wait ? "text-gray-300" : " text-primary"} bg-white px-8 py-2 rounded-sm font-bold text-xl `} >Request Waiter</div>}
                     </div>
                 }
