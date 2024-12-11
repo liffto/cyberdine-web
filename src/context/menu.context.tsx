@@ -1,8 +1,9 @@
 "use client";
 import { CartMenu } from "@/model/orders/cart_menu";
 import { Menu } from "@/model/products/menu";
+import { useNotification } from "@/providers/order_complete";
 import { FirebaseServices } from "@/service/firebase.service";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import React, { createContext, useState, useEffect, useCallback } from "react";
 
 const MenuDataContext = createContext<{
@@ -11,7 +12,9 @@ const MenuDataContext = createContext<{
   category: any;
   setCategory: React.Dispatch<any>;
   cartMenuData: CartMenu | null;
+  orderMenuData: CartMenu | null;
   setCartMenuData: React.Dispatch<React.SetStateAction<CartMenu | null>>;
+  setOrderMenuData: React.Dispatch<React.SetStateAction<CartMenu | null>>;
   deviceId: string | null;
   menuType: string;
   setMenuType: React.Dispatch<React.SetStateAction<string>>;
@@ -19,7 +22,9 @@ const MenuDataContext = createContext<{
   menuData: null,
   setMenuData: () => { },
   category: {},
+  orderMenuData: null,
   setCategory: () => { },
+  setOrderMenuData: () => { },
   cartMenuData: null,
   setCartMenuData: () => { },
   deviceId: null,
@@ -30,10 +35,17 @@ const MenuDataContext = createContext<{
 function MenuDataProvider({ children }: { children: React.ReactNode }) {
   const [menuData, setMenuData] = useState<Map<string, Menu> | null>(null);
   const [cartMenuData, setCartMenuData] = useState<CartMenu | null>(null);
+  const [orderMenuData, setOrderMenuData] = useState<CartMenu | null>(null);
   const [category, setCategory] = useState<any>();
   const { restId } = useParams<{ restId: string }>();
   const [deviceId, setDeviceId] = useState<string>('');
   const [menuType, setMenuType] = useState<string>('');
+  const [redirect, setRedirect] = useState<boolean>(false);
+  // const queryParams = new URLSearchParams(window.location.search);
+  const params = useSearchParams();
+  const table = params.get("table")
+  const { openNotificationDialog } = useNotification()
+  // const table = queryParams.get('table');
   useEffect(() => {
     const getDeviceId = generateDeviceId();
     setDeviceId(getDeviceId);
@@ -43,14 +55,37 @@ function MenuDataProvider({ children }: { children: React.ReactNode }) {
       );
       const menuUnSub = FirebaseServices.shared.getOrgMenu(restId, setMenuData);
 
-      const cartMenuUnSub = FirebaseServices.shared.getCartMenu(restId, getDeviceId, setCartMenuData);
+      const cartMenuUnSub = FirebaseServices.shared.getCartMenu(restId, table ?? '', getDeviceId, (value: CartMenu) => {
+        setCartMenuData(value);
+        setRedirect(true);
+      });
+
       return () => {
         catUnsub();
         menuUnSub();
         cartMenuUnSub();
+
       };
     }
   }, [restId, deviceId]);
+
+  useEffect(() => {
+    if (deviceId) {
+      const listenOrder = FirebaseServices.shared.listenOrder(restId, table ?? '', deviceId, (each: any) => {
+        if (each == "Done") {
+          if (redirect) {
+            openNotificationDialog(true);
+            setRedirect(false);
+          }
+          setCartMenuData(null)
+        }
+      });
+      return () => {
+        listenOrder();
+      };
+    }
+
+  }, [restId, deviceId, redirect])
 
   const generateDeviceId = useCallback(() => {
     const navigatorInfo = window.navigator;
@@ -79,7 +114,7 @@ function MenuDataProvider({ children }: { children: React.ReactNode }) {
     return hash;
   };
 
-  const value = { menuData, setMenuData, category, setCategory, cartMenuData, setCartMenuData, deviceId, menuType, setMenuType };
+  const value = { menuData, setMenuData, category, setCategory, cartMenuData, setCartMenuData, orderMenuData, setOrderMenuData, deviceId, menuType, setMenuType };
 
   return (
     <MenuDataContext.Provider value={value}>

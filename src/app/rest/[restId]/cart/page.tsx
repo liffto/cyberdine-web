@@ -1,10 +1,10 @@
 import CartComponent from "@/component/cart/cart";
 import Topbar from "@/component/menu/topbar";
 
-export default async function MenuSearch({
-    params,searchParams
+export default async function MenuCart({
+    params, searchParams
 }: {
-    params: { restId: string };searchParams:{table:string}
+    params: { restId: string }; searchParams: { table: string }
 }) {
     const response = await fetch(
         `${process.env.NODE_ENV == "development"
@@ -13,7 +13,6 @@ export default async function MenuSearch({
         }/api/rest/${params.restId}/detail`, { next: { revalidate: 60 * 60 * 2 } }
     );
     const json = await response.json();
-    console.log("json", json, json.data);
     function lightenColor(hex: string, percent: any) {
         // Parse the hex color to get RGB components
         let r = parseInt(hex.substring(1, 3), 16);
@@ -45,8 +44,8 @@ export default async function MenuSearch({
                     "--secondary-bg": lightenColor('#' + json.data.hcolor?.slice(2, 10), 40) + "4a",
                 } as React.CSSProperties
             }>
-            <Topbar data={json.data} />
-            <CartComponent restId={params.restId} bgColor={"#" + json.data.hcolor?.slice(2, 10)} table={searchParams.table} topic={json?.data?.fcmTopic} notification={json?.data?.isNoticifation}  />
+            <Topbar data={json.data} table={searchParams.table} restId={params.restId} />
+            <CartComponent isOrderFlow={json?.data?.customerOrders} restId={params.restId} bgColor={"#" + json.data.hcolor?.slice(2, 10)} table={searchParams.table} topic={json?.data?.fcmTopic} notification={json?.data?.isNoticifation} />
         </div>
     );
 }

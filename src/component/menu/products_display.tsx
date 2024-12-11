@@ -8,7 +8,7 @@ import { MenuDataContext } from "@/context/menu.context";
 import Image from "next/image";
 import Link from "next/link";
 import { FcmService } from "@/service/fcm_service";
-import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import SortIcon from '@mui/icons-material/Sort';
 
 const DescriptionSheet = dynamic(() => import("./description_sheet"), {
   ssr: false,
@@ -22,9 +22,22 @@ import PhoneNoDialog from "./phoneNoDialog";
 import { BasicCard, ProCard } from "./cards";
 import HorizontalScrollSnap from "../common/horizontal_scroll_snap";
 import { Menu } from "@/model/products/menu";
+import ProductBottommButton from "./product_bottom_button";
+import FoodMenuBanner from "../common/request_menu_bell_icon";
+import SwipeableDrawer from "@mui/material/SwipeableDrawer";
+import React from "react";
+import { log } from "console";
 
 const notify = () => toast("Notified successfully");
 const soldOutNotify = () => toast("Temporarily out of stock");
+////asdasd
+
+const initialCategories = [
+  { name: "Veg", selected: false },
+  { name: "Egg", selected: false },
+  { name: "Our Special", selected: false },
+  { name: "Non Veg", selected: false },
+];
 
 export default function ProductDisplay({
   menuTypes,
@@ -37,6 +50,7 @@ export default function ProductDisplay({
   isPayCompleted,
   customerDetails,
   review,
+  isOrderFlow
 }: {
   menuTypes: string;
   restId: string;
@@ -48,22 +62,25 @@ export default function ProductDisplay({
   isPayCompleted: boolean;
   customerDetails: boolean;
   review: string;
+  isOrderFlow: boolean;
 }) {
   const [selectedMenuData, setSelectedMenuData] = useState<Item | null>(null);
   const [wait, setWait] = useState<boolean>(false);
   const [showDialog, setShowDialog] = useState<boolean>(false);
   const [phoneNumber, setPhoneNumber] = useState<Number>();
-  const [selfilterList, setSelFilterList] = useState<Array<string>>([]);
-  const [filterList, setFilterList] = useState<Array<string>>([]);
-  const [isCircle, setIsCircle] = useState<boolean>(true);
+  const [filterList, setFilterList] = useState<Array<any>>([]);
+  const [openMenu, setOpenMenu] = useState<boolean>(false);
   const [preOrderData, setPreOrderData] = useState<boolean>(true);
-  const categoryRef = useRef<HTMLDivElement>(null);
-  const [menu, setMenu] = useState<Menu | null>(null)
+  const [menu, setMenu] = useState<Menu | null>(null);
+  const [topItem, setTopItem] = useState(null);
+  const [clicked, setClicked] = useState(false);
   const { menuData, category, cartMenuData, deviceId, menuType, setMenuType } =
     useContext(MenuDataContext);
   const [selectedCategoryName, setSelectedCategoryName] = useState<
     string | null
   >('');
+  const [items, setItems] = useState([]);
+  const refs = useRef<(React.RefObject<HTMLDivElement>)[]>([]);
 
   const setSelectedData = (ele: Item) => {
     if (!ele.isActive) {
@@ -90,95 +107,42 @@ export default function ProductDisplay({
         },
         topic: `${restId}table${table}`,
       };
-      console.log("dataaaa", data);
 
       setWait(true);
       await FcmService.shared.fcmTopic(data);
       notify();
-      setTimeout(() => {
-        setWait(false);
-      }, 1000 * 60);
+      // setTimeout(() => {
+      setWait(false);
+      // }, 1000 * 3);
     }
   };
 
-  const handleCatClick = (cat: string, isFromSelected: boolean) => {
-    if (isFromSelected) {
-      if (cat === "Our Special") {
-        if (!selfilterList.includes("Our Special")) {
-          setSelFilterList((prevCats) => [...prevCats, cat]);
-          setFilterList((prevSelectedCats) =>
-            prevSelectedCats.filter((selectedCat) => selectedCat !== cat)
-          );
-        } else {
-          setSelFilterList((prevSelectedCats) =>
-            prevSelectedCats.filter((selectedCat) => selectedCat !== cat)
-          );
+  const handleCatClick = (catName: string, isFromSelected: boolean) => {
+    setFilterList((prevCats) => {
+      return prevCats.map((cat) => {
+        // Check if the current category is the one being clicked
+        if (cat.name === catName) {
+          // Toggle the selected state of the clicked category
+          return { ...cat, selected: !cat.selected };
         }
-      } else {
-        if (
-          selfilterList.includes("Veg") &&
-          (cat === "Non Veg" || cat === "Egg")
-        ) {
-          setSelFilterList((prevCats) => [...prevCats, cat]);
-          setSelFilterList((prevSelectedCats) =>
-            prevSelectedCats.filter((selectedCat) => selectedCat !== "Veg")
-          );
-          setFilterList((prevSelectedCats) =>
-            prevSelectedCats.filter((selectedCat) => selectedCat !== cat)
-          );
-          setFilterList((prevCats) => [...prevCats, "Veg"]);
-        } else if (
-          (selfilterList.includes("Non Veg") ||
-            selfilterList.includes("Egg")) &&
-          cat === "Veg"
-        ) {
-          setSelFilterList((prevCats) => [...prevCats, cat]);
-          setSelFilterList((prevSelectedCats) =>
-            prevSelectedCats.filter(
-              (selectedCat) =>
-                selectedCat !== "Non Veg" && selectedCat !== "Egg"
-            )
-          );
-          setFilterList((prevSelectedCats) =>
-            prevSelectedCats.filter((selectedCat) => selectedCat !== cat)
-          );
-          if (
-            selfilterList.includes("Non Veg") &&
-            selfilterList.includes("Egg")
-          ) {
-            setFilterList((prevCats) => [...prevCats, ...["Non Veg", "Egg"]]);
-          } else if (selfilterList.includes("Egg")) {
-            setFilterList((prevCats) => [...prevCats, "Egg"]);
-          } else {
-            setFilterList((prevCats) => [...prevCats, "Non Veg"]);
+        if (catName === "Veg") {
+          if (cat.name === "Non Veg" || cat.name === "Egg") {
+            return { ...cat, selected: false }; // Deselect Non Veg and Egg
           }
-        } else {
-          setSelFilterList((prevCats) => [...prevCats, cat]);
-          setFilterList((prevSelectedCats) =>
-            prevSelectedCats.filter((selectedCat) => selectedCat !== cat)
-          );
         }
-      }
-    } else {
-      if (cat === "Our Special") {
-        setFilterList((prevSelectedCats) => [...prevSelectedCats, cat]);
-        setSelFilterList((prevSelectedCats) =>
-          prevSelectedCats.filter((selectedCat) => selectedCat !== cat)
-        );
-      } else {
-        if (
-          selfilterList.includes("Veg") &&
-          (cat === "Non Veg" || cat === "Egg")
-        ) {
-          setFilterList([]);
-        } else {
-          setFilterList((prevSelectedCats) => [...prevSelectedCats, cat]);
+
+        // Logic to deselect other categories based on the selected category
+        if ((catName === "Non Veg" || catName === "Egg")) {
+          // Deselect Veg
+          if (cat.name === "Veg") {
+            return { ...cat, selected: false };
+          }
         }
-        setSelFilterList((prevCats) =>
-          prevCats.filter((prevCat) => prevCat !== cat)
-        );
-      }
-    }
+
+
+        return cat; // Return other categories unchanged
+      });
+    });
   };
 
   const handleNumberChange = (event: any) => {
@@ -228,7 +192,7 @@ export default function ProductDisplay({
       cartMenuData?.getMenuList()?.forEach((each) => {
         let response = menu
           ?.getMenuList(each.category!, [])
-          ?.find((val) => val.id == each.id);
+          ?.find((val) => val.id == each.id && !(each.isApproved == true) && !each.isOrdered);
         if (response != undefined) {
           response.quantity = each.quantity;
           setPreOrderData(false);
@@ -243,7 +207,41 @@ export default function ProductDisplay({
       const offset = element.getBoundingClientRect().top;
       window.scrollTo({ top: window.scrollY + offset, behavior: "smooth" });
     }
+    setOpenMenu(false);
   };
+
+  const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+    setOpenMenu(open);
+  };
+
+  const handleClick = () => {
+    localStorage.setItem('sortAnimation', 'true')
+    setClicked(true);
+    setOpenMenu(true);
+  };
+
+  // First useEffect to set items when menuType changes
+  useEffect(() => {
+    if (category && menuType && menu) {
+      const newItems = (category[menuType] || [])
+        .map((item: any) => {
+          // Only include the item if it is not null and has valid menu items
+          if (item && menu.getMenuList(item, filterList) && menu.getMenuList(item, filterList)!.length > 0) {
+            return item;
+          }
+          return null; // Return null for filtering
+        })
+        .filter((item: any): item is string => item !== null); // Filter out null values
+      setItems(newItems);
+      refs.current = newItems.map(() => React.createRef()); // Reset refs for new items
+    }
+  }, [menuType, category, menu]);
+
+  useEffect(() => {
+    const cat = menuType == "foodMenu" ? initialCategories : [];
+    setFilterList(cat);
+    // setSelFilterList(cat);
+  }, [menuType]);
 
   useEffect(() => {
     // Ensure category is not null and has at least one item before setting selectedCategoryName
@@ -252,7 +250,7 @@ export default function ProductDisplay({
       setMenuType(value!);
       menuTypes = value!;
     }
-    if (category && category[menuTypes]!.length > 0) {
+    if (category && category[menuTypes]?.length > 0) {
       setSelectedCategoryName(category[menuTypes]![0]);
     }
     if (menuData) {
@@ -273,28 +271,38 @@ export default function ProductDisplay({
   }, [category, menuData]);
 
   useEffect(() => {
-    getQuantityFromOrder();
-  }, [cartMenuData, preOrderData, menu]);
+    if (preOrderData) {
+      getQuantityFromOrder();
+    }
+  }, [cartMenuData, menu, preOrderData]);
 
   useEffect(() => {
-    const cat = menuTypes == "foodMenu" ? ["Veg", "Egg", "Non Veg", "Our Special"] : [];
-    setFilterList(cat);
-    // Function to handle clicks outside the div
-    const handleClickOutside = (event: any) => {
-      if (categoryRef.current && !categoryRef.current.contains(event.target)) {
-        setIsCircle(true); // Clicked outside the div, set isCircle to true
+    const checkTopItem = () => {
+      const offset = 240; // Height of each item
+      for (let i = 0; i < refs.current.length; i++) {
+        const element = refs.current[i]?.current;
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          // Check if the element is at the top of the viewport
+          if (rect.top >= 0 && rect.top < offset) {
+            setTopItem(items[i]);
+            break; // Stop after finding the first top item
+          }
+        }
       }
     };
 
-    // Attach the event listener to the document body
-    document.body.addEventListener("click", handleClickOutside);
+    // Initial check
+    checkTopItem();
 
-    // Cleanup the event listener when the component unmounts
+    // Add scroll event listener
+    window.addEventListener('scroll', checkTopItem);
+
+    // Cleanup listener on unmount
     return () => {
-      document.body.removeEventListener("click", handleClickOutside);
+      window.removeEventListener('scroll', checkTopItem);
     };
-  }, []);
-
+  }, [items]);
 
   const OurSpecial = (
     <div
@@ -322,7 +330,7 @@ export default function ProductDisplay({
         priority={true}
       />
     </Link>
-  );
+  );  
   return (
     <div className="">
       {isPayCompleted ? (
@@ -338,12 +346,12 @@ export default function ProductDisplay({
         </div>
       ) : (
         <div className="">
-          <div className="md:container mx-auto  ">
+          <div className="md:container mx-auto">
             {menu ? (
               <div className="">
                 <div className="sticky top-0 z-20 bg-[#fafafa] w-full flex justify-between items-center px-4 pt-2">
                   <Link
-                    href={`/rest/${restId}/search?query=&category=All`}
+                    href={`/rest/${restId}/search?table=${table}&query=&category=All`}
                     className="w-full"
                   >
                     <div className="my-2 flex justify-start items-center w-full bg-white">
@@ -367,38 +375,7 @@ export default function ProductDisplay({
                     >
                       <div className="flex justify-center items-center pl-3 ">
                         <div className="">
-                          <svg
-                            width="20"
-                            height="21"
-                            viewBox="0 0 20 21"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M11.5781 6.10578V5.86245C11.5745 5.68408 11.502 5.51403 11.3759 5.38791C11.2497 5.2618 11.0796 5.18941 10.9012 5.18591H8.5988C8.42043 5.18941 8.25033 5.2618 8.12414 5.38791C7.99796 5.51403 7.92547 5.68408 7.92188 5.86245V6.10578C9.13096 5.88872 10.369 5.88872 11.5781 6.10578ZM9.14062 3.61719V4.52966H10.3594V3.61719C9.96197 3.73706 9.53803 3.73706 9.14062 3.61719Z"
-                              fill={wait ? "#c2beb4" : bgColor}
-                            />
-                            <path
-                              d="M9.7515 3.04988C10.5937 3.04988 11.2764 2.36714 11.2764 1.52494C11.2764 0.682738 10.5937 0 9.7515 0C8.9093 0 8.22656 0.682738 8.22656 1.52494C8.22656 2.36714 8.9093 3.04988 9.7515 3.04988Z"
-                              fill={wait ? "#c2beb4" : bgColor}
-                            />
-                            <path
-                              d="M15.8546 8.93428C14.7272 7.8947 13.3461 7.17017 11.85 6.83348C11.8296 6.83098 11.8095 6.82655 11.7899 6.82027C10.4479 6.52361 9.05738 6.52345 7.71534 6.8198C7.69576 6.82589 7.67564 6.8301 7.65525 6.83236C6.15907 7.16949 4.77796 7.89442 3.65067 8.93433C2.11612 10.3583 1.23581 12.2159 1.14844 14.2315H18.3568C18.2694 12.2159 17.3891 10.3583 15.8546 8.93428Z"
-                              fill={wait ? "#c2beb4" : bgColor}
-                            />
-                            <path
-                              d="M16.6875 16.7168H2.8125V18.3105H16.6875V16.7168Z"
-                              fill={wait ? "#c2beb4" : bgColor}
-                            />
-                            <path
-                              d="M19.5 14.8887H0V16.0605H19.5V14.8887Z"
-                              fill={wait ? "#c2beb4" : bgColor}
-                            />
-                            <path
-                              d="M19.5 18.9668H0V20.1387H19.5V18.9668Z"
-                              fill={wait ? "#c2beb4" : bgColor}
-                            />
-                          </svg>
+                          <FoodMenuBanner bgColor={bgColor} wait={wait} />
                         </div>
                         <div className="ml-3 leading-3 mt-[2px]">
                           <div
@@ -415,12 +392,11 @@ export default function ProductDisplay({
                     </div>
                   )}
                 </div>
-                <CategoryList
-                  selfilterList={selfilterList}
+                {filterList && filterList.length > 0 && <CategoryList
                   handleCatClick={handleCatClick}
                   filterList={filterList}
-                />
-                {selfilterList.length == 0 &&
+                />}
+                {!(filterList && filterList.some(cat => cat.selected === true)) &&
                   <HorizontalScrollSnap
                     items={review && GoogleReview ? [OurSpecial, review && GoogleReview] : [OurSpecial]}
                   />
@@ -433,25 +409,28 @@ export default function ProductDisplay({
                       return (
                         <div key={catIndex} id={ele}>
                           {menu &&
-                            menu.getMenuList(ele, selfilterList) &&
-                            menu.getMenuList(ele, selfilterList)!.length >
+                            menu.getMenuList(ele, filterList) &&
+                            menu.getMenuList(ele, filterList)!.length >
                             0 &&
                             (plan === "basic" ? (
                               <BasicCard
                                 setCatName={setCatName}
                                 ele={ele}
                                 menuData={menu}
-                                selfilterList={selfilterList}
+                                selfilterList={filterList}
                                 selectedCategoryName={selectedCategoryName}
                               />
                             ) : (
                               <ProCard
                                 ele={ele}
                                 menuData={menu}
-                                selfilterList={selfilterList}
+                                selfilterList={filterList}
                                 setSelectedData={setSelectedData}
                                 catIndex={catIndex}
-                                bgColor={bgColor} menuTypes={menuType} />
+                                bgColor={bgColor}
+                                restId={restId}
+                                deviceId={deviceId ?? ""}
+                                menuTypes={menuType} onRemoveOrders={() => { setPreOrderData(true); }} table={table} isOrderFlow={isOrderFlow} />
                             ))}
                         </div>
                       );
@@ -473,76 +452,85 @@ export default function ProductDisplay({
                 selectedMenuData={selectedMenuData}
                 bgColor={bgColor}
                 restId={restId}
-                deviceId={deviceId ?? ""} menu={menu ?? new Menu()} />
+                deviceId={deviceId ?? ""} menu={menu ?? new Menu()} table={table} isOrderFlow={isOrderFlow} />
             )}
-            {plan !== "basic" && (
-              <div className="">
-                <div
-                  className={`category_shape fixed z-10 ${cartMenuData &&
-                    cartMenuData?.getMenuList() &&
-                    cartMenuData?.getMenuList()?.length != 0
-                    ? "bottom-16"
-                    : "bottom-6"
-                    }  right-6 ${isCircle ? "circle" : "rectangle"}`}
-                  onClick={() => setIsCircle(!isCircle)}
-                >
-                  {isCircle ? (
-                    <div className="category_text text-center flex justify-center items-center flex-col">
+            <div className="relative">
+              <SwipeableDrawer
+                anchor='bottom'
+                open={openMenu}
+                onClose={toggleDrawer(false)}
+                onOpen={toggleDrawer(true)}
+                PaperProps={{
+                  style: {
+                    width: '90%', // Set width to 90%
+                    height: menu && menu.getMenuLength(category[menuType], filterList) && menu.getMenuLength(category[menuType], filterList)! > 10 ? '70%' : '',
+                    maxHeight: '70%',
+                    position: 'absolute', // Use absolute positioning
+                    bottom: cartMenuData &&
+                      cartMenuData?.getMenuList() &&
+                      cartMenuData?.getMenuList()?.length != 0 ? '70px' : '20px', // Position it 90px above the bottom
+                    margin: 'auto',
+                    backgroundColor: 'transparent',
+                    boxShadow: 'none',
+                  },
+                }}
+              >
+                <div className="" style={{ display: 'flex', flexDirection: 'column', height: '100%' }} >
+                  <div style={{ flex: '1', overflowY: 'auto', backgroundColor: bgColor }} className="flex px-6 py-3 rounded-lg text-white">
+                    <ul className="w-[100%] ">
+                      {category && category[menuType] && category[menuType]!.map(
+                        (item: any, index: any) =>
+                          menu &&
+                          menu.getMenuList(item, filterList) &&
+                          menu.getMenuList(item, filterList)!.length >
+                          0 && (
+                            <li
+                              onClick={() => handleItemClick(item)}
+                              className="pb-2 cursor-pointer capitalize font-medium"
+                              key={index}
+                            >
+                              <div className=" w-full flex item-center justify-between">
+                                <div className={`${topItem && topItem == item ? 'font-bold text-lg ' : 'font-normal text-base opacity-80'}`}>{item}</div>
+                                <div className={`${topItem && topItem == item ? 'font-bold text-lg ' : 'font-normal text-base opacity-80'}`}>{menu.getMenuList(item, filterList)!.length}</div>
+                              </div>
+                            </li>
+                          )
+                      )}
+                    </ul>
+                  </div>
+                  <div className="flex item-center justify-center mt-6">
+                    <div style={{ backgroundColor: bgColor }} className=" text-white flex items-center justify-center rounded-md py-3 w-28" onClick={() => { setOpenMenu(false) }} >
                       <div className="">
                         <Image
-                          src="/images/svg/menu_icon.svg"
+                          src="/images/svg/close_icon.svg"
                           alt="menu icon"
-                          width="16"
-                          height="16"
+                          width="20"
+                          height="20"
                           priority={true}
                         />
                       </div>
-                      <div className="p-1 text-xs font-semibold">Menu</div>
+                      <div className="text-base pl-2 font-semibold">Close</div>
                     </div>
-                  ) : (
-                    <div ref={categoryRef} className="category_text">
-                      <ul className="">
-                        {category[menuType]!.map(
-                          (item: any, index: any) =>
-                            menu &&
-                            menu.getMenuList(item, selfilterList) &&
-                            menu.getMenuList(item, selfilterList)!.length >
-                            0 && (
-                              <li
-                                onClick={() => handleItemClick(item)}
-                                className="pb-2 cursor-pointer capitalize text-lg font-medium"
-                                key={index}
-                              >
-                                {item}
-                              </li>
-                            )
-                        )}
-                      </ul>
-                    </div>
-                  )}
+                  </div>
+                </div>
+              </SwipeableDrawer>
+            </div>
+            {plan !== "basic" && menu && menu.getMenuLength(category[menuType], filterList) && menu && menu.getMenuLength(category[menuType], filterList)! > 0 && !openMenu && (
+              <div className={` w-28 text-center mx-auto sticky ${cartMenuData &&
+                cartMenuData?.getMenuList() &&
+                cartMenuData?.getMenuList()?.length != 0 ? 'bottom-[80px]' : 'bottom-5'} z-10`}>
+                <div style={{ boxShadow: "0px 0px 6px 0px gray", animation: !clicked && (localStorage.getItem('sortAnimation') != 'true' || localStorage.getItem('sortAnimation') == undefined) ? 'skew-x-shakeng 1s infinite' : 'none', }} className="bg-primary text-white flex item-center justify-center rounded-md py-3 w-28" onClick={() => { handleClick() }} >
+                  <div className="">
+                    <SortIcon />
+                  </div>
+                  <div className="text-base pl-2 font-semibold">Sort</div>
                 </div>
               </div>
             )}
             {cartMenuData &&
               cartMenuData?.getMenuList() &&
               cartMenuData?.getMenuList()?.length != 0 && (
-                <Link
-                  href={`/rest/${restId}/cart?table=${table}`}
-                  className="w-full"
-                >
-                  <div className="fixed bottom-0 z-20 bg-primary w-full px-4 py-3">
-                    <div className="text-[#fafafa] flex justify-between items-center">
-                      <div className="">
-                        <div className="text-sm font-semibold">
-                          {cartMenuData?.getMenuList()?.length} Items in
-                          wishlist
-                        </div>
-                        <div className="text-xs">View Now</div>
-                      </div>
-                      <ArrowRightIcon fontSize="large" />
-                    </div>
-                  </div>
-                </Link>
+                <ProductBottommButton cartCount={cartMenuData.getCartLength()} pendingCount={cartMenuData.getPendingLength()} approvedCount={cartMenuData.getApprovedLength()} restId={restId} table={table} />
               )}
           </div>
         </div>

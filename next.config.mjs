@@ -3,17 +3,23 @@ const nextConfig = {
   //  (https://firebasestorage.googl
   images: {
     minimumCacheTTL: 180,
+    domains: ['raw.githubusercontent.com', 'firebasestorage.googleapis.com', 'googleapis.com'],
     remotePatterns: [
       {
-    protocol: 'https',
-    hostname: '**.firebasestorage.googleapis.com',
-    port: '',
-  },
-  {
-    protocol: 'https',
-    hostname: '**.googleapis.com',
-    port: '',
-  },
+        protocol: 'https',
+        hostname: '**.firebasestorage.googleapis.com',
+        port: '',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.raw.githubusercontent.com',
+        port: '',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.googleapis.com',
+        port: '',
+      },
     ],
   },
 

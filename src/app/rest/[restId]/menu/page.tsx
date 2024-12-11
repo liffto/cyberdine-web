@@ -10,10 +10,9 @@ export default async function OrgProductsPage({
     `${process.env.NODE_ENV == "development"
       ? "http://localhost:3000"
       : "https://www.cyberdine.in"
-    }/api/rest/${params.restId}/detail`, { next: { revalidate: 1 * 1 * 1 } }
+    }/api/rest/${params.restId}/detail`, { next: { revalidate: 60 * 60 * 2 } }
   );
   const json = await response.json();
-  console.log("jsonsssss", json);
 
   function lightenColor(hex: string, percent: any) {
     // Parse the hex color to get RGB components
@@ -48,8 +47,8 @@ export default async function OrgProductsPage({
         } as React.CSSProperties
       }
     >
-      <Topbar data={json.data} />
-      <ProductDisplay restId={params.restId} table={searchParams.table} topic={json?.data?.fcmTopic} notification={json?.data?.isNoticifation} bgColor={"#" + json.data.hcolor?.slice(2, 10)} plan={json?.data?.plan} isPayCompleted={json?.data?.isPayCompleted} customerDetails={json?.data?.customerDetails} review={json?.data?.googleReviewLink} menuTypes={""} />
+      <Topbar data={json.data} table={searchParams.table} restId={params.restId} />
+      <ProductDisplay isOrderFlow={json?.data?.customerOrders} restId={params.restId} table={searchParams.table} topic={json?.data?.fcmTopic} notification={json?.data?.isNoticifation} bgColor={"#" + json.data.hcolor?.slice(2, 10)} plan={json?.data?.plan} isPayCompleted={json?.data?.isPayCompleted} customerDetails={json?.data?.customerDetails} review={json?.data?.googleReviewLink} menuTypes={""} />
     </div>
   );
 }

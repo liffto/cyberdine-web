@@ -3,16 +3,14 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import "./font.css";
 import AOSProvider from "@/providers/aos";
-import { GoogleTagManager } from '@next/third-parties/google'
+import { GoogleTagManager } from "@next/third-parties/google";
+import { NotificationProvider } from "@/providers/order_complete";
 const inter = Inter({ subsets: ["latin"] });
-
-
 
 const APP_NAME = "Cyber Dine";
 const APP_DEFAULT_TITLE = "Cyber Dine";
 const APP_TITLE_TEMPLATE = "%s - Cyber Dine";
-const APP_DESCRIPTION =
-  "Restraunt management solutions, 'best in business'";
+const APP_DESCRIPTION = "Restraunt management solutions, 'best in business'";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://cyberdine.in"),
@@ -61,10 +59,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <AOSProvider>
-      <body className={inter.className}>{children}
+        <body className={inter.className}>
+          {children}
 
-      <GoogleTagManager gtmId={process.env.GAID!} />
-      </body>
+          <GoogleTagManager gtmId={process.env.GAID!} />
+        </body>
       </AOSProvider>
     </html>
   );

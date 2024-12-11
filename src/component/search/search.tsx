@@ -14,27 +14,38 @@ import CloseIcon from "@mui/icons-material/Close";
 import DescriptionSheet from "../menu/description_sheet";
 import BasicMenuItemCard from "../menu/basic_menu_item_card";
 import { Menu } from "@/model/products/menu";
+import CategoryList from "../menu/category_list";
+import ProductBottommButton from "../menu/product_bottom_button";
 
+const initialCategories = [
+  { name: "Veg", selected: false },
+  { name: "Egg", selected: false },
+  { name: "Our Special", selected: false },
+  { name: "Non Veg", selected: false },
+];
 export default function SearchComponent({
   restId,
   bgColor,
-  plan
+  plan,
+  table,
+  isOrderFlow
 }: {
   restId: string;
   bgColor: string;
   plan: string;
+  table: string;
+  isOrderFlow: boolean;
 }) {
-  const { menuData, category, deviceId, menuType } = useContext(MenuDataContext);
+  const { menuData, category, cartMenuData, deviceId, menuType } = useContext(MenuDataContext);
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace, back } = useRouter();
-  const [filter, setFilter] = useState(false);
   const [query, setQuery] = useState("");
-  const [selfilterList, setSelFilterList] = useState<Array<string>>([]);
-  const [filterList, setFilterList] = useState<Array<string>>([]);
+  const [filterList, setFilterList] = useState<Array<any>>([]);
   const [selectedMenuData, setSelectedMenuData] = useState<Item | null>(null);
   const [menu, setMenu] = useState<Menu | null>(null)
   const inputRef = useRef<HTMLInputElement>(null);
+  const [preOrderData, setPreOrderData] = useState<boolean>(true);
 
   const setSelectedData = (ele: Item) => {
     setSelectedMenuData(ele);
@@ -50,85 +61,53 @@ export default function SearchComponent({
     replace(`${pathname}?${params.toString()}`);
   }
 
-  const handleCatClick = (cat: string, isFromSelected: boolean) => {
-    if (isFromSelected) {
-      if (cat === "Our Special") {
-        if (!selfilterList.includes("Our Special")) {
-          setSelFilterList((prevCats) => [...prevCats, cat]);
-          setFilterList((prevSelectedCats) =>
-            prevSelectedCats.filter((selectedCat) => selectedCat !== cat)
-          );
-        } else {
-          setSelFilterList((prevSelectedCats) =>
-            prevSelectedCats.filter((selectedCat) => selectedCat !== cat)
-          );
+  const handleCatClick = (catName: string) => {
+    setFilterList((prevCats) => {
+      return prevCats.map((cat) => {
+        // Check if the current category is the one being clicked
+        if (cat.name === catName) {
+          // Toggle the selected state of the clicked category
+          return { ...cat, selected: !cat.selected };
         }
-      } else {
-        if (
-          selfilterList.includes("Veg") &&
-          (cat === "Non Veg" || cat === "Egg")
-        ) {
-          setSelFilterList((prevCats) => [...prevCats, cat]);
-          setSelFilterList((prevSelectedCats) =>
-            prevSelectedCats.filter((selectedCat) => selectedCat !== "Veg")
-          );
-          setFilterList((prevSelectedCats) =>
-            prevSelectedCats.filter((selectedCat) => selectedCat !== cat)
-          );
-          setFilterList((prevCats) => [...prevCats, "Veg"]);
-        } else if (
-          (selfilterList.includes("Non Veg") ||
-            selfilterList.includes("Egg")) &&
-          cat === "Veg"
-        ) {
-          setSelFilterList((prevCats) => [...prevCats, cat]);
-          setSelFilterList((prevSelectedCats) =>
-            prevSelectedCats.filter(
-              (selectedCat) =>
-                selectedCat !== "Non Veg" && selectedCat !== "Egg"
-            )
-          );
-          setFilterList((prevSelectedCats) =>
-            prevSelectedCats.filter((selectedCat) => selectedCat !== cat)
-          );
-          if (
-            selfilterList.includes("Non Veg") &&
-            selfilterList.includes("Egg")
-          ) {
-            setFilterList((prevCats) => [...prevCats, ...["Non Veg", "Egg"]]);
-          } else if (selfilterList.includes("Egg")) {
-            setFilterList((prevCats) => [...prevCats, "Egg"]);
-          } else {
-            setFilterList((prevCats) => [...prevCats, "Non Veg"]);
+        if (catName === "Veg") {
+          if (cat.name === "Non Veg" || cat.name === "Egg") {
+            return { ...cat, selected: false }; // Deselect Non Veg and Egg
           }
-        } else {
-          setSelFilterList((prevCats) => [...prevCats, cat]);
-          setFilterList((prevSelectedCats) =>
-            prevSelectedCats.filter((selectedCat) => selectedCat !== cat)
-          );
         }
-      }
-    } else {
-      if (cat === "Our Special") {
-        setFilterList((prevSelectedCats) => [...prevSelectedCats, cat]);
-        setSelFilterList((prevSelectedCats) =>
-          prevSelectedCats.filter((selectedCat) => selectedCat !== cat)
-        );
-      } else {
-        if (
-          selfilterList.includes("Veg") &&
-          (cat === "Non Veg" || cat === "Egg")
-        ) {
-          setFilterList([]);
-        } else {
-          setFilterList((prevSelectedCats) => [...prevSelectedCats, cat]);
+
+        // Logic to deselect other categories based on the selected category
+        if ((catName === "Non Veg" || catName === "Egg")) {
+          // Deselect Veg
+          if (cat.name === "Veg") {
+            return { ...cat, selected: false };
+          }
         }
-        setSelFilterList((prevCats) =>
-          prevCats.filter((prevCat) => prevCat !== cat)
-        );
-      }
+
+
+        return cat; // Return other categories unchanged
+      });
+    });
+  };
+
+  const getQuantityFromOrder = () => {
+    if (cartMenuData) {
+      cartMenuData?.getMenuList()?.forEach((each) => {
+        let response = menu
+          ?.getMenuList(each.category!, [])
+          ?.find((val) => val.id == each.id && !(each.isApproved == true) && !each.isOrdered);
+        if (response != undefined) {
+          response.quantity = each.quantity;
+          setPreOrderData(false);
+        }
+      });
     }
   };
+
+  useEffect(() => {
+    if (preOrderData) {
+      getQuantityFromOrder();
+    }
+  }, [cartMenuData, menu, preOrderData]);
 
   useEffect(() => {
     if (inputRef.current) {
@@ -138,7 +117,7 @@ export default function SearchComponent({
       const menuInstance = new Menu(menuData[menuType]);
       setMenu(menuInstance)
     }
-    const cat = menuType == "foodMenu" ? ["Veg", "Egg", "Non Veg", "Our Special"] : [];
+    const cat = menuType == "foodMenu" ? initialCategories : [];
     setFilterList(cat);
   }, []);
 
@@ -172,13 +151,16 @@ export default function SearchComponent({
               endAdornment: (
                 <InputAdornment
                   onClick={() => {
-                    setFilter(true);
+                    if (query) {
+                      setQuery('');
+                    }
                   }}
                   position="end"
                   className="cursor-pointer"
                 >
                   <div className="">
-                    <SearchIcon sx={{ color: "black" }} />
+                    {query ? <CloseIcon sx={{ color: "black" }} /> : <SearchIcon sx={{ color: "black" }} />}
+
                   </div>
                 </InputAdornment>
               ),
@@ -197,83 +179,6 @@ export default function SearchComponent({
     );
   }
 
-  function CategoryList() {
-    return (
-      <div
-        className={`overflow-x-scroll md:container max-w-screen py-2 bg-white z-20 sticky top-[72px]`}
-      >
-        <div className="flex gap-4 px-4">
-          {selfilterList!.map((ele, index) => {
-            return (
-              <div
-                key={index}
-                onClick={() => {
-                  handleCatClick(ele, false);
-                }}
-                className={`cursor-pointer rounded border whitespace-nowrap border-primary px-2 py-px text-gray-600`}
-              >
-                <div className="flex justify-center items-center gap-2">
-                  <div className="w-3 h-3">
-                    <Image
-                      src={
-                        ele == "Veg"
-                          ? "/images/svg/veg_icon.svg"
-                          : ele == "Non Veg"
-                            ? "/images/svg/non_veg_icon.svg"
-                            : ele == "Egg"
-                              ? "/images/svg/egg_icon.svg"
-                              : "/images/svg/our_special_icon.svg"
-                      }
-                      alt={ele}
-                      width={14}
-                      height={14}
-                    />
-                  </div>
-                  <div className="">{ele}</div>
-                  <div className="rounded-full border border-primary text-primary w-4 h-4 flex justify-center items-center">
-                    <CloseIcon sx={{ fontSize: "10px" }} />
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-          {filterList!.map((ele, index) => {
-            return (
-              <div
-                key={index}
-                onClick={() => {
-                  handleCatClick(ele, true);
-                }}
-                className={`cursor-pointer rounded border whitespace-nowrap border-gray-400 px-2 py-px text-gray-600`}
-              >
-                <div className="flex justify-center items-center gap-2">
-                  <div className="w-3 h-3">
-                    <Image
-                      src={
-                        ele == "Veg"
-                          ? "/images/svg/veg_icon.svg"
-                          : ele == "Non Veg"
-                            ? "/images/svg/non_veg_icon.svg"
-                            : ele == "Egg"
-                              ? "/images/svg/egg_icon.svg"
-                              : "/images/svg/our_special_icon.svg"
-                      }
-                      alt={ele}
-                      width={14}
-                      height={14}
-                    />
-                  </div>
-                  <div className="">{ele}</div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    );
-  }
-
-
   const inputStyles = {
     '& .MuiInputBase-input': {
       color: '#000', // Change text color
@@ -291,15 +196,26 @@ export default function SearchComponent({
     },
   };
 
+  const checkOrderList = (data: Item, type: string) => {
+    menu?.addQantity(data, data.quantity, restId, deviceId ?? '', type, table, (val: any) => {
+      if (val == "remove" && cartMenuData && cartMenuData?.getMenuList()!.length == 1 && data.quantity == null) {
+        cartMenuData.makeCartMenuEmpty();
+      }
+    })
+  }
+
   return (
     <div className="">
       {TopBar()}
-      {CategoryList()}
+      {filterList && filterList.length > 0 && <CategoryList
+        handleCatClick={handleCatClick}
+        filterList={filterList}
+      />}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 md:gap-6 py-4 ">
         {menu &&
-          menu.getSearchedMenu(query, selfilterList) &&
+          menu.getSearchedMenu(query, filterList) &&
           Array.from(
-            menu.getSearchedMenu(query, selfilterList)!.entries()
+            menu.getSearchedMenu(query, filterList)!.entries()
           ).map((value, index) => {
             return (
               <div className="" key={index}>
@@ -315,7 +231,7 @@ export default function SearchComponent({
                         <div className="pb-4" key={key} >
                           {plan === "basic" ? <BasicMenuItemCard
                             index={index}
-                            ele={item} /> : <MenuItemCard index={index} ele={item} setSelectedData={setSelectedData} bgColor={bgColor} />}
+                            ele={item} /> : <MenuItemCard index={index} ele={item} setSelectedData={setSelectedData} bgColor={bgColor} addOrderItems={checkOrderList} isOrderFlow={isOrderFlow} />}
                         </div>
                       );
                     })}
@@ -324,12 +240,17 @@ export default function SearchComponent({
               </div>
             );
           })}
+        {cartMenuData &&
+          cartMenuData?.getMenuList() &&
+          cartMenuData?.getMenuList()?.length != 0 && (
+            <ProductBottommButton cartCount={cartMenuData.getCartLength()} pendingCount={cartMenuData.getPendingLength()} approvedCount={cartMenuData.getApprovedLength()} restId={restId} table={table} />
+          )}
       </div>
       {selectedMenuData && (
         <DescriptionSheet
           menuType={menuType}
           setSelectedMenuData={setSelectedData}
-          selectedMenuData={selectedMenuData} bgColor={bgColor} restId={restId} deviceId={deviceId ?? ""} menu={menu ?? new Menu()} />
+          selectedMenuData={selectedMenuData} bgColor={bgColor} restId={restId} deviceId={deviceId ?? ""} menu={menu ?? new Menu()} table={table} isOrderFlow={isOrderFlow} />
       )}
     </div>
   );

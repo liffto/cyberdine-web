@@ -6,13 +6,8 @@ import { useContext, useEffect, useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { MenuDataContext } from "@/context/menu.context";
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
-import BookmarkIcon from '@mui/icons-material/Bookmark';
-import toast, { Toaster } from "react-hot-toast";
 import { Menu } from "@/model/products/menu";
-
-const itemAdd = () => toast('Item successfully added to wishlist');
-const itemRemove = () => toast('Item successfully removed from wishlist');
+import { Item } from "@/model/products/items";
 
 export default function DescriptionSheet({
   menuType,
@@ -21,63 +16,71 @@ export default function DescriptionSheet({
   bgColor,
   restId,
   deviceId,
-  menu
+  menu,
+  table,
+  isOrderFlow
 }: {
   menuType: string;
   setSelectedMenuData: any;
-  selectedMenuData: any;
+  selectedMenuData: Item;
   bgColor: string;
   restId: string;
   deviceId: string;
   menu: Menu;
+  table: string;
+  isOrderFlow: boolean;
 }) {
   const [itemCount, setItemCount] = useState<number | null>(selectedMenuData.quantity && selectedMenuData.quantity != undefined ? selectedMenuData.quantity : null);
   const { cartMenuData } = useContext(MenuDataContext);
 
-  const addToWishList = () => {
-    let temp: number | null;
-    temp = itemCount;
-    if (temp == 0 || temp == null) {
-      temp = 1;
-      itemAdd();
-    } else if (temp > 0) {
-      temp = null;
-      itemRemove();
+  const addToItems = (type: string) => {
+    if (type == "add" && selectedMenuData.quantity == 0 || selectedMenuData.quantity == null) {
+      selectedMenuData.quantity = 1;
+      checkOrderList(selectedMenuData, type);
+    } else if (type == "add") {
+      selectedMenuData.quantity = selectedMenuData.quantity + 1;
+      checkOrderList(selectedMenuData, type);
+    } else if (type == "remove" && selectedMenuData.quantity > 0) {
+      if (selectedMenuData.quantity > 1) {
+        selectedMenuData.quantity = selectedMenuData.quantity - 1;
+      } else {
+        selectedMenuData.quantity = null;
+      }
+      checkOrderList(selectedMenuData, type);
     }
-    setItemCount(temp);
-    checkOrderList(temp);
   };
 
-  // const itemCountFunc = () => {
-  //   let temp = itemCount;
-  //   if (temp == 0) {
-  //     temp = temp + 1;
-  //   } else if (temp > 0) {
-  //     temp = temp - 1;
-  //   }
-  //   setItemCount(temp);
-  // };
-
-  const checkOrderList = (count: number | null) => {
-    menu?.addQantity(selectedMenuData, count, restId, deviceId, (val: any) => {
-      if (val == "remove" && cartMenuData && cartMenuData?.getMenuList()!.length < 2 && (itemCount == 1)) {
-        cartMenuData.makeCartMenuEmpty()
+  const checkOrderList = (data: Item, type: string) => {
+    menu?.addQantity(data, data.quantity, restId, deviceId ?? '', type, table, (val: any) => {
+      if (val == "remove" && cartMenuData && cartMenuData?.getMenuList()!.length == 1 && data.quantity == null) {
+        cartMenuData.makeCartMenuEmpty();
       }
-      setSelectedMenuData(null);
     })
-
   }
+
+  const addWishList = () => {
+    if (selectedMenuData.quantity == undefined || selectedMenuData.quantity == 0 || selectedMenuData.quantity == null) {
+      selectedMenuData.quantity = 1;
+      checkOrderList(selectedMenuData, "add");
+    } else {
+      if (selectedMenuData.quantity > 1) {
+        selectedMenuData.quantity = selectedMenuData.quantity - 1;
+      } else {
+        selectedMenuData.quantity = null;
+      }
+      checkOrderList(selectedMenuData, "remove");
+    }
+  };
 
   const description = () => {
     return (
       <div className="h-full flex flex-col justify-between">
-        <Toaster position="top-center" />
         <div onClick={() => { setSelectedMenuData(null); }} className="text-white bg-black text-center rounded-full w-12 py-3 mx-auto mb-4">
           <CloseIcon />
         </div>
-        <div className="bg-white" style={{ borderRadius: '20px 20px 0 0' }} >
-          {selectedMenuData.itemsImageUrl && (
-            <div className="rounded overflow-hidden mb-3 ">
+        <div className="bg-white " style={{ borderRadius: '16px 16px 0 0' }} >
+          <div className="rounded overflow-hidden pb-3 px-4 pt-4">
+            {selectedMenuData && selectedMenuData.itemsImageUrl && (
               <Image
                 src={selectedMenuData.itemsImageUrl!}
                 alt={selectedMenuData.name!}
@@ -91,24 +94,24 @@ export default function DescriptionSheet({
                   borderRadius: '20px 20px 0 0'
                 }}
               />
-            </div>
-          )}
-          <div className="px-4 py-2 text-black">
-            <div className="mb-2">
+            )}
+          </div>
+
+          <div className="px-4 pb-2 text-black">
+            <div className="mb-3">
               <div className=" flex justify-between items-center">
                 <div className="flex-1 font-bold text-xl">{selectedMenuData?.capitalizeNameFirstLetter()}</div>
 
                 <div className={`flex justify-center items-center`}>
                   <div className="">
                     <Image
-                      src={selectedMenuData?.foodType == "Veg" ? "/images/svg/veg_icon.svg" : "/images/svg/non_veg_icon.svg"}
-                      alt={selectedMenuData.name!}
+                      src={selectedMenuData?.foodType === "Egg" ? "/images/svg/egg_icon.svg" : selectedMenuData?.foodType == "Drinks" ? "/images/svg/liquor_icon.svg" : selectedMenuData?.foodType == "Veg" ? "/images/svg/veg_icon.svg" : selectedMenuData?.foodType == "Non Veg" ? "/images/svg/non_veg_icon.svg" : ""}
+                      alt={selectedMenuData?.name!}
                       height={16}
                       width={16}
                       priority={false}
                       style={{
                         objectFit: "cover",
-                        background: "var(--secondary-bg)"
                       }}
                     />
                   </div>
@@ -119,18 +122,30 @@ export default function DescriptionSheet({
                   </div>
                 </div>
               </div>
-              <div className={`font-medium text-gray-400`}>&#x20B9; {selectedMenuData?.price}</div>
+              {selectedMenuData?.price && <div className={`pt-[1px] font-medium text-[#7A7A7A]`}>&#x20B9; {selectedMenuData?.price}</div>}
             </div>
-            {selectedMenuData?.description && <div className="font-medium text-base mb-2">
+            {selectedMenuData && selectedMenuData?.description && <div className="text-[#7A7A7A] text-base mb-2">
               {selectedMenuData?.capitalizeDescriptionFirstLetter()}
             </div>}
           </div>
-          <div
-            className={`text-lg text-center flex justify-between px-4 items-center w-full py-3 font-semibold`} style={{ backgroundColor: bgColor }}
+          {isOrderFlow ? <div
+            className={`text-lg text-center flex gap-4 justify-between px-4 items-center w-full py-3 font-semibold`} style={{ backgroundColor: bgColor, boxShadow: "0px 0px 10px 0.5px #00000040" }}
           >
-            <div className="flex-1 bg-white px-4 py-2 rounded font-semibold text-xl" onClick={() => { setSelectedMenuData(null); }} style={{ color: bgColor }} >Cancel</div>
-            <div onClick={() => { addToWishList(); }} className="border-2 border-white px-[8px] ml-3 py-[7px] rounded"  >{itemCount != null ? <BookmarkIcon sx={{ color: "white" }} /> : <BookmarkBorderIcon sx={{ color: "white" }} />}</div>
-          </div>
+            <div className="flex-1 bg-white flex items-center justify-between rounded font-semibold text-xl"  >
+              <div className="bg-gray-900 py-2 px-4 rounded-tl rounded-bl text-white" onClick={() => { addToItems("remove") }}>
+                <RemoveIcon />
+              </div>
+              <div className="">{selectedMenuData.quantity ?? '0'}</div>
+              <div className="bg-gray-900 py-2 px-4 rounded-tr rounded-br text-white" onClick={() => { addToItems("add") }}>
+                <AddIcon />
+              </div>
+            </div>
+            <div className="flex-1 bg-white px-4 py-2 rounded font-semibold text-xl" onClick={() => { setSelectedMenuData(null); }} style={{ color: bgColor }} >{"Add Item"}</div>
+          </div> : <div
+            className={`text-lg text-center flex justify-between px-4 items-center w-full py-3 font-semibold`} style={{ backgroundColor: bgColor, boxShadow: "0px 0px 10px 0.5px #00000040" }}
+          >
+            <div className="flex-1 bg-white px-4 py-2 rounded font-semibold text-xl" onClick={() => { addWishList(); }} style={{ color: selectedMenuData && selectedMenuData.quantity != null ? '#DD0000' : bgColor }} >{selectedMenuData && selectedMenuData.quantity != null ? "Remove from wishlist" : "+ Add to wishlist"}</div>
+          </div>}
         </div>
       </div>
     );
@@ -138,7 +153,6 @@ export default function DescriptionSheet({
   return (
     <div className="md:hidden block">
       <SwipeableDrawer
-        disableSwipeToOpen={true}
         open={selectedMenuData != null}
         anchor="bottom"
         PaperProps={{

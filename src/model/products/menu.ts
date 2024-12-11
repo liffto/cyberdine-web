@@ -11,66 +11,86 @@ export class Menu {
     }
   }
 
-  getMenuList(category: string, pref: Array<string> = []): Item[] | null {
+  getMenuList(category: string, pref: Array<any> = []): Item[] | null {
     if (!this.menuMap?.has(category)) {
       return null;
     }
-    const menu = Array.from(
-      this.menuMap?.get(category)?.values() as Iterable<Item>
-    );
-    if (pref.length == 1 && pref.includes("Our Special")) {
-      const ourSpeical = menu.filter((item: Item) => item.isSpecial == true);
-      return ourSpeical;
-    } else if (pref.length > 1 && pref.includes("Our Special")) {
-      const ourSpeical = menu.filter(
+
+    const menu = Array.from(this.menuMap?.get(category)?.values() as Iterable<Item>);
+
+    // Extract only the selected food types from pref
+    const selectedPref = pref.filter(item => item.selected).map(item => item.name);
+
+    if (selectedPref.length === 1 && selectedPref.includes("Our Special")) {
+      const ourSpecial = menu.filter((item: Item) => item.isSpecial === true);
+      return ourSpecial;
+    } else if (selectedPref.length > 1 && selectedPref.includes("Our Special")) {
+      const ourSpecial = menu.filter(
         (item: Item) =>
-          item.isSpecial == true && pref.some((each) => each == item.foodType)
+          item.isSpecial === true && selectedPref.some(each => each === item.foodType)
       );
-      return ourSpeical;
+      return ourSpecial;
     } else {
       const filteredMenu = menu.filter((item: Item) =>
-        pref.some((each) => each == item.foodType)
+        selectedPref.some(each => each === item.foodType)
       );
-      return pref && pref.length > 0 ? filteredMenu : menu;
+      return selectedPref.length > 0 ? filteredMenu : menu;
     }
   }
 
   getSearchedMenu(
     searchString: string = "",
-    pref: Array<string> = []
+    pref: Array<any> = []
   ): Map<string, Item[]> | null {
     let response: Item[] = [];
-    if (searchString == "") {
+
+    if (searchString === "") {
       return null;
     } else if (this.menuMap != null) {
       const categories = Array.from(this.menuMap!.values());
-      categories.map((value, key) => {
+
+      // Combine all items from all categories into the response array
+      categories.forEach((value) => {
         response = response.concat(Array.from(value.values()));
       });
-      const menu = response
-        .flat()
-        .filter((item) =>
-          item.name?.toLowerCase()?.includes(searchString?.toLowerCase())
-        );
-      if (pref.length == 1 && pref.includes("Our Special")) {
-        const ourSpeical = menu.filter((item: Item) => item.isSpecial == true);
 
-        return this.convertListToArray(ourSpeical);
-      } else if (pref.length > 1 && pref.includes("Our Special")) {
-        const ourSpeical = menu.filter(
+      // Filter menu based on search string
+      const menu = response.filter((item) =>
+        item.name?.toLowerCase()?.includes(searchString.toLowerCase())
+      );
+
+      // Extract selected preferences
+      const selectedPref = pref.filter(item => item.selected).map(item => item.name);
+
+      if (selectedPref.length === 1 && selectedPref.includes("Our Special")) {
+        const ourSpecial = menu.filter((item: Item) => item.isSpecial === true);
+        return this.convertListToArray(ourSpecial);
+      } else if (selectedPref.length > 1 && selectedPref.includes("Our Special")) {
+        const ourSpecial = menu.filter(
           (item: Item) =>
-            item.isSpecial == true && pref.some((each) => each == item.foodType)
+            item.isSpecial === true && selectedPref.some(each => each === item.foodType)
         );
-        return this.convertListToArray(ourSpeical);
+        return this.convertListToArray(ourSpecial);
       } else {
         const filteredMenu = menu.filter((item: Item) =>
-          pref.some((each) => each == item.foodType)
+          selectedPref.some(each => each === item.foodType)
         );
-        return this.convertListToArray(pref && pref.length > 0 ? filteredMenu : menu);
+        return this.convertListToArray(selectedPref.length > 0 ? filteredMenu : menu);
       }
     } else {
       return null;
     }
+  }
+
+  getMenuLength(categories: string[], pref: Array<any> = []): number | null {
+    let categoryCount = 0;
+if(categories)
+    for (const category of categories) {
+      if (this.getMenuList(category, pref) && this.getMenuList(category, pref)?.length != 0) {
+        categoryCount = categoryCount + 1;
+      }
+    }
+    return categoryCount > 0 ? categoryCount : null;
   }
 
   convertListToArray(menu: Item[]) {
@@ -85,18 +105,18 @@ export class Menu {
     return tempMap;
   }
 
-  async addQantity(menu: Item, count: number | null, restId: string, deviceId: string, callback?: (ele: string) => void) {
-    let res = this.menuMap!.get(menu.category!)?.get(menu.id!);
+  async addQantity(menu: Item, count: number | null, restId: string, deviceId: string, type: string, table: string, callback?: (ele: string) => void) {
+    let res = menu;
     if (res != undefined) {
       res.quantity = 0;
       res.quantity = count;
-      if (res.quantity! > 0) {
-        await FirebaseServices.shared.addToCart(res, restId, deviceId, (val: any) => {
+      if (type == "add") {
+        await FirebaseServices.shared.addToCart(res, restId, deviceId, `table${table}`, (val: any) => {
           callback && callback("add")
         });
 
       } else {
-        await FirebaseServices.shared.removeToCart(res, restId, deviceId, (val: any) => {
+        await FirebaseServices.shared.removeToCart(res, restId, deviceId, `table${table}`, (val: any) => {
           callback && callback("remove")
         });
 

@@ -5,15 +5,6 @@ export default async function OrgProductsPage({
 }: {
   params: { restId: string }; searchParams: { table: string }
 }) {
-  const response = await fetch(
-    `${process.env.NODE_ENV == "development"
-      ? "http://localhost:3000"
-      : "https://www.cyberdine.in"
-    }/api/rest/${params.restId}/detail`, { next: { revalidate: 1 * 1 * 1 } }
-  );
-  const json = await response.json();
-  console.log("jsonsssss", json);
-
   function lightenColor(hex: string, percent: any) {
     // Parse the hex color to get RGB components
     let r = parseInt(hex.substring(1, 3), 16);
@@ -37,17 +28,31 @@ export default async function OrgProductsPage({
 
     return '#' + hexR + hexG + hexB;
   }
-  return (
-    <div
-      className="restaraunt-backround"
-      style={
-        {
-          "--primary-bg": "#" + json.data.hcolor?.slice(2, 10),
-          "--secondary-bg": lightenColor('#' + json.data.hcolor?.slice(2, 10), 40) + "4a",
-        } as React.CSSProperties
-      }
-    >
-      <HomePage data={json.data} restId={params.restId} table={searchParams.table} bgColor={"#" + json.data.hcolor?.slice(2, 10)} />
-    </div>
-  );
+  try {
+    const response = await fetch(
+      `${process.env.NODE_ENV == "development"
+        ? "http://localhost:3000"
+        : "https://www.cyberdine.in"
+      }/api/rest/${params.restId}/detail`, { next: { revalidate: 60 * 60 * 2 } }
+    );
+    const json = await response.json();
+  
+    
+    return (
+      <div
+        className="restaraunt-backround"
+        style={
+          {
+            "--primary-bg": "#" + json.data.hcolor?.slice(2, 10),
+            "--secondary-bg": lightenColor('#' + json.data.hcolor?.slice(2, 10), 40) + "4a",
+          } as React.CSSProperties
+        }
+      >
+        <HomePage data={json.data} restId={params.restId} table={searchParams.table} bgColor={"#" + json.data.hcolor?.slice(2, 10)} />
+      </div>
+    );
+  } catch (error) {
+    return <></>
+  }
+  
 }

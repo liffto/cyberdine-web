@@ -1,35 +1,71 @@
 import { Item } from "@/model/products/items";
 import Image from "next/image";
 import { useState } from "react";
-import BookmarkSharpIcon from '@mui/icons-material/BookmarkSharp';
-
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 export default function MenuItemCard({
   index,
   setSelectedData,
   ele,
   catIndex,
   bgColor,
+  addOrderItems,
+  isOrderFlow
 }: {
   index: any;
   setSelectedData?: (ele: Item) => void;
   ele: Item;
   catIndex?: number;
   bgColor: string;
+  addOrderItems: (ele: Item, type: string) => void;
+  isOrderFlow: boolean;
 }) {
   const [imageError, setImageError] = useState(false);
 
   const handleImageError = () => {
     setImageError(true);
   };
+
+  const addToItems = (type: string) => {
+    if (type == "add" && ele.quantity == 0 || ele.quantity == null) {
+      ele.quantity = 1;
+      addOrderItems(ele, type);
+    } else if (type == "add") {
+      ele.quantity = ele.quantity + 1;
+      addOrderItems(ele, type);
+    } else if (type == "remove" && ele.quantity > 0) {
+      if (ele.quantity > 1) {
+        ele.quantity = ele.quantity - 1;
+      } else {
+        ele.quantity = null;
+      }
+      addOrderItems(ele, type);
+    }
+  };
+  const addWishList = () => {
+    if (ele.quantity == undefined || ele.quantity == 0 || ele.quantity == null) {
+      ele.quantity = 1;
+      addOrderItems(ele, "add");
+    } else {
+      if (ele.quantity > 1) {
+        ele.quantity = ele.quantity - 1;
+      } else {
+        ele.quantity = null;
+      }
+      addOrderItems(ele, "remove");
+    }
+  };
   return (
     <div
       key={index}
-      onClick={() => {
-        setSelectedData && setSelectedData(ele);
-      }}
-      className={`rounded-md boxshadow-3 md:rounded-md overflow-hidden max-h-[100px] flex bg-white  ${ele.quantity != undefined && ele.quantity > 0 ? "border-2 border-primary" : ""}`}
+
+      className={`rounded-md boxshadow-3 md:rounded-md overflow-hidden max-h-[100px] flex bg-white`}
     >
-      <div className="relative z-0">
+      <div className="relative z-0" onClick={() => {
+        setSelectedData && setSelectedData(ele);
+      }}>
         <div className={`h-full bg-slate-200  flex items-center`}>
           {imageError ? (
             <Image
@@ -67,28 +103,37 @@ export default function MenuItemCard({
         )}
       </div>
       <div className={`relative z-0 flex items-center rounded-e-md p-2 flex-1`}>
-        <div className="flex flex-col  flex-1 pl-1">
+        <div className="flex flex-col  flex-1 pl-1" onClick={() => {
+          setSelectedData && setSelectedData(ele);
+        }}>
           <h1 className={`text-base capitalize md:text-lg font-bold ${!ele.isActive ? "text-gray-400" : "text-black"}`}>
             {ele.capitalizeNameFirstLetter()}
           </h1>
           <div
-            className={`text-xs md:text-sm  ${!ele.isActive ? "text-gray-300" : "text-gray-800"} font-medium`}
+            className={`text-xs md:text-sm overflow-hidden ${!ele.isActive ? "text-gray-300" : "text-gray-800"} font-medium`} style={{ maxWidth: '200px', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}
           >
-            {ele.foodType}
+            {ele?.capitalizeDescriptionFirstLetter() && ele?.capitalizeDescriptionFirstLetter()!.length > 0 ? ele?.capitalizeDescriptionFirstLetter() : ele.foodType}
           </div>
+          <div className={`font-bold pr-1 text-sm pt-1 ${!ele.isActive ? "text-gray-300" : "text-gray-700"}`}>&#x20B9; {ele.price}</div>
         </div>
-        {
-          // ele.quantity != undefined && ele.quantity > 0 ?
-          //  <div className="flex flex-col justify-center items-center pr-3">
-          //   <div className={`font-bold text-black text-2xl`}>{ele.quantity}</div>
-          //   <div className={`text-xs md:text-sm font-medium text-black`}>Qty</div>
-          // </div> 
-          // :
-          <div className={`font-bold pr-1 ${!ele.isActive ? "text-gray-300" : "text-gray-700"}`}>&#x20B9; {ele.price}</div>
+        {isOrderFlow ? ele.isActive ?
+          ele.quantity != null && ele.quantity > 0 ?
+            <div className="flex justify-center items-center rounded border-2 border-primary mb-1">
+              <div onClick={() => { addToItems("remove") }} className="bg-primary px-1"><RemoveIcon sx={{ fontSize: '13px', color: 'white' }} /></div>
+              <div className="px-2">{ele.quantity ?? 0}</div>
+              <div onClick={() => { addToItems("add") }} className="bg-primary px-1"><AddIcon sx={{ fontSize: '13px', color: 'white' }} /></div>
+            </div>
+            :
+            <div onClick={() => { addToItems("add") }} className={`flex justify-center items-center pl-4 pr-3 py-1 rounded border-2 border-primary text-primary`}>
+              <div className="text-xs pr-1">Add</div>
+              <AddIcon sx={{ fontSize: '13px' }} />
+            </div> : <div className={`flex justify-center items-centser pl-4 pr-3 py-1 rounded border-2 border-gray text-gray-400`}>
+            <div className="text-xs pr-1">Add</div>
+            <AddIcon sx={{ fontSize: '13px' }} />
+          </div> : <div onClick={() => { addWishList() }} style={{ border: `1px solid ${bgColor}`, borderRadius: '3px' }}>
+          {ele.quantity != null && ele.quantity > 0 ? <BookmarkIcon sx={{ color: bgColor, padding: '3px 2px' }} /> : <BookmarkBorderIcon sx={{ color: bgColor, padding: '3px 2px' }} />}
+        </div>
         }
-        {ele.quantity != undefined && ele.quantity > 0  &&<div className="absolute -top-[5px] right-2">
-          <BookmarkSharpIcon sx={{ color: bgColor }} />
-        </div>}
       </div>
     </div>
   );
