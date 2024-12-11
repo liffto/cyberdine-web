@@ -1,6 +1,7 @@
 "use client";
 import { CartMenu } from "@/model/orders/cart_menu";
 import { Menu } from "@/model/products/menu";
+import { useNotification } from "@/providers/order_complete";
 import { FirebaseServices } from "@/service/firebase.service";
 import { useParams, useSearchParams } from "next/navigation";
 import React, { createContext, useState, useEffect, useCallback } from "react";
@@ -42,6 +43,7 @@ function MenuDataProvider({ children }: { children: React.ReactNode }) {
   // const queryParams = new URLSearchParams(window.location.search);
   const params = useSearchParams();
   const table = params.get("table")
+  const {openNotificationDialog} = useNotification()
   // const table = queryParams.get('table');
   useEffect(() => {
     const getDeviceId = generateDeviceId();
@@ -55,6 +57,8 @@ function MenuDataProvider({ children }: { children: React.ReactNode }) {
       const cartMenuUnSub = FirebaseServices.shared.getCartMenu(restId, table ?? '', getDeviceId, setCartMenuData);
       const listenOrder = FirebaseServices.shared.listenOrder(restId, table ?? '', getDeviceId, (each: any) => {
         if (each == "Done") {
+          console.log("listen order");
+          openNotificationDialog()
           setCartMenuData(null)
         }
       });

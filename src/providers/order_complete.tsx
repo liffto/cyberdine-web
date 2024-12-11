@@ -22,10 +22,14 @@ import {
 } from "@mui/material";
 import {Done, DoneOutline,QrCodeScannerRounded} from "@mui/icons-material"
 import { TransitionProps } from "@mui/material/transitions";
-import { getMessaging, onMessage, MessagePayload } from "firebase/messaging";
-import { app, messaging, requestNotificationPermission } from "../../firebase-config";
+import {  onMessage, MessagePayload } from "firebase/messaging";
+import { app, getMessagingFun, requestNotificationPermission } from "../../firebase-config";
 import { MenuDataContext } from "@/context/menu.context";
-import admin from "firebase-admin";
+import admin, { messaging } from "firebase-admin";
+import enviroment from "../../firebase-admin-config.dev.json"
+import prodEnviroment from "../../firebase-admin-config.prod.json"
+
+
 // Slide transition for dialog
 const Transition = React.forwardRef<unknown, TransitionProps>((props, ref) => (
   <Slide direction="up" ref={ref} {...props}>
@@ -35,7 +39,7 @@ const Transition = React.forwardRef<unknown, TransitionProps>((props, ref) => (
 
 // Interface for notification context
 interface NotificationContextType {
-  openNotificationDialog: (payload: MessagePayload) => void;
+  openNotificationDialog: () => void;
   closeNotificationDialog: () => void;
 }
 
@@ -68,54 +72,10 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
   const [currentNotification, setCurrentNotification] =
     useState<MessagePayload | null>(null);
 
-    function setupMessageListener() {
-        if (typeof window !== 'undefined') {
-            console.log();
-            
-          const messagings = messaging();
-          
-          if(messagings)
-          return onMessage(messagings, (payload) => {
-            console.log('Message received in foreground:', payload);
-            
-            // Optional: Create a custom notification
-            // new Notification(payload.notification?.title || 'New Notification', {
-            //   body: payload.notification?.body || '',
-            // });
-          });
-        }
-      }
-      
-  // Initialize Firebase messaging listener
-  useEffect(() => {
-    // Request notification permission and log the token
-    async function setupNotifications() {
-      const token = await requestNotificationPermission();
-      if (token) {
-        console.log('FCM Token:', token);
-        // const topic=await admin.messaging(app).subscribeToTopic([token],deviceId??"");
-        
-        // Here you would typically send this token to your backend
-        // to associate it with the current user
-      }
-    }
-
-    // Setup message listener for foreground messages
-    const unsubscribe = setupMessageListener();
-
-    setupNotifications();
-
-    // Cleanup
-    return () => {
-      if (unsubscribe) {
-        unsubscribe();
-      }
-    };
-  }, []);
 
   // Open notification dialog
-  const openNotificationDialog = (payload: MessagePayload) => {
-    setCurrentNotification(payload);
+  const openNotificationDialog = () => {
+    // setCurrentNotification(payload);
     setNotificationDialogOpen(true);
   };
 
@@ -163,15 +123,15 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
         open={notificationDialogOpen}
         TransitionComponent={Transition}
         keepMounted
-        onClose={() => setNotificationDialogOpen(false)}
+        // onClose={() => setNotificationDialogOpen(false)}
         aria-describedby="notification-dialog"
       >
         <DialogTitle>
           <Box display="flex" alignItems="center" justifyContent="space-between">
-            <Typography variant="h6">New Notification</Typography>
-            <IconButton onClick={() => setNotificationDialogOpen(false)}>
+            <Typography variant="h6">Order Completed</Typography>
+            {/* <IconButton onClick={() => setNotificationDialogOpen(false)}> */}
               <DoneOutline color="primary" />
-            </IconButton>
+            {/* </IconButton> */}
           </Box>
         </DialogTitle>
         <Divider />

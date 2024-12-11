@@ -40,7 +40,7 @@ const config = {
   appId: process.env.NEXT_PUBLIC_APP_ID,
   measurementId: process.env.NEXT_PUBLIC_MEASUREMENT_ID,
 };
-export const messaging = () => {
+export const getMessagingFun = () => {
   if (typeof window !== "undefined"){
     
     console.log(config,"config");
