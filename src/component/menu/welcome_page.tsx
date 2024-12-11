@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import StarRating from './start_rating';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 // Card component
 const Card = ({ svg, text }: { svg: string, text: string }) => (
     <div className="bg-white border-2 border-black rounded-lg w-full max-w-sm flex items-center">
@@ -52,11 +52,17 @@ const WelcomePage = ({ data, restId, table, bgColor }: { data: any, restId: stri
     }
 
     function getTableNumber() {
-        const params = useSearchParams();
-        const table = params.get("table")
-
-        return table;
-    }
+        // Get the current URL (window.location.href)
+        const url = window.location.href;
+      
+        // Create a new URL object from the current URL
+        const urlObj = new URL(url);
+      
+        // Use searchParams to extract the value of the 'table' query parameter
+        const tableNumber = urlObj.searchParams.get('table');
+      
+        return tableNumber;
+      }
 
     return (
         <div className={`text-white min-h-screen flex flex-col items-center justify-center p-4`}
