@@ -58,7 +58,9 @@ function MenuDataProvider({ children }: { children: React.ReactNode }) {
       const listenOrder = FirebaseServices.shared.listenOrder(restId, table ?? '', getDeviceId, (each: any) => {
         if (each == "Done") {
           console.log("listen order");
-          openNotificationDialog()
+          if(cartMenuData){
+            openNotificationDialog(true)
+          }
           setCartMenuData(null)
         }
       });

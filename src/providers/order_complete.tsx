@@ -20,21 +20,13 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import {Done, DoneOutline,QrCodeScannerRounded} from "@mui/icons-material"
-import { TransitionProps } from "@mui/material/transitions";
-import {  onMessage, MessagePayload } from "firebase/messaging";
-import { app, getMessagingFun, requestNotificationPermission } from "../../firebase-config";
-import { MenuDataContext } from "@/context/menu.context";
-import admin, { messaging } from "firebase-admin";
-import enviroment from "../../firebase-admin-config.dev.json"
-import prodEnviroment from "../../firebase-admin-config.prod.json"
-
-
-
-
+import { QrCodeScannerRounded } from "@mui/icons-material";
+import DoneIcon from '@mui/icons-material/Done';
+import { MessagePayload } from "firebase/messaging";
+import Image from 'next/image';
 // Interface for notification context
 interface NotificationContextType {
-  openNotificationDialog: () => void;
+  openNotificationDialog: (value: boolean) => void;
   closeNotificationDialog: () => void;
 }
 
@@ -57,7 +49,7 @@ const NotificationContext = createContext<NotificationContextType | undefined>(
 export const NotificationProvider: React.FC<NotificationProviderProps> = ({
   children,
 }) => {
-  const [notificationDialogOpen, setNotificationDialogOpen] = useState(false);
+  const [notificationDialogOpen, setNotificationDialogOpen] = useState<boolean>(false);
   const [fullScreenDialog, setFullScreenDialog] =
     useState<FullScreenDialogState>({
       open: false,
@@ -68,22 +60,23 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
 
 
   // Open notification dialog
-  const openNotificationDialog = () => {
-    // setCurrentNotification(payload);
-    setNotificationDialogOpen(true);
+  const openNotificationDialog = (value: boolean) => {
+    console.log("Opening notification dialog...", value);
+    setNotificationDialogOpen(value);
   };
 
   // Close notification dialog
   const closeNotificationDialog = () => {
     setNotificationDialogOpen(false);
-
+    window.history.replaceState(null, '', '/scan-again');
+    window.location.href = '/scan-again';
     // Open full-screen dialog if notification exists
-    if (currentNotification) {
-      setFullScreenDialog({
-        open: true,
-        message: currentNotification.notification?.body || "No message",
-      });
-    }
+    // if (currentNotification) {
+    // setFullScreenDialog({
+    //   open: true,
+    //   message: currentNotification?.notification?.body || "No message",
+    // });
+    // }
   };
 
   // Close full-screen dialog
@@ -116,26 +109,64 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
       <Dialog
         open={notificationDialogOpen}
         keepMounted
-        // onClose={() => setNotificationDialogOpen(false)}
         aria-describedby="notification-dialog"
+        sx={{
+          '& .MuiDialog-paper': {
+            width: '74%', // Set width to 70%
+            paddingBottom: 2, // Add padding to the bottom of the dialog
+          },
+        }}
       >
         <DialogTitle>
-          <Box display="flex" alignItems="center" justifyContent="space-between">
-            <Typography variant="h6">Order Completed</Typography>
-            {/* <IconButton onClick={() => setNotificationDialogOpen(false)}> */}
-              <DoneOutline color="primary" />
-            {/* </IconButton> */}
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            flexDirection="column"
+            textAlign="center"
+          >
+            <Box
+              sx={{
+                padding: 2,
+                marginBottom: 2
+              }}
+            >
+              <Image
+                src="/images/png/order_complete_done_icon.png"
+                alt="Order Complete"
+                width={80}
+                height={80}
+                className="object-contain"
+              />
+            </Box>
+
+            <Typography variant="h6" fontWeight="600" gutterBottom>
+              Order Completed
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              Thank you, please visit again.
+            </Typography>
           </Box>
         </DialogTitle>
-        <Divider />
-        <DialogContent>
-          <DialogContentText id="notification-dialog">
-            {currentNotification?.notification?.body || 'You have a new notification'}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeNotificationDialog} color="primary">
-            View Details
+        <DialogActions sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Button
+            onClick={closeNotificationDialog}
+            variant="outlined"
+            color="success"
+            sx={{
+              width: '70%',
+              borderColor: 'green',
+              color: 'green',
+              fontWeight: 'bold', // Make the text bold
+              boxShadow: '0 4px 6px rgba(0, 128, 0, 0.2)', // Add shadow to the button
+              '&:hover': {
+                backgroundColor: 'rgba(0, 128, 0, 0.1)', // Slight green hover effect
+                boxShadow: '0 6px 6px rgba(0, 128, 0, 0.3)', // Darker shadow on hover
+              },
+            }}
+            fullWidth
+          >
+            Done
           </Button>
         </DialogActions>
       </Dialog>
@@ -144,13 +175,13 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
       <Dialog
         fullScreen={true}
         open={fullScreenDialog.open}
-        onClose={() => {}} // Prevent closing
+        onClose={() => { }} // Prevent closing
       >
         <DialogTitle>
           <Box display="flex" alignItems="center" justifyContent="space-between">
             <Typography variant="h6">Notification Details</Typography>
             <IconButton onClick={closeFullScreenDialog}>
-              <DoneOutline color="primary" />
+              <DoneIcon color="primary" />
             </IconButton>
           </Box>
         </DialogTitle>
