@@ -1,9 +1,9 @@
 import Image from "next/image";
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import Link from "next/link";
-export default function ProductBottommButton({ cartCount, pendingCount, approvedCount, restId, table }: {
+export default function ProductBottommButton({ cartCount, pendingCount, approvedCount, restId, table, isOrderFlow }: {
     cartCount: number; pendingCount: number; approvedCount: number; restId: string;
-    table: string;
+    table: string; isOrderFlow: boolean
 }) {
     return (
         <div className="fixed bottom-0 z-20 bg-white w-full px-4 py-3 flex justify-between" style={{ boxShadow: '0 -4px 6px rgba(0, 0, 0, 0.1)' }}
@@ -12,7 +12,7 @@ export default function ProductBottommButton({ cartCount, pendingCount, approved
                 <Image src={'/images/svg/placed_order.svg'} alt="placed order" height={20} width={20} />
                 <div className="ml-2">
                     <div className="text-xs font-semibold">{`${cartCount} Selected`}</div>
-                    <div className="text-sm text-gray-400">{pendingCount} waiting | {approvedCount} approved</div>
+                    {isOrderFlow && <div className="text-sm text-gray-400">{pendingCount} waiting | {approvedCount} approved</div>}
                 </div>
             </div>
             <Link href={cartCount == 0 ? `/rest/${restId}/orders?table=${table}` : `/rest/${restId}/cart?table=${table}`}>

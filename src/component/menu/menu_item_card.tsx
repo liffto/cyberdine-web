@@ -67,36 +67,38 @@ export default function MenuItemCard({
         setSelectedData && setSelectedData(ele);
       }}>
         <div className={`h-full bg-slate-200  flex items-center`}>
-          {imageError ? (
-            <Image
-              src="/images/png/empty_menu_item.png"
-              alt={ele.name! + "empty"}
-              height={80}
-              width={80}
-              style={{ objectFit: "cover", height: "80px" }}
-            />
-          ) : (
-            <Image
-              src={ele.itemsImageUrl && ele.itemsImageUrl != "" ? ele.itemsImageUrl : '/images/png/empty_menu_item.png'}
-              alt={ele.name!}
-              height={80}
-              width={80}
-              priority={catIndex ? false : catIndex == 0 ? true : false}
-              onError={handleImageError}
-              style={{
-                objectFit: "cover",
-                height: "80px",
-                opacity: !ele.isActive ? 0.4 : 1
-              }}
-            />
-          )}
+          {
+            imageError ? (
+              <Image
+                src="/images/png/empty_menu_item.png"
+                alt={ele.name! + "empty"}
+                height={80}
+                width={80}
+                style={{ objectFit: "cover", height: "80px" }}
+              />
+            ) :
+              (
+                <img
+                  src={ele.itemsImageUrl && ele.itemsImageUrl != "" ? ele.itemsImageUrl : '/images/png/empty_menu_item.png'}
+                  alt={ele.name!}
+                  height={80}
+                  width={80}
+                  // priority={catIndex ? false : catIndex == 0 ? true : false}
+                  onError={handleImageError}
+                  style={{
+                    objectFit: "cover",
+                    height: "80px",
+                    opacity: ele.isSoldOut ? 0.4 : 1
+                  }}
+                />
+              )}
         </div>
-        {ele.isActive && ele.isSpecial && (
+        {!ele.isSoldOut && ele.isSpecial && (
           <div className="absolute bottom-0 right-0 text-white bg-primary text-sm w-full text-center">
             Special
           </div>
         )}
-        {!ele.isActive && (
+        {ele.isSoldOut && (
           <div className="absolute bottom-[38%] right-0 text-white bg-[#d71d25] text-sm w-full text-center">
             Sold Out
           </div>
@@ -106,17 +108,17 @@ export default function MenuItemCard({
         <div className="flex flex-col  flex-1 pl-1" onClick={() => {
           setSelectedData && setSelectedData(ele);
         }}>
-          <h1 className={`text-base capitalize md:text-lg font-bold ${!ele.isActive ? "text-gray-400" : "text-black"}`}>
+          <h1 className={`text-base capitalize md:text-lg font-bold ${ele.isSoldOut ? "text-gray-400" : "text-black"}`}>
             {ele.capitalizeNameFirstLetter()}
           </h1>
           <div
-            className={`text-xs md:text-sm overflow-hidden ${!ele.isActive ? "text-gray-300" : "text-gray-800"} font-medium`} style={{ maxWidth: '200px', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}
+            className={`text-xs md:text-sm overflow-hidden ${ele.isSoldOut ? "text-gray-300" : "text-gray-800"} font-medium`} style={{ maxWidth: '200px', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}
           >
             {ele?.capitalizeDescriptionFirstLetter() && ele?.capitalizeDescriptionFirstLetter()!.length > 0 ? ele?.capitalizeDescriptionFirstLetter() : ele.foodType}
           </div>
-          <div className={`font-bold pr-1 text-sm pt-1 ${!ele.isActive ? "text-gray-300" : "text-gray-700"}`}>&#x20B9; {ele.price}</div>
+          <div className={`font-bold pr-1 text-sm pt-1 ${ele.isSoldOut ? "text-gray-300" : "text-gray-700"}`}>&#x20B9; {ele.price}</div>
         </div>
-        {isOrderFlow ? ele.isActive ?
+        {isOrderFlow ? !ele.isSoldOut ?
           ele.quantity != null && ele.quantity > 0 ?
             <div className="flex justify-center items-center rounded border-2 border-primary mb-1">
               <div onClick={() => { addToItems("remove") }} className="bg-primary px-1"><RemoveIcon sx={{ fontSize: '13px', color: 'white' }} /></div>

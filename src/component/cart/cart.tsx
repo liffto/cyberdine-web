@@ -81,7 +81,7 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
         var pendingData = cartMenuData?.cartMenuMap?.get('pending');
         const mergedData = mergeCartAndPendingData(cartData, pendingData);
         FirebaseServices.shared.placeOrder(mergedData, restId, deviceId ?? '', table, () => {
-            sendFcm(`New Order`,`New Order been assigned to you.`);
+            sendFcm(`New Order`,`From table - ${table} order has been asigned to you.`);
             router.replace(`/rest/${restId}/orders?table=${table}`);
             getQuantityFromOrder();
         });

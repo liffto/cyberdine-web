@@ -3,6 +3,7 @@ export class Item {
     id: string | null = null;
     isActive: boolean | null = null;
     isSpecial: boolean | null = null;
+    isSoldOut: boolean | null = null;
     itemsImageUrl: string | null = null;
     name: string | null = null;
     foodType: string | null = null;
@@ -19,6 +20,7 @@ export class Item {
             this.category = data.category;
             this.id = data.id;
             this.isActive = data.isActive;
+            this.isSoldOut = data.isSoldOut;
             this.isSpecial = data.isSpecial;
             this.itemsImageUrl = data.itemsImageUrl;
             this.name = data.name;

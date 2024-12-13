@@ -530,7 +530,7 @@ export default function ProductDisplay({
             {cartMenuData &&
               cartMenuData?.getMenuList() &&
               cartMenuData?.getMenuList()?.length != 0 && (
-                <ProductBottommButton cartCount={cartMenuData.getCartLength()} pendingCount={cartMenuData.getPendingLength()} approvedCount={cartMenuData.getApprovedLength()} restId={restId} table={table} />
+                <ProductBottommButton cartCount={cartMenuData.getCartLength()} pendingCount={cartMenuData.getPendingLength()} approvedCount={cartMenuData.getApprovedLength()} restId={restId} table={table} isOrderFlow={isOrderFlow} />
               )}
           </div>
         </div>

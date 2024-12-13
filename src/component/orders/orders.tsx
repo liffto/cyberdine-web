@@ -74,7 +74,7 @@ const OrdersComponent: React.FC<OrdersComponentProps> = ({ bgColor, restId, tabl
                 <div className="bg-primary px-4 text-white py-2 font-semibold text-xs">
                     <div className="flex justify-start items-center gap-3">
                         <div className=""><CheckCircleOutlineIcon /></div>
-                        <div className="">Approved</div>
+                        <div className="">Order sent to kitchen</div>
                     </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 py-4 px-4">

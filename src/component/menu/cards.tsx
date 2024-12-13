@@ -70,7 +70,7 @@ export function ProCard({
           menuData
             .getMenuList(ele, selfilterList)!
             .map((ele: Item, index: any) => {
-              return (
+              return ele.isActive && (
                 <div key={index} className="">
                   <MenuItemCard
                     index={index}

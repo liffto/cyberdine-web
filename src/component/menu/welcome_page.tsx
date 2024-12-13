@@ -54,15 +54,15 @@ const WelcomePage = ({ data, restId, table, bgColor }: { data: any, restId: stri
     function getTableNumber() {
         // Get the current URL (window.location.href)
         const url = window.location.href;
-      
+
         // Create a new URL object from the current URL
         const urlObj = new URL(url);
-      
+
         // Use searchParams to extract the value of the 'table' query parameter
         const tableNumber = urlObj.searchParams.get('table');
-      
+
         return tableNumber;
-      }
+    }
 
     return (
         <div className={`text-white min-h-screen flex flex-col items-center justify-center p-4`}
@@ -92,9 +92,9 @@ const WelcomePage = ({ data, restId, table, bgColor }: { data: any, restId: stri
                         alt={'Welcome Logo'}
                         className="w-26 h-26 my-4 object-contain m-auto" // Adjust size and ensure the image fits
                     />}
-                <p className="text-3xl font-bold mt-4" style={{ fontFamily: 'mum mum restaurant' }}>
+                {getTableNumber() && <p className="text-2xl font-bold mt-4" style={{ fontFamily: 'mum mum restaurant' }}>
                     {`Table - ${getTableNumber()}`}
-                </p>
+                </p>}
             </div>
             <div className={`w-full flex flex-col mb-14 max-w-4xl overflow-y-hidden	`}>
                 {items.map((item, index) => (
