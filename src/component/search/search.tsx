@@ -243,7 +243,7 @@ export default function SearchComponent({
         {cartMenuData &&
           cartMenuData?.getMenuList() &&
           cartMenuData?.getMenuList()?.length != 0 && (
-            <ProductBottommButton cartCount={cartMenuData.getCartLength()} pendingCount={cartMenuData.getPendingLength()} approvedCount={cartMenuData.getApprovedLength()} restId={restId} table={table} />
+            <ProductBottommButton cartCount={cartMenuData.getCartLength()} pendingCount={cartMenuData.getPendingLength()} approvedCount={cartMenuData.getApprovedLength()} restId={restId} table={table} isOrderFlow={isOrderFlow} />
           )}
       </div>
       {selectedMenuData && (
