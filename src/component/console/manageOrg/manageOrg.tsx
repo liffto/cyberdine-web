@@ -84,7 +84,7 @@ export default function ManageOrgComponent({ onBackClicked }: { onBackClicked: (
                     </div>
                 ) : (
                     <div className="flex flex-col justify-center items-center">
-                        <Image
+                        <img
                             src="/images/png/empty_manage_org.png"
                             alt="Empty State"
                             width={400}

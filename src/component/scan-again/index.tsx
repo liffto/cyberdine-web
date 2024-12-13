@@ -6,7 +6,7 @@ const ThankYouPage: React.FC = () => {
         <div className="flex items-center justify-center min-h-screen ">
             <div className="text-center px-6 py-12 bg-white rounded-lg max-w-sm w-full">
                 {/* Image */}
-                <Image
+                <img
                     src="/images/svg/scan_again_icon.svg"
                     alt="Empty State"
                     width={400}

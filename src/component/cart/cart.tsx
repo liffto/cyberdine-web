@@ -154,7 +154,7 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
                 <Toaster position="top-center" />
                 <div className="border border-primary mx-4 mt-2"></div>
                 {cartMenuData && (cartMenuData?.getApprovedLength() != 0 || cartMenuData?.getPendingLength() != 0) && <div className="w-full" onClick={handleViewOrderClick} >
-                    <Image src={'/images/png/view_selected_order.png'} alt="placed order" height={10} width={430} />
+                    <img src={'/images/png/view_selected_order.png'} alt="placed order" height={10} width={430} />
                 </div>}
                 <div className={`${cartMenuData && (cartMenuData?.getApprovedLength() != 0 || cartMenuData?.getPendingLength() != 0) ? "" : "mt-4"} px-4 py-1 font-bold text-sm bg-secondary text-black capitalize flex`}>
                     <div className=" ">Items in cart</div>

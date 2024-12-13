@@ -311,23 +311,23 @@ export default function ProductDisplay({
       }}
       className={"bg-primary  rounded-md"}
     >
-      <Image
+      <img
         src="/images/svg/our_special_banner.svg"
         alt="restarunt logo"
         width="443"
         height="123"
-        priority={true}
+        // priority={true}
       />
     </div>
   );
   const GoogleReview = (
     <Link href={review} target="_blank" aria-label="Link to google review">
-      <Image
+      <img
         src="/images/svg/g_review_banner.svg"
         alt="restarunt logo"
         width="443"
         height="123"
-        priority={true}
+        // priority={true}
       />
     </Link>
   );  
@@ -335,12 +335,12 @@ export default function ProductDisplay({
     <div className="">
       {isPayCompleted ? (
         <div className="h-screen flex flex-col justify-center items-center">
-          <Image
+          <img
             src="/images/svg/no_dishes.svg"
             alt="no dishes"
             width="280"
             height="123"
-            priority={true}
+            // priority={true}
           />
           <div className="mt-4 font-semibold text-black">No dishes found</div>
         </div>
@@ -501,12 +501,12 @@ export default function ProductDisplay({
                   <div className="flex item-center justify-center mt-6">
                     <div style={{ backgroundColor: bgColor }} className=" text-white flex items-center justify-center rounded-md py-3 w-28" onClick={() => { setOpenMenu(false) }} >
                       <div className="">
-                        <Image
+                        <img
                           src="/images/svg/close_icon.svg"
                           alt="menu icon"
                           width="20"
                           height="20"
-                          priority={true}
+                          // priority={true}
                         />
                       </div>
                       <div className="text-base pl-2 font-semibold">Close</div>

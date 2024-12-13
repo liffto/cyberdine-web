@@ -61,7 +61,7 @@ function TextAndButtons() {
       <div className="flex flex-col lg:flex-row items-center justify-center lg:justify-left gap-4 pt-4">
         <Link href={demoLink}>
           <div className="flex items-center justify-center font-semibold bg-primary text-white rounded-md w-[200px] xl:w-[220px] py-3 text-sm lg:text-xl gap-4">
-            <Image
+            <img
               src={googlePlay}
               width={24}
               height={24}
@@ -72,7 +72,7 @@ function TextAndButtons() {
         </Link>
         <Link href={productTourLink}>
           <div className="flex items-center justify-center font-semibold text-primary border-2 border-primary rounded-md w-[200px] xl:w-[220px] py-3 text-sm lg:text-xl gap-4">
-            <Image
+            <img
               src={apple}
               width={24}
               height={24}

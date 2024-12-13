@@ -36,7 +36,7 @@ export default function OrderCard({ ele, index, bgColor, addOrderItems, canAddIt
             <div className="relative z-0">
                 <div className={`h-full bg-slate-200  flex items-center`}>
                     {imageError ? (
-                        <Image
+                        <img
                             src="/images/png/empty_menu_item.png"
                             alt={ele.name! + "empty"}
                             height={80}
@@ -44,12 +44,12 @@ export default function OrderCard({ ele, index, bgColor, addOrderItems, canAddIt
                             style={{ objectFit: "cover", height: "80px" }}
                         />
                     ) : (
-                        <Image
+                        <img
                             src={ele.itemsImageUrl && ele.itemsImageUrl != "" ? ele.itemsImageUrl : '/images/png/empty_menu_item.png'}
                             alt={ele.name!}
                             height={80}
                             width={80}
-                            priority={index == 0 ? true : false}
+                            // priority={index == 0 ? true : false}
                             onError={handleImageError}
                             style={{
                                 objectFit: "cover",

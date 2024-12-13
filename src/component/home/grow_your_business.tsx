@@ -58,23 +58,23 @@ function DemoTourButtons() {
 function BannerImage() {
   return (
     <div  className="pt-4 md:pt-6 lg:pt-8 flex justify-center">
-      <Image
+      <img
         className="lg:hidden"
         src={bannerSm}
         alt={"banner image"}
         width={325}
         height={153}
-        quality={100}
-        priority
-      ></Image>
-      <Image
+        // quality={100}
+        // priority
+      />
+      <img
         className="hidden lg:block"
         src={bannerLg}
         alt={"banner image"}
         width={916}
         height={432}
-        priority
-      ></Image>
+        // priority
+      />
     </div>
   );
 }

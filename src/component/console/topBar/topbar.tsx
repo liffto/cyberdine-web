@@ -5,7 +5,7 @@ export default function ConsoleTopbar() {
         <div className="bg-[#179428] px-16"> 
             <div className="flex items-center justify-between p-4">
                 <div className="flex-shrink-0">
-                    <Image
+                    <img
                         src="/images/svg/console_logo.svg"
                         alt="Logo"
                         height={40}

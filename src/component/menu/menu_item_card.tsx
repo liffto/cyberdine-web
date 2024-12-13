@@ -69,7 +69,7 @@ export default function MenuItemCard({
         <div className={`h-full bg-slate-200  flex items-center`}>
           {
             imageError ? (
-              <Image
+              <img
                 src="/images/png/empty_menu_item.png"
                 alt={ele.name! + "empty"}
                 height={80}

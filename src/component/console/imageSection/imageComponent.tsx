@@ -26,7 +26,7 @@ export default function ImageComponent({ onBackClicked }: { onBackClicked: () =>
                 </button>
             </div>
             <div className="flex-grow flex items-center justify-center mt-6">
-                <Image
+                <img
                     src="/images/png/console_empty_menu.png"
                     alt="Empty State"
                     width={400}

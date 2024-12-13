@@ -14,34 +14,33 @@ export default function PickPlan() {
         className="container pt-3 md:pt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 "
       >
         <div data-aos={"fade-left"} data-aos-anchor-placement="center-bottom" className="  w-[220px] md:min-w-full rounded md:rounded-lg mx-auto">
-          <Image
+          <img
             className=" bg-secondary lg:block rounded-t-xl"
             src={'/images/svg/starter.svg'}
             alt={"starter price"}
             width={409}
             height={383}
-            priority
-          ></Image>
+          // priority
+          />
         </div>
         <div data-aos={"fade-in"} data-aos-anchor-placement="center-bottom" className="  w-[220px] md:min-w-full rounded md:rounded-lg mx-auto">
-        <Image
+          <img
             className=" bg-secondary lg:block rounded-t-xl"
             src={'/images/svg/premium.svg'}
             alt={"premium price"}
             width={409}
             height={383}
-            priority
-          ></Image>
+
+          />
         </div>
         <div data-aos={"fade-right"} data-aos-anchor-placement="center-bottom" className="  w-[220px] md:min-w-full rounded md:rounded-lg mx-auto">
-        <Image
+          <img
             className=" bg-secondary lg:block rounded-t-xl"
             src={'/images/svg/basic.svg'}
             alt={"basic price"}
             width={409}
             height={383}
-            priority
-          ></Image>
+          />
         </div>
       </div>
     </div>

@@ -25,7 +25,7 @@ export default function CategoryList({
               >
                 <div className="flex justify-center items-center gap-2 py-1">
                   <div className={`w-3 h-3`}>
-                    <Image
+                    <img
                       src={
                         ele.name === "Veg"
                           ? "/images/svg/veg_icon.svg"

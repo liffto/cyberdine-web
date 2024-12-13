@@ -26,23 +26,22 @@ export default function HowOurPageWorks() {
 function HowWorksCard({ card, index }: { card: any; index: number }) {
   return (
     <div className="max-w-[300px] md:max-w-auto mx-auto">
-      <Image
+      <img
         className="lg:hidden bg-secondary rounded-t-md"
         src={card.image}
         alt={"banner image"}
         width={300}
         height={280}
-        quality={100}
-        priority
-      ></Image>
-      <Image
+        // quality={100}
+        // priority
+      />
+      <img
         className="hidden bg-secondary lg:block rounded-t-xl"
         src={card.image}
         alt={"banner image"}
         width={409}
         height={383}
-        priority
-      ></Image>
+      />
       <div className="font-bold text-xl lg:text-[45px] pt-2 md:pt-4 lg:pt-6">0{index}</div>
       <div className="font-bold text-sm lg:text-[26px] lg:leading-8 md:pt-2 lg:pt-4">
         {card.title}

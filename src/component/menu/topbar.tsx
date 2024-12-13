@@ -28,7 +28,7 @@ export default function Topbar({ data, restId, table }: { data: any, table: any,
                     </div>
                 </div>
                 <div onClick={() => { handleClick() }} >
-                    <Image
+                    <img
                         className=""
                         src={"/images/png/home_button.png"}
                         alt={"home button"}

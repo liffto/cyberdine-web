@@ -130,7 +130,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
                 marginBottom: 2
               }}
             >
-              <Image
+              <img
                 src="/images/png/order_complete_done_icon.png"
                 alt="Order Complete"
                 width={80}

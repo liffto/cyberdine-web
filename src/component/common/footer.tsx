@@ -8,20 +8,20 @@ export default function Footer() {
         <div className="pb-2 md:pb-3 border-b">
           <div className="h-full flex flex-col md:flex-row items-center  py-2 md:py-4  mx-auto">
             <Link href="/" className="flex-1 lg:flex-none py-4 md:py-0 pb-6 md:pb-0" >
-              <Image
+              <img
                 className="md:hidden"
                 src={"/images/svg/cyberdine_logo.svg"}
                 alt={"logo"}
                 width={55}
                 height={25}
-              ></Image>
-              <Image
+              />
+              <img
                 className="hidden md:block"
                 src={"/images/svg/cyberdine_logo.svg"}
                 alt={"logo"}
                 width={80}
                 height={35}
-              ></Image>
+              />
             </Link>
             <div className="flex-1 flex flex-col md:flex-row items-center gap-4 lg:gap-6 xl:gap-8 justify-center nexa-regular">
               <Link href="/">Home</Link>

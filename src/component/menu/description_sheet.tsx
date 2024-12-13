@@ -82,12 +82,12 @@ export default function DescriptionSheet({
         <div className="bg-white " style={{ borderRadius: '16px 16px 0 0' }} >
           <div className="rounded overflow-hidden pb-3 px-4 pt-4">
             {selectedMenuData && selectedMenuData.itemsImageUrl && (
-              <Image
+              <img
                 src={selectedMenuData.itemsImageUrl!}
                 alt={selectedMenuData.name!}
                 height={163}
                 width={475}
-                priority={true}
+                // priority={true}
                 style={{
                   objectFit: "cover",
                   height: "250px",
@@ -105,12 +105,12 @@ export default function DescriptionSheet({
 
                 <div className={`flex justify-center items-center`}>
                   <div className="">
-                    <Image
+                    <img
                       src={selectedMenuData?.foodType === "Egg" ? "/images/svg/egg_icon.svg" : selectedMenuData?.foodType == "Drinks" ? "/images/svg/liquor_icon.svg" : selectedMenuData?.foodType == "Veg" ? "/images/svg/veg_icon.svg" : selectedMenuData?.foodType == "Non Veg" ? "/images/svg/non_veg_icon.svg" : ""}
                       alt={selectedMenuData?.name!}
                       height={16}
                       width={16}
-                      priority={false}
+                      // priority={false}
                       style={{
                         objectFit: "cover",
                       }}

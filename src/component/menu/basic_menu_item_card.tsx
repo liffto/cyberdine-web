@@ -32,12 +32,12 @@ export default function BasicMenuItemCard({
                                 {ele.capitalizeNameFirstLetter()}
                             </h1>
                             <div className="">
-                                <Image
+                                <img
                                     src={ele?.foodType == "Veg" ? "/images/svg/veg_icon.svg" : "/images/svg/non_veg_icon.svg"}
                                     alt={ele.name!}
                                     height={12}
                                     width={12}
-                                    priority={false}
+                                    // priority={false}
                                     style={{
                                         objectFit: "cover",
                                         background: "var(--secondary-bg)"

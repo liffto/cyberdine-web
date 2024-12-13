@@ -6,20 +6,20 @@ export default function TopBar() {
     <div className="h-[50px] md:h-[80px] sticky top-0 bg-appbg" style={{ boxShadow: "0px 0px 6px 0px #00000040",zIndex:100 }}>
       <div className="h-full flex items-center container py-2 md:py-4  mx-auto">
         <Link href="/" className="flex-1 lg:flex-none ">
-          <Image
+          <img
             className="md:hidden"
             src={"/images/svg/cyberdine_logo.svg"}
             alt={"logo"}
             width={55}
             height={25}
-          ></Image>
-          <Image
+          />
+          <img
             className="hidden md:block"
             src={"/images/svg/cyberdine_logo.svg"}
             alt={"logo"}
             width={80}
             height={35}
-          ></Image>
+          />
         </Link>
         <div className="flex-1 hidden lg:flex gap-4 xl:gap-6 justify-center nexa-bold">
             <Link href="/">Products</Link>

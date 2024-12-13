@@ -13,14 +13,14 @@ export default function DemoVideoComponent() {
         data-aos="fade-in"
         className="pt-3 md:pt-6"
       >
-        <Image
+        <img
           className="hidden lg:block "
           src={"/images/svg/demo_video.svg"}
           alt={"sample video"}
           height={1271}
           width={715}
         />
-        <Image
+        <img
           className="lg:hidden"
           src={"/images/svg/demo_video.svg"}
           alt={"sample video"}

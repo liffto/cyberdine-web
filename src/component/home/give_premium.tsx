@@ -29,23 +29,23 @@ function TitleAndSub() {
   );
 }
 
-function PremiumImage(){
-    return(
-        <div data-aos="fade-right" className="flex-1">
-        <Image
+function PremiumImage() {
+  return (
+    <div data-aos="fade-right" className="flex-1">
+      <img
         className="lg:hidden"
         src={givePremiumSm}
         alt={"give premium experience image"}
         width={252}
         height={353}
-      ></Image>
-      <Image
+      />
+      <img
         className="hidden lg:block"
         src={givePremiumLg}
         alt={"give premium experience  image"}
         width={514}
         height={844}
-      ></Image>
-        </div>
-    )
+      />
+    </div>
+  )
 }
