@@ -85,7 +85,7 @@ export default function ProductDisplay({
   const setSelectedData = (ele: Item) => {
     if (!ele.isActive) {
       soldOutNotify();
-    } else {
+    } else if(!ele.isSoldOut) {
       setSelectedMenuData(ele);
     }
   };
@@ -398,7 +398,8 @@ export default function ProductDisplay({
                 />}
                 {!(filterList && filterList.some(cat => cat.selected === true)) &&
                   <HorizontalScrollSnap
-                    items={review && GoogleReview ? [OurSpecial, review && GoogleReview] : [OurSpecial]}
+                    items={[OurSpecial]}
+                    // items={review && GoogleReview ? [OurSpecial, review && GoogleReview] : [OurSpecial]}
                   />
                 }
 

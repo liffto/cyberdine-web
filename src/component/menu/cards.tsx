@@ -108,7 +108,8 @@ export function BasicCard({
         className="px-4 py-2 font-bold text-sm bg-secondary text-black capitalize flex justify-between items-center"
       >
         <div className=" ">
-          {`${ele} (${menuData?.getMenuList(ele, selfilterList)!.length})`}
+          {`${ele}`}
+          {/* {`${ele} (${menuData?.getMenuList(ele, selfilterList)!.length})`} */}
         </div>
         <div className="pr-2">
           {ele === selectedCategoryName ? (

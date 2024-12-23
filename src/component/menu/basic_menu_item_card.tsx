@@ -33,14 +33,13 @@ export default function BasicMenuItemCard({
                             </h1>
                             <div className="">
                                 <img
-                                    src={ele?.foodType == "Veg" ? "/images/svg/veg_icon.svg" : "/images/svg/non_veg_icon.svg"}
+                                    src={ele?.foodType === "Egg" ? "/images/svg/egg_icon.svg" : ele?.foodType == "Veg" ? "/images/svg/veg_icon.svg" : "/images/svg/non_veg_icon.svg"}
                                     alt={ele.name!}
                                     height={12}
                                     width={12}
                                     // priority={false}
                                     style={{
                                         objectFit: "cover",
-                                        background: "var(--secondary-bg)"
                                     }}
                                 />
                             </div>
@@ -65,7 +64,7 @@ export default function BasicMenuItemCard({
                     <div className={`font-bold pr-1 ${!ele.isActive ? "text-gray-300" : "text-gray-700"}`}>&#x20B9; {ele.price}</div>
                 </div>
             </div>
-            { isLast && <div className="h-[1px] bg-gray-300 mx-3 my-3"></div>}
+            {isLast && <div className="h-[1px] bg-gray-300 mx-3 my-3"></div>}
         </div>
     );
 }
