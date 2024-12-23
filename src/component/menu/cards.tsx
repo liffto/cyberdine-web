@@ -126,7 +126,7 @@ export function BasicCard({
             menuData
               .getMenuList(ele, selfilterList)!
               .map((each: Item, index: any) => {
-                return (
+                return each.isActive && (
                   <div key={index} className="">
                     <BasicMenuItemCard
                       index={index}
