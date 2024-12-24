@@ -351,7 +351,7 @@ export default function ProductDisplay({
               <div className="">
                 <div className="sticky top-0 z-20 bg-[#fafafa] w-full flex justify-between items-center px-4 pt-2">
                   <Link
-                    href={`/rest/${restId}/search?table=${table}&query=&category=All`}
+                    href={table ? `/rest/${restId}/search?table=${table}&query=&category=All` : `/rest/${restId}/search?query=&category=All`}
                     className="w-full"
                   >
                     <div className="my-2 flex justify-start items-center w-full bg-white">

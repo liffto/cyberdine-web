@@ -15,7 +15,7 @@ export default function ProductBottommButton({ cartCount, pendingCount, approved
                     {isOrderFlow && <div className="text-sm text-gray-400">{pendingCount} waiting | {approvedCount} approved</div>}
                 </div>
             </div>
-            <Link href={cartCount == 0 ? `/rest/${restId}/orders?table=${table}` : `/rest/${restId}/cart?table=${table}`}>
+            <Link href={cartCount == 0 ? table ? `/rest/${restId}/orders?table=${table}` : `/rest/${restId}/orders` : table ? `/rest/${restId}/cart?table=${table}` : `/rest/${restId}/cart`}>
                 <div className={`text-white flex justify-center no-underline bg-primary w-44 py-2 rounded font-semibold text-lg`} >
                     <div className="">{cartCount == 0 ? "My Orders" : isOrderFlow ? "View Cart" : "View Wishlist"}</div>
                     <div className=""><ArrowRightIcon /></div>

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 export default function Topbar({ data, restId, table }: { data: any, table: any, restId: any }) {
     const router = useRouter();
     const handleClick = () => {
-        router.replace(`/rest/${restId}?table=${table}`);
+        router.replace(table ? `/rest/${restId}?table=${table}` : `/rest/${restId}`);
     };
     return (
         <div className="pt-4 px-4 md:container bg-[#fafafa]">

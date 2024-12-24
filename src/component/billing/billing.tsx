@@ -55,7 +55,7 @@ const BillingComponents: React.FC<BillingComponentsProps> = ({ restId, bgColor, 
 
 
     const handleClick = () => {
-        router.replace(`/rest/${restId}/menu?table=${table}`);
+        router.replace(table ? `/rest/${restId}/menu?table=${table}` : `/rest/${restId}/menu`);
     };
 
     return (

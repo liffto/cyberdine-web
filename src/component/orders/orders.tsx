@@ -38,7 +38,7 @@ const OrdersComponent: React.FC<OrdersComponentProps> = ({ bgColor, restId, tabl
     }
 
     const handleClick = () => {
-        router.replace(`/rest/${restId}/billing?table=${table}`);
+        router.replace(table ? `/rest/${restId}/billing?table=${table}` : `/rest/${restId}/billing`);
     };
 
     return <div className="mt-6">

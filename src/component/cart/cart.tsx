@@ -82,7 +82,7 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
         const mergedData = mergeCartAndPendingData(cartData, pendingData);
         FirebaseServices.shared.placeOrder(mergedData, restId, deviceId ?? '', table, () => {
             sendFcm(`New Order`,`From table - ${table} order has been asigned to you.`);
-            router.replace(`/rest/${restId}/orders?table=${table}`);
+            router.replace(table ? `/rest/${restId}/orders?table=${table}` : `/rest/${restId}/orders`);
             getQuantityFromOrder();
         });
     };
@@ -142,7 +142,7 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
     };
 
     const handleViewOrderClick = () => {
-        router.push(`/rest/${restId}/orders?table=${table}`);
+        router.push(table ? `/rest/${restId}/orders?table=${table}`: `/rest/${restId}/orders`);
     };
 
     return (
