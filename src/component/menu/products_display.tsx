@@ -220,6 +220,19 @@ export default function ProductDisplay({
     setOpenMenu(true);
   };
 
+  function getFoodType() {
+    // Get the current URL (window.location.href)
+    const url = window.location.href;
+
+    // Create a new URL object from the current URL
+    const urlObj = new URL(url);
+
+    // Use searchParams to extract the value of the 'table' query parameter
+    const foodType = urlObj.searchParams.get('foodType');
+
+    return foodType;
+}
+
   // First useEffect to set items when menuType changes
   useEffect(() => {
     if (category && menuType && menu) {
@@ -238,7 +251,7 @@ export default function ProductDisplay({
   }, [menuType, category, menu]);
 
   useEffect(() => {
-    const cat = menuType == "foodMenu" ? initialCategories : [];
+    const cat = menuType == "foodMenu" || restId == "TOW151224htl" || restId == "THE271124htl"  ? initialCategories : [];
     setFilterList(cat);
     // setSelFilterList(cat);
   }, [menuType]);
@@ -246,7 +259,7 @@ export default function ProductDisplay({
   useEffect(() => {
     // Ensure category is not null and has at least one item before setting selectedCategoryName
     if (!menuTypes) {
-      const value = localStorage.getItem('menuType');
+      const value = localStorage.getItem('menuType') ?? getFoodType();
       setMenuType(value!);
       menuTypes = value!;
     }
