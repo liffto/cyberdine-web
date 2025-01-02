@@ -30,6 +30,15 @@ const OrdersComponent: React.FC<OrdersComponentProps> = ({ bgColor, restId, tabl
         }
     }, [])
     const checkOrderList = (data: Item, type: string) => {
+        if (data.dateAndTime == null) {
+            data.dateAndTime = new Date().toISOString();
+          }
+          if (data.isOrdered != false) {
+            data.isOrdered = false;
+          }
+          if (data.isApproved != false) {
+            data.isApproved = false;
+          }
         menu?.addQantity(data, data.quantity, restId, deviceId ?? '', type, table, (val: any) => {
             if (val == "remove" && cartMenuData && cartMenuData?.getMenuList()!.length == 1 && data.quantity == null) {
                 cartMenuData.makeCartMenuEmpty();
