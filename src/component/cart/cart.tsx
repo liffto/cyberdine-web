@@ -54,7 +54,7 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
             'data': {
                 'title': title,
                 'body': body,
-                'screen': screen
+                'titleLocKey': screen
             },
             topic: `${restId}table${table}`,
         };
