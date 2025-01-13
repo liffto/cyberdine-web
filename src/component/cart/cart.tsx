@@ -49,17 +49,11 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
         }
     };
 
-    const sendFcm = async (title: string, body: string, screen: string) => {
+    const sendFcm = async (title: string, body: string,screen: string) => {
         var data = {
-            'notification': {
-                'title': title,
-                'body': body
-            },
             'data': {
                 'title': title,
                 'body': body,
-                'titleLocKey': screen,
-                'web': screen
             },
             topic: `${restId}table${table}`,
         };
@@ -67,7 +61,7 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
         await FcmService.shared.fcmTopic(data);
         notify()
         // setTimeout(() => {
-        setWait(false);
+            setWait(false);
         // }, 1000 * 3);
     };
 
@@ -87,7 +81,7 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
         var pendingData = cartMenuData?.cartMenuMap?.get('pending');
         const mergedData = mergeCartAndPendingData(cartData, pendingData);
         FirebaseServices.shared.placeOrder(mergedData, restId, deviceId ?? '', table, () => {
-            sendFcm(`New Order`, `From table - ${table} order has been asigned to you.`, `table`);
+            sendFcm(`New Order`,`From table - ${table} order has been asigned to you.`,`table`);
             router.replace(table ? `/rest/${restId}/orders?table=${table}` : `/rest/${restId}/orders`);
             getQuantityFromOrder();
         });
@@ -148,7 +142,7 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
     };
 
     const handleViewOrderClick = () => {
-        router.push(table ? `/rest/${restId}/orders?table=${table}` : `/rest/${restId}/orders`);
+        router.push(table ? `/rest/${restId}/orders?table=${table}`: `/rest/${restId}/orders`);
     };
 
     return (
@@ -189,7 +183,7 @@ const CartComponent: React.FC<CartComponentProps> = ({ restId, bgColor, table, t
                             back();
                         }} >Select More</div>
                         {notification && <div onClick={() => {
-                            wait ? null : sendFcm(`Table ${table}`, `Requesting for Captain`, `dashboard`);
+                            wait ? null : sendFcm(`Table ${table}`,`Requesting for Captain`,`dashboard`);
                         }} className={`${wait ? "text-gray-300" : " text-primary"} bg-white px-8 py-2 rounded-sm font-bold text-xl `} >Request Waiter</div>}
                     </div>
                 }

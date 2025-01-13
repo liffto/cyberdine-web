@@ -26,6 +26,7 @@ const WelcomePage = ({ data, restId, table, bgColor }: { data: any, restId: stri
     const items = [
         { svg: '/images/svg/welcome_page/food_menu_icon.svg', text: 'View Food Menu', type: 'foodMenu', showCard: true, link: table ? `/rest/${restId}/menu?table=${table}&foodType=foodMenu` : `/rest/${restId}/menu?foodType=foodMenu` },
         { svg: data.id == "TOW151224htl" || data.id == "THE271124htl" ? '/images/svg/welcome_page/food_menu_icon.svg' : '/images/svg/welcome_page/drinks_menu_icon.svg', text: data.id == "TOW151224htl" || data.id == "THE271124htl" ? 'View AC Menu' : 'View Drinks Menu', type: 'drinksMenu', showCard: data.businessType == "restroBar", link: table ? `/rest/${restId}/menu?table=${table}&foodType=drinksMenu` : `/rest/${restId}/menu?foodType=drinksMenu` },
+        { svg: '/images/svg/welcome_page/phone_no.svg', text: 'Call Reception', type: 'phoneNo', showCard: data.phoneNo, link: data.phoneNo },
         { svg: '/images/svg/welcome_page/google_review_icon.svg', text: 'Google review', type: 'gReview', showCard: data.googleReviewLink, link: data.googleReviewLink },
         { svg: '/images/svg/welcome_page/instagram_icon.svg', text: 'Instagram', type: 'insta', showCard: data.instagramLink, link: data.instagramLink },
         { svg: '/images/svg/welcome_page/facebook_icon.svg', text: 'Facebook', type: 'fb', showCard: data.facebookLink, link: data.facebookLink },
@@ -46,6 +47,8 @@ const WelcomePage = ({ data, restId, table, bgColor }: { data: any, restId: stri
                 setLink(link);
             }
 
+        } else if(type == "phoneNo"){
+            window.location.href = `tel:${link}`;
         } else {
             router.push(link);
         }
