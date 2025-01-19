@@ -96,7 +96,7 @@ const WelcomePage = ({ data, restId, table, bgColor }: { data: any, restId: stri
                         className="w-26 h-26 my-4 object-contain m-auto" // Adjust size and ensure the image fits
                     />}
                 {getTableNumber() && <p className="text-2xl font-bold mt-4" style={{ fontFamily: 'mum mum restaurant' }}>
-                    {`Table - ${getTableNumber()}`}
+                    {data.businessType == "hotels" ? `Room - ${getTableNumber()}` : `Table - ${getTableNumber()}`}
                 </p>}
             </div>
             <div className={`w-full flex flex-col mb-14 max-w-4xl overflow-y-hidden	`}>
